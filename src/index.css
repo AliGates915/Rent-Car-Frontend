@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+  }
+  
+  .errorContainer {
+    text-align: center;
+    color: red;
+    padding: 20px;
+  }
+  
