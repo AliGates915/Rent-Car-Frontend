@@ -1,22 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 import "./sidebar.scss";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import StoreIcon from "@mui/icons-material/Store";
 import ListAltIcon from '@mui/icons-material/ListAlt';
-import GroupIcon from '@mui/icons-material/Group';
-import HotelIcon from '@mui/icons-material/Hotel';
-import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
-import TourIcon from '@mui/icons-material/Tour';
-import PlaceIcon from '@mui/icons-material/Place';
-import FlightIcon from '@mui/icons-material/Flight';
-import CreditScoreIcon from '@mui/icons-material/CreditScore';
-import PaymentIcon from '@mui/icons-material/Payment';
-import LocalAtmIcon from '@mui/icons-material/LocalAtm';
-import FactCheckIcon from '@mui/icons-material/FactCheck';
 import { Link } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
@@ -39,6 +24,7 @@ const Sidebar = () => {
             <span>Dashboard</span>
           </li>
           <p className="title">LISTS</p>
+          
           <Link to="/vechile-type" style={{ textDecoration: "none" }}>
           <li>
             <ListAltIcon className="icon" />
@@ -67,10 +53,17 @@ const Sidebar = () => {
             </span>
           </li>
           </Link>
-          <Link to="/package-list" style={{ textDecoration: "none" }}>
+          <Link to="/owner-details" style={{ textDecoration: "none" }}>
           <li>
             <ListAltIcon className="icon" />
             <span>Vehicle Owner Details
+            </span>
+          </li>
+          </Link>
+          <Link to="/customer-details" style={{ textDecoration: "none" }}>
+          <li>
+            <ListAltIcon className="icon" />
+            <span>Customer Details
             </span>
           </li>
           </Link>
@@ -103,7 +96,7 @@ const Sidebar = () => {
             </span>
           </li>
           </Link>
-          <Link to="/package-list" style={{ textDecoration: "none" }}>
+          <Link to="/rent-receipt" style={{ textDecoration: "none" }}>
           <li>
             <ListAltIcon className="icon" />
             <span>Rent Receipt and Agreement
@@ -141,7 +134,7 @@ const Sidebar = () => {
           
           <Link to='/login'style={{ textDecoration: "none" }}>
           <li>
-            <ExitToAppIcon className="icon" />
+            {/* <ExitToAppIcon className="icon" /> */}
             <span>Logout</span>
           </li>
           </Link>

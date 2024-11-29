@@ -62,7 +62,6 @@ function NewVehicle() {
     const [floorMat, setFloorMat] = useState(false)
     const [isLoading, setIsLoading] = useState(false);
     const swiperRef = useRef(null);    // Handle file input change
-    console.log(files);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -101,8 +100,9 @@ function NewVehicle() {
             wheelPanna,
             mudFlaps,
             floorMat,
-            photos: pictures, // Pass image URLs
+            photos: pictures.map((picture) => picture.url), // Pass only the URLs
         };
+    console.log(formData);
 
         try {
             const response = await axios.post(
@@ -128,10 +128,12 @@ function NewVehicle() {
             setFiles(selectedFiles);
         }
     };
+
+    // Upload Images to Cloudinary
     const handleClick = async (e) => {
-        setIsLoading(true)
         e.preventDefault();
         if (!files || files.length === 0) return;
+        setIsLoading(true);
 
         try {
             const list = await Promise.all(
@@ -145,46 +147,22 @@ function NewVehicle() {
                         data
                     );
 
-                    return uploadRes.data.secure_url; // Get URL
+                    return uploadRes.data.secure_url; // Get the URL
                 })
-            ); const newhotel = {
-                photos: list, // The list of image URLs
-            };
+            );
 
-            // Sending the image URLs to the backend
-            await axios.post(`${process.env.REACT_APP_API_URL}/new-vehicle`, newhotel);
-
-            // Updating state with the new uploaded images
-            setPictures((prevPictures) => [
-                ...prevPictures,
-                ...list.map((url) => ({ url })) // Mapping URLs to picture objects
-            ]);
-
-            setFiles(null); // Reset the files after upload
+            setPictures((prevPictures) => [...prevPictures, ...list.map((url) => ({ url }))]);
+            setFiles([]); // Reset the files after upload
         } catch (err) {
             console.error("Error uploading images", err);
-        }
-        finally {
-            setTimeout(() => {
-                setIsLoading(false); // Hide loading spinner after 5 seconds
-            }, 5000); // Set delay (5 seconds)
+        } finally {
+            setIsLoading(false);
         }
     };
 
-
-
-    // Handle image upload to Cloudinary
-
-
-
-    // Delete image from both frontend and backend
+    // Delete Image
     const handleDelete = (url) => {
-        setPictures((prevPictures) => prevPictures.filter((picture) => picture.url !== url));
-
-        // If you want to delete the image from the server as well:
-        axios.delete(`${process.env.REACT_APP_API}/delete-image`, { data: { url } })
-            .then(() => console.log("Image deleted"))
-            .catch((err) => console.error("Error deleting image", err));
+        setPictures(pictures.filter((pic) => pic.url !== url));
     };
 
     // Save function
@@ -493,6 +471,7 @@ function NewVehicle() {
                                 <select
                                     className="w-full bg-transparent border-none focus:outline-none cursor-pointer text-gray-700"
                                     value={fuelType}
+                                    required
                                     onChange={(e) => setFuelType(e.target.value)}
                                 >
                                     <option value="">Select</option>
@@ -930,31 +909,12 @@ function NewVehicle() {
                         <Swiper
                             spaceBetween={10}
                             slidesPerView={3}
-                            navigation={{ prevEl: '.swiper-button-prev', nextEl: '.swiper-button-next' }} // Link custom buttons to swiper
-                            pagination
-                            grabCursor={true}
-                            loop={true}
-                            breakpoints={{
-                                640: {
-                                    slidesPerView: 1,
-                                },
-                                768: {
-                                    slidesPerView: 2,
-                                },
-                                1024: {
-                                    slidesPerView: 3,
-                                },
-                            }}
-                            ref={swiperRef} // Reference Swiper instance
+                            ref={swiperRef}
                         >
                             {pictures.map((picture, index) => (
                                 <SwiperSlide key={index}>
                                     <div className="relative">
-                                        <img
-                                            src={picture.url}
-                                            alt={picture.name}
-                                            className="w-full h-40 object-cover rounded-lg"
-                                        />
+                                        <img src={picture.url} alt="Uploaded" className="w-full h-40 object-cover rounded-lg" />
                                         <button
                                             className="absolute top-2 right-2 text-white bg-red-500 rounded-full p-1"
                                             onClick={() => handleDelete(picture.url)}
