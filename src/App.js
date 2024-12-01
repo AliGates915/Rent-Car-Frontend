@@ -18,7 +18,9 @@ import OwnerVehicle from "./pages/Vehicle/OwnerVehicle";
 import NewOwner from "./pages/Vehicle/OwnerVehicle/NewOwner";
 import NewCustomer from "./pages/Vehicle/Customer/NewCustomer";
 import CustomerVehicle from "./pages/Vehicle/CustomerVehicle";
-import RentVehicle from "./pages/Vehicle/Rent Vehicle/RentVehicle";
+import RentReceipt from "./pages/Vehicle/Rent/RentReceipt";
+import RentVehicle from "./pages/Vehicle/Rent/RentVehicle";
+import ReturnVehicleForm from "./pages/Vehicle/Rent/ReturnVehicleForm";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -139,7 +141,26 @@ function App() {
               index
               element={
                 <Layout>
-                  <RentVehicle />
+                  <RentReceipt />
+                  </Layout>
+              }
+            />
+
+            <Route
+              path='rent-vehicle'
+              index
+              element={
+                <Layout>
+                  <RentVehicle   />
+                  </Layout>
+              }
+            />
+            <Route
+              path='save-vehicle'
+              index
+              element={
+                <Layout>
+                  <ReturnVehicleForm   />
                   </Layout>
               }
             />

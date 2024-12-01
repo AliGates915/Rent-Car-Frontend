@@ -46,17 +46,10 @@ const Sidebar = () => {
           </li>
           </Link>
 
-          <Link to="/vehicle-details" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Vehicle Details
-            </span>
-          </li>
-          </Link>
           <Link to="/owner-details" style={{ textDecoration: "none" }}>
           <li>
             <ListAltIcon className="icon" />
-            <span>Vehicle Owner Details
+            <span>Owner Details
             </span>
           </li>
           </Link>
@@ -68,6 +61,35 @@ const Sidebar = () => {
           </li>
           </Link>
 
+          <Link to="/vehicle-details" style={{ textDecoration: "none" }}>
+          <li>
+            <ListAltIcon className="icon" />
+            <span>Vehicle Details
+            </span>
+          </li>
+          </Link> 
+          <Link to="/rent-receipt" style={{ textDecoration: "none" }}>
+          <li>
+            <ListAltIcon className="icon" />
+            <span>Rent Receipt
+            </span>
+          </li>
+          </Link>
+          
+          <Link to="/rent-vehicle" style={{ textDecoration: "none" }}>
+          <li>
+            <ListAltIcon className="icon" />
+            <span>Return Vehicles</span>
+          </li>
+          </Link>
+          <Link to="/save-vehicle" style={{ textDecoration: "none" }}>
+          <li>
+            <ListAltIcon className="icon" />
+            <span>Save Vehicles</span>
+          </li>
+          </Link>
+
+          
           <Link to="/package-list" style={{ textDecoration: "none" }}>
           <li>
             <ListAltIcon className="icon" />
@@ -83,6 +105,7 @@ const Sidebar = () => {
             </span>
           </li>
           </Link>
+         
           <Link to="/package-list" style={{ textDecoration: "none" }}>
           <li>
             <ListAltIcon className="icon" />
@@ -96,13 +119,7 @@ const Sidebar = () => {
             </span>
           </li>
           </Link>
-          <Link to="/rent-receipt" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Rent Receipt and Agreement
-            </span>
-          </li>
-          </Link>
+          
           <Link to="/package-list" style={{ textDecoration: "none" }}>
           <li>
             <ListAltIcon className="icon" />

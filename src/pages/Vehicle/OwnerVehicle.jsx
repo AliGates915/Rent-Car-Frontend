@@ -4,71 +4,58 @@
 import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom'
 
+import ProfileCard from './OwnerVehicle/ProfileCards'
 import { AiFillDelete } from "react-icons/ai";
 import axios from "axios";
+import { FaEdit } from "react-icons/fa";
+import { PulseLoader } from 'react-spinners';
 
 function OwnerVehicle() {
-
-    // random data
-    const [products, setProducts] = useState([
-        {
-            imgSrc: "https://honda.com.pk/images/landingimages/images/city/city1.2.jpg",
-            serialNo: "1",
-            registerNo: "ABC-123",
-            type: "Sedan",
-            make: "Honda",
-            model: "City",
-            status: "Available",
-            price: 149,
-            originalPrice: 199,
-        },
-        {
-            imgSrc: "https://cache4.pakwheels.com/system/car_generation_pictures/7314/original/Wagon-R.jpg?1677147187",
-            serialNo: "2",
-            registerNo: "XYZ-456",
-            type: "Hatchback",
-            make: "Suzuki",
-            model: "Wagon R",
-            status: "Sold",
-            price: 179,
-            originalPrice: 229,
-        },
-        {
-            imgSrc: "https://cache4.pakwheels.com/system/car_generation_pictures/6014/original/Suzuki_Cultus_-_PNG.png?1635945515",
-            serialNo: "3",
-            registerNo: "LMN-789",
-            type: "Hatchback",
-            make: "Suzuki",
-            model: "Cultus",
-            status: "Available",
-            price: 120,
-            originalPrice: 170,
-        },
-    ]);
-
-    const handleDelete = (serialNo) => {
-        if (window.confirm("Are you sure you want to delete this product?")) {
-            setProducts(products.filter((product) => product.serialNo !== serialNo));
-        }
-    };
-
+    const [vehicles, setVehicles] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const fetchHeads = async () => {
+        const fetchVehicle = async () => {
+            setIsLoading(true);
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/heads`);
-                const heads = response.data;
-
-                const newCodeNumber = heads.length + 1;
-                const formattedCode = String(newCodeNumber).padStart(2, '0');
-                setHeadCode(formattedCode);
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/owner-details`);
+                
+                console.log("Data", response.data);
+                if (Array.isArray(response.data)) {
+                setVehicles(response.data);
+                } else {
+                    console.error("Data is not an array. Resetting to empty array.");
+                    setVehicles([]); // Set as empty array if response isn't an array
+                }
+                
             } catch (error) {
-                console.error('Error fetching companies:', error);
+                console.error("Error fetching vehicles:", error);
+            } finally {
+                setTimeout(() => setIsLoading(false), 2000); // Stop loading after 2 seconds
             }
         };
-        fetchHeads();
+
+        fetchVehicle();
     }, []);
 
+    // Delete item
+    const handleDelete = async (id) => {
+        if (!id) {
+            console.error("Vehicle ID is undefined.");
+            return;
+        }
+
+        // Confirm with the user before proceeding with the delete
+        if (!window.confirm("Are you sure you want to delete this vehicle?")) return;
+
+        try {
+            console.log("Deleting vehicle with id:", id); // Log ID to ensure it's correct
+            await axios.delete(`${process.env.REACT_APP_API_URL}/vehicle-details/${id}`);
+            setVehicles(vehicles.filter((vehicle) => vehicle.id !== id));
+        } catch (error) {
+            console.error("Error deleting vehicle:", error);
+        }
+    };
 
     return (
         <>
@@ -91,57 +78,48 @@ function OwnerVehicle() {
 
             {/* New cards */}
 
-            <div className="text-center">
-                <section className="w-fit mx-auto grid grid-cols-1 lg:grid-cols-3 
-                md:grid-cols-2 justify-items-center justify-center gap-y-20 
-                gap-x-6 mt-10 mb-5">
-                    {products.map((product) => (
-                        <div
-                            key={product.serialNo}
-                            className="w-[22rem] bg-white shadow-xl shadow-gray-400 rounded-xl duration-500 
-                            hover:scale-105 hover:shadow-xl relative"
-                        >
-                            {/* Image */}
-                            <img
-                                src={product.imgSrc}
-                                alt={product.model}
-                                className="h-80 w-[22rem] object-cover rounded-t-xl border-b-2"
-                            />
-
-                            {/* Product Info */}
-                            <div className="px-4 py-3 w-[22rem]">
-                                <span className="text-gray-400 mr-3 uppercase text-xs">
-                                    Serial No: {product.serialNo}
-                                </span>
-                                <p className="text-lg font-bold text-black truncate block capitalize">
-                                    {product.make} {product.model}
-                                </p>
-                                <p className="text-gray-500 text-sm">
-                                    Register No: {product.registerNo}
-                                </p>
-                                <p className="text-gray-500 text-sm">Type: {product.type}</p>
-                                <p className="text-gray-500 text-sm">Status: {product.status}</p>
-
-                                <div className="flex items-center mt-3">
-                                    <p className="text-lg font-semibold text-black">
-                                        ${product.price}
-                                    </p>
-                                    <del className="ml-2 text-sm text-gray-600">
-                                        ${product.originalPrice}
-                                    </del>
-                                </div>
-
-                                {/* Delete Button */}
-                                <button
-                                    onClick={() => handleDelete(product.serialNo)}
-                                    className="absolute top-4 right-4 text-red-500 hover:text-red-700"
-                                >
-                                    <AiFillDelete size={24} />
-                                </button>
-                            </div>
+            <div className="">
+                    {isLoading ? (
+                        <div className=" flex justify-center mt-48 min-h-screen">
+                            <PulseLoader color="#0fdaee" size={15} margin={5} />
                         </div>
-                    ))}
-                </section>
+                    ) :(
+                        <div className="min-h-screen p-8">
+                        <div className="grid grid-cols-2 gap-6">
+                            {vehicles.map((profile, index) => (
+                                <ProfileCard
+                                    key={index}
+                                    name={profile.ownerName}
+                                    address={profile.totalVehicles}
+                                    avatar={profile.profilePhotoUrl}
+                                    company={profile.phone}
+                                >
+                                    
+                                    <div className="mt-4 flex space-x-2 text-md">
+                                        <button className="bg-blue hover:bg-[#005a59]
+                                         text-white px-3 py-1 
+                                    rounded-full ">
+                                            <FaEdit size={20}/>
+                                        </button>
+                                        <Link to="/">
+                                            <button className="bg-blue 
+                                            hover:bg-[#005a59] text-white px-3 py-3 
+                                    rounded-full ">
+                                                < AiFillDelete size={20} />
+                                                
+                                            </button>
+                                        </Link>
+                                        <button className="bg-green hover:bg-[#005a59]  text-white px-2 py-2  rounded-full ">
+                                            Complete Profile
+                                        </button>
+                                    </div>
+                                </ProfileCard>
+                            ))}
+
+
+                        </div>
+                    </div>
+                        )}
             </div>
         </>
     );

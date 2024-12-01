@@ -144,6 +144,7 @@ function Head() {
         }
     };
 
+    // Delete item
     const handleDelete = async (id) => {
         if (!id) {
             console.error("Head ID is undefined.");

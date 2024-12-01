@@ -6,15 +6,17 @@ import React, { useState } from "react";
   
     return (
       <div
-        className="relative flex items-center"
+        className=""
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
       >
-        <span className="cursor-pointer">{icon}</span>
+        <span className="cursor-pointer absolute top-3 right-3 bg-red text-white px-2 font-semibold 
+        py-1 rounded-full text-xs">{icon}</span>
         {showTooltip && (
           <div
-            className="absolute left-1/2 top-full mb-2 transform -translate-x-1/2 
-            whitespace-nowrap bg-gray-700 text-white text-sm px-2 py-1 rounded shadow-lg z-10"
+            className="absolute bottom-full left-[80%] transform -translate-x-1/2 
+            whitespace-nowrap bg-[#0096ff] text-white text-sm px-2 py-1 
+            rounded shadow-lg z-10"
           >
             {tooltipText}
           </div>

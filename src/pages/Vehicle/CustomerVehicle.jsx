@@ -3,49 +3,97 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom'
-
 import { AiFillDelete } from "react-icons/ai";
+
+import ProfileCard from './Customer/ProfileCards'
 import axios from "axios";
+import IconTooltip from "./Customer/IconTooltip";
+import { FaEdit } from "react-icons/fa";
+import { PulseLoader } from 'react-spinners';
 
 function CustomerVehicle() {
-   
+    const profiles = [
+        {
+            name: 'Alexander Pierce',
+            role: 'Admin',
+            company: 'Tech Innovations Inc.',
+            address: '795 Folsom Ave, Suite 600 San Francisco',
+            avatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg',
+        },
+        {
+            name: 'Nadia',
+            role: 'Customer',
+            company: 'Fashion Hub',
+            address: '1234 Elm St, Brooklyn, NY 11201',
+            avatar: 'https://images.pexels.com/photos/694556/pexels-photo-694556.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
+        },
+        {
+            name: 'Jane',
+            role: 'Admin',
+            company: 'Creative Solutions',
+            address: '4567 Oak St, Chicago, IL 60602',
+            avatar: 'https://images.pexels.com/photos/1212984/pexels-photo-1212984.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
+        },
+        {
+            name: 'Nora',
+            role: 'Customer',
+            company: 'Health First',
+            address: '890 Willow Dr, Los Angeles, CA 90015',
+            avatar: 'https://images.pexels.com/photos/3764542/pexels-photo-3764542.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
+        },
+        {
+            name: 'Alexander',
+            role: 'Admin',
+            company: 'Global Ventures',
+            address: '342 Pine St, Miami, FL 33101',
+            avatar: 'https://images.pexels.com/photos/6325964/pexels-photo-6325964.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
+        },
+        {
+            name: 'Sarah',
+            role: 'Customer',
+            company: 'Eco Systems',
+            address: '789 Maple Ave, Austin, TX 73301',
+            avatar: 'https://images.pexels.com/photos/1520760/pexels-photo-1520760.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
+        },
+        {
+            name: 'Norman',
+            role: 'Admin',
+            company: 'Tech Titans',
+            address: '152 Elm St, Seattle, WA 98104',
+            avatar: 'https://images.pexels.com/photos/3777952/pexels-photo-3777952.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
+        },
+        {
+            name: 'John',
+            role: 'Customer',
+            company: 'Foodies Delight',
+            address: '987 Cedar Rd, Denver, CO 80201',
+            avatar: 'https://images.pexels.com/photos/6829574/pexels-photo-6829574.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
+        },
+    ];
 
-    // random data
-    const [products, setProducts] = useState([
-        {
-            imgSrc: "https://honda.com.pk/images/landingimages/images/city/city1.2.jpg",
-            serialNo: "1",
-            registerNo: "ABC-123",
-            type: "Sedan",
-            make: "Honda",
-            model: "City",
-            status: "Available",
-            price: 149,
-            originalPrice: 199,
-        },
-        {
-            imgSrc: "https://cache4.pakwheels.com/system/car_generation_pictures/7314/original/Wagon-R.jpg?1677147187",
-            serialNo: "2",
-            registerNo: "XYZ-456",
-            type: "Hatchback",
-            make: "Suzuki",
-            model: "Wagon R",
-            status: "Sold",
-            price: 179,
-            originalPrice: 229,
-        },
-        {
-            imgSrc: "https://cache4.pakwheels.com/system/car_generation_pictures/6014/original/Suzuki_Cultus_-_PNG.png?1635945515",
-            serialNo: "3",
-            registerNo: "LMN-789",
-            type: "Hatchback",
-            make: "Suzuki",
-            model: "Cultus",
-            status: "Available",
-            price: 120,
-            originalPrice: 170,
-        },
-    ]);
+    const visibleProfiles = profiles.slice(0, 8);
+    const [vehicles, setVehicles] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    useEffect(() => {
+        const fetchCustomer = async () => {
+            setIsLoading(true);
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/customer-details`);
+                if (Array.isArray(response.data)) {
+                    console.log("Data is an array.");
+                    setVehicles(response.data);
+                } else {
+                    console.error("Data is not an array. Resetting to empty array.");
+                    setVehicles([]); // Set as empty array if response isn't an array
+                }
+            } finally {
+                setTimeout(() => setIsLoading(false), 2000); // Stop loading after 2 seconds
+            }
+        };
+
+        fetchCustomer();
+    }, []);
+
 
     const handleDelete = (serialNo) => {
         if (window.confirm("Are you sure you want to delete this product?")) {
@@ -71,40 +119,6 @@ function CustomerVehicle() {
     }, []);
 
 
-    const handleHeadChange = (e) => {
-        setHead(e.target.value);
-    };
-
-
-    const fetchCompanyTypes = async () => {
-        try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/companies`);
-            setCompanyTypes(response.data);
-            console.log("Fetched company types:", response.data);
-        } catch (error) {
-            console.error("Error fetching company types:", error);
-        }
-    };
-
-    const fetchHead = async () => {
-        try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/heads`);
-            // const response = await axios.get(`https://company-backend-delta.vercel.app/api/heads`);
-            setfetchingHeadTypes(Array.isArray(response.data) ? response.data : []);
-        } catch (error) {
-            console.error("Error fetching packages types:", error);
-            if (error.response) {
-                console.error("Response data:", error.response.data);
-                console.error("Response status:", error.response.status);
-            }
-        }
-    };
-
-
-
-
-
-
     return (
         <>
             <nav className='flex justify-between my-4 mx-10'>
@@ -126,56 +140,51 @@ function CustomerVehicle() {
 
             {/* New cards */}
 
-            <div className="text-center">
-                <section className="w-fit mx-auto grid grid-cols-1 lg:grid-cols-3 
-                md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-6 mt-10 mb-5">
-                    {products.map((product) => (
-                        <div
-                            key={product.serialNo}
-                            className="w-[22rem] bg-white shadow-xl shadow-gray-400 rounded-xl duration-500 
-                            hover:scale-105 hover:shadow-xl relative"
-                        >
-                            {/* Image */}
-                            <img
-                                src={product.imgSrc}
-                                alt={product.model}
-                                className="h-80 w-[22rem] object-cover rounded-t-xl border-b-2"
-                            />
-
-                            {/* Product Info */}
-                            <div className="px-4 py-3 w-[22rem]">
-                                <span className="text-gray-400 mr-3 uppercase text-xs">
-                                    Serial No: {product.serialNo}
-                                </span>
-                                <p className="text-lg font-bold text-black truncate block capitalize">
-                                    {product.make} {product.model}
-                                </p>
-                                <p className="text-gray-500 text-sm">
-                                    Register No: {product.registerNo}
-                                </p>
-                                <p className="text-gray-500 text-sm">Type: {product.type}</p>
-                                <p className="text-gray-500 text-sm">Status: {product.status}</p>
-
-                                <div className="flex items-center mt-3">
-                                    <p className="text-lg font-semibold text-black">
-                                        ${product.price}
-                                    </p>
-                                    <del className="ml-2 text-sm text-gray-600">
-                                        ${product.originalPrice}
-                                    </del>
-                                </div>
-
-                                {/* Delete Button */}
-                                <button
-                                    onClick={() => handleDelete(product.serialNo)}
-                                    className="absolute top-4 right-4 text-red-500 hover:text-red-700"
+            <div className="">
+                {isLoading ? (
+                    <div className=" flex justify-center mt-48 min-h-screen">
+                        <PulseLoader color="#0fdaee" size={15} margin={5} />
+                    </div>
+                ) : (
+                    <div className="min-h-screen p-8">
+                        <div className="grid grid-cols-2 gap-6">
+                            {vehicles.map((profile, index) => (
+                                <ProfileCard
+                                    key={index}
+                                    name={profile.customerName}
+                                    address={profile.referenceName}
+                                    avatar={profile.profilePhotoUrl}
+                                    company={profile.phone}
                                 >
-                                    <AiFillDelete size={24} />
-                                </button>
-                            </div>
+                                    <IconTooltip
+                                        icon={profile.totalTransactions}
+                                        tooltipText="Total Transactions"
+                                    />
+                                    <div className="mt-4 flex space-x-2 text-md">
+                                        <button className="bg-blue hover:bg-[#005a59]
+                                         text-white px-3 py-1 
+                                    rounded-full ">
+                                            <FaEdit size={20}/>
+                                        </button>
+                                        <Link to="/">
+                                            <button className="bg-blue 
+                                            hover:bg-[#005a59] text-white px-3 py-3 
+                                    rounded-full ">
+                                                < AiFillDelete size={20} />
+                                                
+                                            </button>
+                                        </Link>
+                                        <button className="bg-green hover:bg-[#005a59]  text-white px-2 py-2  rounded-full ">
+                                            Complete Profile
+                                        </button>
+                                    </div>
+                                </ProfileCard>
+                            ))}
+
+
                         </div>
-                    ))}
-                </section>
+                    </div>
+                )}
             </div>
         </>
     );

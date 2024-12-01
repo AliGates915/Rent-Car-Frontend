@@ -9,6 +9,13 @@
     height: 100vh; 
   }
   
+  .loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
   .errorContainer {
     text-align: center;
     color: red;
