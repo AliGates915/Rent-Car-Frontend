@@ -1,7 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { useState, useEffect } from "react";
-import { AiFillDelete } from "react-icons/ai";
-import { FaEdit } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import { TbAirConditioning } from "react-icons/tb";
 import { SiAirplayvideo } from "react-icons/si";
@@ -22,7 +20,6 @@ function SaveVehicle() {
     const [vehicles, setVehicles] = useState([]);
     const [saveVehicle, setSaveVehicles] = useState([]);
     const [currentIndices, setCurrentIndices] = useState({});
-    const [customerInfo, setCustomerInfo] = useState([]);
 
     const [isLoading, setIsLoading] = useState(true);
     // Fetch vehicle data once when the component mounts
@@ -81,40 +78,51 @@ function SaveVehicle() {
 
     // Rent Vehicle Page (Displaying Booked Vehicles)
     useEffect(() => {
-        setIsLoading(true)
+        setIsLoading(true);
         const fetchSaveVehicles = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/vehicle-details/save-vehicle`);
-                console.log("Rented Data", response.data)
+                const response = await axios.get(
+                    `${process.env.REACT_APP_API_URL}/vehicle-details/booking`
+                );
+
+                console.log("Fetched Vehicles", response.data);
+
                 if (Array.isArray(response.data)) {
-                    setSaveVehicles(response.data);
-                }
-                else {
+                    // Separate available and booked vehicles
+                    const bookedVehicles = response.data.filter(
+                        (vehicle) => vehicle.isSaved || vehicle.isBooked
+                    );
+
+                    setSaveVehicles(bookedVehicles);
+                } else {
                     console.error("Data is not an array. Resetting to empty array.");
-                    setSaveVehicles([]); // Set as empty array if response isn't an array
+                    setSaveVehicles([]); // Reset to empty array if response isn't an array
                 }
             } catch (error) {
-                console.error('Error fetching rented vehicles:', error);
-            }finally {
+                console.error("Error fetching rented vehicles:", error);
+            } finally {
                 setTimeout(() => setIsLoading(false), 2000); // Stop loading after 2 seconds
             }
         };
 
         fetchSaveVehicles();
-    }, []);
+    }, [vehicles]); // Fetch on component mount
+
+
 
     // Handle rent button click
-
     const handleSave = async (id) => {
+        console.log("id", id);
+
         try {
             const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/vehicle-details/save-form/${id}`);
-            alert("Vehicle Saved Successfully.")
-            console.log('Vehicle returned:', response.data);
-            setVehicles((prevVehicles) => prevVehicles.filter((vehicle) => vehicle._id !== id));
+                `${process.env.REACT_APP_API_URL}/vehicle-details/save-vehicle/${id}`
+            );
 
+            console.log("After Save", response.data);
+            alert("Vehicle returned successfully.");
         } catch (error) {
-            console.error('Error returning vehicle:', error.response?.data || error.message);
+            console.error("Error returning vehicle:", error.response?.data || error.message);
         }
     };
 
@@ -149,15 +157,7 @@ function SaveVehicle() {
                 <div className='text-2xl font-extrabold text-[#0096FF] tracking-wide '>
                     All Save Vehicles
                 </div>
-                <Link to='/new-vehicle'>
-                    <button className='bg-[#0096FF] font-extrabold px-3 py-1 rounded-full transition-all duration-300 
-                text-xl text-white tracking-wide flex items-center justify-center
-                 hover:bg-[#4a32b3] 
-               hover:scale-105 hover:shadow-lg hover:shadow-[#0096FF]/80'
-                    >
-                        +
-                    </button>
-                </Link>
+
             </nav>
             <hr className='bg-gray-400 mb-4' />
 
@@ -266,20 +266,20 @@ function SaveVehicle() {
 
                                     {/* Return Vehicle Button */}
                                     <div className="mt-2 mb-4 flex justify-center">
-                                        <Link to='/save-vehicle'>
-                                            <button
-                                                className="bg-[#0096FF] hover:font-extrabold px-8 py-2 rounded-lg transition-all duration-300 text-xl text-white tracking-wide flex items-center justify-center hover:bg-[#4a32b3] hover:scale-105 hover:shadow-lg hover:shadow-[#0096FF]/80"
-                                                onClick={() => handleSave(vehicle._id)}
-                                            >
-                                                Save Vehicle
-                                            </button>
-                                        </Link>
+
+                                        <button
+                                            className="bg-[#0096FF] hover:font-extrabold px-8 py-2 rounded-lg transition-all duration-300 text-xl text-white tracking-wide flex items-center justify-center hover:bg-[#4a32b3] hover:scale-105 hover:shadow-lg hover:shadow-[#0096FF]/80"
+                                            onClick={() => handleSave(vehicle._id)}
+                                        >
+                                            Return to Available
+                                        </button>
                                     </div>
 
                                 </div>
                             );
                         })
-                    )}
+                    )} 
+                    
                 </section>
             </div>
 

@@ -121,7 +121,7 @@ function NewVehicle() {
                 formData,
                 { headers: { 'Content-Type': 'application/json' } }
             );
-
+            resetForm()
             // Simulate a 3-second delay (e.g., API call)
             setTimeout(() => {
                 // After 3 seconds, stop the loader
@@ -135,6 +135,48 @@ function NewVehicle() {
             console.error("Error:", error.response ? error.response.data : error.message); alert(error.message);
         }
     };
+     // Reset form fields
+     const resetForm = () => {
+        setPictures([]);
+        setFiles("");
+        setRegistrationNo('');
+        setRegisteredCity('');
+        setCarType([]);
+        setSelectedCarType("");
+        setCarMake('');
+        setYearOfModel('');
+        setCarModel('');
+        setColor('');
+        setRatePerDay(1000);
+        setTransmissionType('');
+        setEngineCapacity('');
+        setChassisNo('');
+        setEngineNo('');
+        setFuelType('');
+        setFuelTankCapacity('');
+        setMaxSpeed('');
+        setSeatingCapacity('');
+        setInspectionDate('');
+        setInspectionMileage('');
+        setAirConditioner(false);
+        setHeater(false);
+        setSunRoof(false);
+        setCdDVD(false);
+        setAndriod(false);
+        setFrontCamera(false);
+        setRearCamera(false);
+        setCigarette(false);
+        setSterring(false);
+        setWheelCup(false);
+        setSpareWheel(false);
+        setAirCompressor(false);
+        setJackHandle(false);
+        setLocation('');
+        setWheelPanna(false);
+        setMudFlaps(false);
+        setFloorMat(false);
+    };
+    
     
     // current date 
     useEffect(() => {
@@ -387,9 +429,9 @@ function NewVehicle() {
                                         <option value="">Select</option>
                                         <option value="Petrol">Honda</option>
                                         <option value="Diesel">Suzuki</option>
-                                        <option value="Diesel">Toyota</option>
-                                        <option value="Diesel">KIA</option>
-                                        <option value="Diesel">Hyundai</option>
+                                        <option value="Toyota">Toyota</option>
+                                        <option value="KIA">KIA</option>
+                                        <option value="Hyundai">Hyundai</option>
                                     </select>
                                 </div>
                             </div>
@@ -1012,21 +1054,6 @@ function NewVehicle() {
 
 
                         <div className="my-4">
-                            {/* Custom Buttons for Navigation */}
-                            <div className="flex justify-between mb-4">
-                                <button
-                                    className="bg-blue-500 text-white p-2 rounded-full"
-                                    onClick={() => swiperRef.current.swiper.slidePrev()} // Navigate to previous slide
-                                >
-                                    Prev
-                                </button>
-                                <button
-                                    className="bg-blue-500 text-white p-2 rounded-full"
-                                    onClick={() => swiperRef.current.swiper.slideNext()} // Navigate to next slide
-                                >
-                                    Next
-                                </button>
-                            </div>
 
                             {/* Swiper Component */}
                             <Swiper
@@ -1039,7 +1066,7 @@ function NewVehicle() {
                                         <div className="relative">
                                             <img src={picture.url} alt="Uploaded" className="w-full h-40 object-cover rounded-lg" />
                                             <button
-                                                className="absolute top-2 right-2 text-white bg-red-500 rounded-full p-1"
+                                                className="absolute top-2 right-2 bg-blue px-2 text-white bg-red-500 rounded-full p-1"
                                                 onClick={() => handleDelete(picture.url)}
                                             >
                                                 X

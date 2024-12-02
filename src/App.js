@@ -111,6 +111,15 @@ function App() {
               }
             />
             <Route
+              path="save-vehicle"
+              index
+              element={
+                <Layout>
+                  <SaveVehicle />
+                </Layout>
+              }
+            />
+            <Route
               path="new-owner"
               index
               element={
@@ -119,6 +128,16 @@ function App() {
                 </Layout>
               }
             />
+            <Route
+              path="save-form"
+              index
+              element={
+                <Layout>
+                  <ReturnVehicleForm />
+                </Layout>
+              }
+            />
+            
             <Route
               path="owner-details"
               index

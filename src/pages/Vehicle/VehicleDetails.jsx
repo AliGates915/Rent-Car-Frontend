@@ -27,8 +27,15 @@ function VehicleDetails() {
         const fetchVehicle = async () => {
             setIsLoading(true);
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/vehicle-details`);
-                setVehicles(response.data);
+                const response = await axios.get(
+                    `${process.env.REACT_APP_API_URL}/vehicle-details`);
+                if (Array.isArray(response.data)) {
+                    setVehicles(response.data);
+                    console.log("data", response.data);
+                    
+                } else {
+                    setVehicles([]);
+                }
 
                 // Initialize current index for each vehicle
                 const initialIndices = {};
@@ -54,12 +61,19 @@ function VehicleDetails() {
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/vehicle-details/book-vehicle/${id}`);
             console.log('Vehicle booked:', response.data);
-            // Remove booked vehicle from list
-            setVehicles(vehicles.filter((vehicle) => vehicle.id !== id));
+
+            alert('Vehicle booked successfully!');
+    
+            // Refetch vehicles or update the list of vehicles in your component state
+            const updatedVehicles = await axios.get(`${process.env.REACT_APP_API_URL}/vehicle-details`);
+            setVehicles(updatedVehicles.data); // Update the state with the new vehicle list
+    
         } catch (error) {
             console.error('Error booking vehicle:', error.response?.data || error.message);
+            alert('Error booking vehicle, please try again!');
         }
     };
+    
 
 
     // Automatic Image Slide every 3 seconds
@@ -121,27 +135,24 @@ function VehicleDetails() {
             <hr className='bg-gray-400 mb-4' />
 
             {/* Cards */}
+
             <div className="">
-                <section className="w-fit mx-auto  grid grid-cols-3 
-                 justify-items-center justify-center gap-y-20 gap-x-6 
-                mt-10 mb-5">
+                <section className="w-fit mx-auto grid grid-cols-3 justify-items-center justify-center gap-y-20 gap-x-6 mt-10 mb-5">
                     {isLoading ? (
                         <div className=" ml-[40rem] mt-28 min-h-screen">
-                            <FadeLoader
-                                color="#26d7d7" size={30} margin={4} />
+                            <FadeLoader color="#26d7d7" size={30} margin={4} />
                         </div>
                     ) : Array.isArray(vehicles) && vehicles.length > 0 ? (
                         vehicles.map((product, index) => (
                             <div
-                                key={index}
-                                className="w-[320px] bg-white shadow-xl shadow-gray-400 
-                                rounded-xl duration-500 hover:scale-105 hover:shadow-xl relative"
+                                key={product._id || index} // Use product._id for key if available
+                                className="w-[320px] bg-white shadow-xl shadow-gray-400 rounded-xl duration-500 hover:scale-105 hover:shadow-xl relative"
                             >
                                 {/* Image */}
                                 {product?.photos?.length > 0 ? (
                                     <img
-                                        src={product.photos[currentIndices[product.id] || 0]} // Properly access the current index for this vehicle
-                                        alt={`Slide ${currentIndices[product.id] || 0}`}
+                                        src={product.photos[currentIndices[product._id] || 0]} // Use product._id for indexing
+                                        alt={`Slide ${currentIndices[product._id] || 0}`}
                                         className="h-80 w-[22rem] object-cover rounded-t-xl"
                                     />
                                 ) : (
@@ -162,13 +173,13 @@ function VehicleDetails() {
                                         </p>
                                     </div>
 
-
                                     <div className="ml-6 flex justify-between w-80">
                                         <p className="text-[#ef730f] text-[0.98rem] block">
                                             Color: <span className="font-bold mr-1">{product.color}</span>
                                             Location: <span className="font-bold">{product.location || "Lahore"}</span>
                                         </p>
                                     </div>
+
                                     <div className="ml-4 flex justify-between w-80">
                                         <p className="text-[#76d930] text-[0.79rem] block">
                                             VehicleCompany: <span className="font-bold mr-1">{product.carMake}</span>
@@ -214,18 +225,15 @@ function VehicleDetails() {
                                     </div>
                                     <div className="my-2 flex justify-center">
                                         <button className="bg-[#0096FF] hover:font-extrabold px-8 py-2 
-                                        rounded-lg transition-all duration-300 
-                                        text-xl text-white tracking-wide flex items-center justify-center
-                                        hover:bg-[#4a32b3] 
-                                        hover:scale-105 hover:shadow-lg hover:shadow-[#0096FF]/80"
+                            rounded-lg transition-all duration-300 
+                            text-xl text-white tracking-wide flex items-center justify-center
+                            hover:bg-[#4a32b3] 
+                            hover:scale-105 hover:shadow-lg hover:shadow-[#0096FF]/80"
                                             onClick={() => handleBook(product._id)}
                                         >
                                             Book
                                         </button>
                                     </div>
-
-
-                                    {/* Delete Button */}
 
                                 </div>
                             </div>
@@ -233,9 +241,9 @@ function VehicleDetails() {
                     ) : (
                         <p>No vehicles available</p>
                     )}
-
                 </section>
             </div>
+
 
         </>
     );

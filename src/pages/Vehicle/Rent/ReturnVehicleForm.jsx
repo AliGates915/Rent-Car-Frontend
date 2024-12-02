@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { RotateLoader } from "react-spinners";
 import SaveVehicle from "./SaveVehilce";
+import {Link} from 'react-router-dom';
 
 const ReturnVehicleForm = ({ vehicleId, onClose }) => {
   const [formData, setFormData] = useState({
@@ -143,13 +144,15 @@ const handleSubmit = async (e) => {
               >
                 Cancel
               </button>
-
+              
+              <Link to='/save-vehicle'> 
               <button
                 type="submit"
                 className="bg-[#0096FF] hover:font-bold text-white px-4 py-2 rounded hover:bg-[#4a32b3] transition-all"
               >
                 Save
               </button>
+              </Link>
             </div>
           </form>
         </div>
