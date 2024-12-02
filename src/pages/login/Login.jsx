@@ -58,7 +58,7 @@ const Login = () => {
       <div
         className="flex justify-center items-center font-[sans-serif] h-full min-h-screen p-4"
         style={{
-          backgroundImage: 'url(./login.png)',
+          backgroundImage: 'url(./slider.png)',
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
         }}
