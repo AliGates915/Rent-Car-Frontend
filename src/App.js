@@ -5,12 +5,12 @@ import Login from "./pages/login/Login";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./style/dark.scss";
 import { useContext } from "react";
-import Layout from './layout/Layout'
+import Layout from "./layout/Layout";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/AuthContext";
 import VehicleTypes from "./pages/Vehicle/Vehicle";
-import VehicleMaintenance from './pages/Vehicle/VehicleMaintenance'
-import Head from './pages/Vehicle/Head'
+import VehicleMaintenance from "./pages/Vehicle/VehicleMaintenance";
+import Head from "./pages/Vehicle/Head";
 import RentType from "./pages/Vehicle/RentType";
 import VehicleDetails from "./pages/Vehicle/VehicleDetails";
 import NewVehicle from "./pages/Vehicle/Vehicle Details/NewVehicle";
@@ -21,6 +21,7 @@ import CustomerVehicle from "./pages/Vehicle/CustomerVehicle";
 import RentReceipt from "./pages/Vehicle/Rent/RentReceipt";
 import RentVehicle from "./pages/Vehicle/Rent/RentVehicle";
 import ReturnVehicleForm from "./pages/Vehicle/Rent/ReturnVehicleForm";
+import SaveVehicle from "./pages/Vehicle/Rent/SaveVehilce";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -28,10 +29,9 @@ function App() {
   const ProtectedRoute = ({ children }) => {
     const { user } = useContext(AuthContext);
 
-  
     // If no user or no authentication cookie, redirect to login
-    if (!user ) {
-      return <Navigate to="/login" />;
+    if (!user&& user) {
+      return <Navigate to="/" />;
     }
 
     return children;
@@ -44,6 +44,7 @@ function App() {
           <Route path="/">
             <Route path="login" element={<Login />} />
             <Route
+            path="/"
               index
               element={
                 <ProtectedRoute>
@@ -53,136 +54,138 @@ function App() {
             />
 
             <Route
-              path='vechile-type'
+              path="vechile-type"
               index
               element={
                 <Layout>
                   <VehicleTypes />
-                  </Layout>
+                </Layout>
               }
             />
 
             <Route
-              path='vehicle-maintenance'
+              path="vehicle-maintenance"
               index
               element={
                 <Layout>
                   <VehicleMaintenance />
-                  </Layout>
+                </Layout>
               }
             />
 
             <Route
-              path='rent-type'
+              path="rent-type"
               index
               element={
                 <Layout>
                   <RentType />
-                  </Layout>
+                </Layout>
               }
             />
             <Route
-              path='vehicle-details'
+              path="vehicle-details"
               index
               element={
                 <Layout>
                   <VehicleDetails />
-                  </Layout>
+                </Layout>
               }
             />
 
             <Route
-              path='new-vehicle'
+              path="new-vehicle"
               index
               element={
                 <Layout>
                   <NewVehicle />
-                  </Layout>
+                </Layout>
               }
             />
             <Route
-              path='new-owner'
+              path="save-vehicle"
+              index
+              element={
+                <Layout>
+                  <SaveVehicle />
+                </Layout>
+              }
+            />
+            <Route
+              path="new-owner"
               index
               element={
                 <Layout>
                   <NewOwner />
-                  </Layout>
+                </Layout>
               }
             />
-             <Route
-              path='owner-details'
+            <Route
+              path="owner-details"
               index
               element={
                 <Layout>
                   <OwnerVehicle />
-                  </Layout>
+                </Layout>
               }
             />
             <Route
-              path='new-customer'
+              path="new-customer"
               index
               element={
                 <Layout>
                   <NewCustomer />
-                  </Layout>
+                </Layout>
               }
             />
             <Route
-              path='customer-details'
+              path="customer-details"
               index
               element={
                 <Layout>
                   <CustomerVehicle />
-                  </Layout>
+                </Layout>
               }
             />
             <Route
-              path='rent-receipt'
+              path="rent-receipt"
               index
               element={
                 <Layout>
                   <RentReceipt />
-                  </Layout>
+                </Layout>
               }
             />
 
             <Route
-              path='rent-vehicle'
+              path="rent-vehicle"
               index
               element={
                 <Layout>
-                  <RentVehicle   />
-                  </Layout>
+                  <RentVehicle />
+                </Layout>
               }
             />
             <Route
-              path='save-vehicle'
+              path="save-vehicle"
               index
               element={
                 <Layout>
-                  <ReturnVehicleForm   />
-                  </Layout>
+                  <ReturnVehicleForm />
+                </Layout>
               }
             />
-           
 
             <Route
-              path='destination'
+              path="destination"
               index
               element={
                 <Layout>
                   <Head />
-                  </Layout>
-                
+                </Layout>
               }
             />
-            <Route path="users">
-              
-
-             
-            </Route>
-
-            </Route>
+            <Route path="users"></Route>
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>

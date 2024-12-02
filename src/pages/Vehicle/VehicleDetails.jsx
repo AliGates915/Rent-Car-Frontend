@@ -10,7 +10,9 @@ import { GiCarWheel } from "react-icons/gi";
 import { LuCigarette } from "react-icons/lu";
 import IconTooltip from './IconTooltip';
 
-import { GridLoader } from 'react-spinners';
+import {
+    FadeLoader
+} from 'react-spinners';
 
 
 import axios from "axios";
@@ -32,7 +34,7 @@ function VehicleDetails() {
                 const initialIndices = {};
                 response.data.forEach((vehicle) => {
                     if (vehicle.photos && vehicle.photos.length > 0) {
-                        initialIndices[vehicle.id] = 0; 
+                        initialIndices[vehicle.id] = 0;
                         // Ensure each vehicle has a unique id and valid photos array
                     }
                 });
@@ -47,19 +49,19 @@ function VehicleDetails() {
         fetchVehicle();
     }, []);
 
-      
+
     const handleBook = async (id) => {
         try {
-          const response = await axios.post(`${process.env.REACT_APP_API_URL}/vehicle-details/book-vehicle/${id}`);
-          console.log('Vehicle booked:', response.data);
-          // Remove booked vehicle from list
-          setVehicles(vehicles.filter((vehicle) => vehicle.id !== id)); 
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/vehicle-details/book-vehicle/${id}`);
+            console.log('Vehicle booked:', response.data);
+            // Remove booked vehicle from list
+            setVehicles(vehicles.filter((vehicle) => vehicle.id !== id));
         } catch (error) {
-          console.error('Error booking vehicle:', error.response?.data || error.message);
+            console.error('Error booking vehicle:', error.response?.data || error.message);
         }
-      };
-      
-      
+    };
+
+
     // Automatic Image Slide every 3 seconds
     useEffect(() => {
         const interval = setInterval(() => {
@@ -125,7 +127,8 @@ function VehicleDetails() {
                 mt-10 mb-5">
                     {isLoading ? (
                         <div className=" ml-[40rem] mt-28 min-h-screen">
-                            <GridLoader color="#26d7d7" size={30} margin={4} />
+                            <FadeLoader
+                                color="#26d7d7" size={30} margin={4} />
                         </div>
                     ) : Array.isArray(vehicles) && vehicles.length > 0 ? (
                         vehicles.map((product, index) => (
@@ -188,7 +191,7 @@ function VehicleDetails() {
                                         <p className="text-[14px] text-black">
                                             Per Day Charge:
                                             <span className="ml-2 text-[20px] text-sky-500 font-semibold">
-                                                 Rs.{product.ratePerDay || 1000}
+                                                Rs.{product.ratePerDay || 1000}
                                             </span>
                                         </p>
 
@@ -214,8 +217,8 @@ function VehicleDetails() {
                                         rounded-lg transition-all duration-300 
                                         text-xl text-white tracking-wide flex items-center justify-center
                                         hover:bg-[#4a32b3] 
-                                        hover:scale-105 hover:shadow-lg hover:shadow-[#0096FF]/80" 
-                                        onClick={() => handleBook(product._id)}              
+                                        hover:scale-105 hover:shadow-lg hover:shadow-[#0096FF]/80"
+                                            onClick={() => handleBook(product._id)}
                                         >
                                             Book
                                         </button>

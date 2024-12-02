@@ -2,14 +2,20 @@
 import { useState,useEffect } from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import axios from "axios";
+import {
+    FadeLoader
+} from 'react-spinners';
+
 
 function RentType() {
     const [rentTypes, setRentTypes] = useState("");
     const [fetchRentTypes, setFetchRentTypes] = useState([]);
     const [openHead, setOpenHead] = useState(false)
+    const [isLoading, setIsLoading] = useState(true);
     
     
     useEffect(() => {
+        setIsLoading(true);
         const fetchVehicleTypes = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/rentType`);
@@ -26,6 +32,8 @@ function RentType() {
             } catch (error) {
                 console.error("Error fetching vehicle types:", error.message);
                 setFetchRentTypes([]); // Fallback to prevent error
+            } finally {
+                setTimeout(() => setIsLoading(false), 2000); // Stop loading after 2 seconds
             }
         };
 
@@ -154,7 +162,12 @@ function RentType() {
                     </div>
                 </div>
             )}
-
+            {isLoading ? (
+                <div className="flex justify-center mt-48 min-h-screen">
+                    <FadeLoader
+                        color="#0fdaee" size={15} margin={5} />
+                </div>
+            ) : (
             <div className=" max-w-full mx-10">
                 <table className="min-w-full shadow-xl border-collapse border border-gray-200">
                     <thead className="text-sm bg-[#0096FF] text-gray-50">
@@ -195,6 +208,7 @@ function RentType() {
 
                 </table>
             </div>
+            )}
         </>
     );
 }

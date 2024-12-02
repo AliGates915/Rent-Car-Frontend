@@ -2,42 +2,45 @@
 import { useState, useEffect } from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import axios from "axios";
-
+import {
+    FadeLoader
+} from 'react-spinners';
 function VehicleType() {
     const [vehicleTypes, setVehicleTypes] = useState("");
     const [vehicleTypeList, setVehicleTypeList] = useState([]);
     const [openHead, setOpenHead] = useState(false)
-
+    const [isLoading, setIsLoading] = useState(true);
 
     const handleSave = async () => {
         if (!vehicleTypes) {
-          alert("Enter vehicle type");
-          return;
+            alert("Enter vehicle type");
+            return;
         }
-    
+
         const dataToSend = {
-          vehicleTypes,
+            vehicleTypes,
         };
-    
+
         try {
-          const response = await axios.post(
-            `${process.env.REACT_APP_API_URL}/vehicleType`,
-            dataToSend
-          );
-          setVehicleTypeList([...vehicleTypeList, response.data]); // Append the new item to the list
-          setVehicleTypes(""); // Reset input field
-          alert("Data is successfully saved.");
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/vehicleType`,
+                dataToSend
+            );
+            setVehicleTypeList([...vehicleTypeList, response.data]); // Append the new item to the list
+            setVehicleTypes(""); // Reset input field
+            alert("Data is successfully saved.");
         } catch (error) {
-          console.error("Error saving vehicle type:", error);
-          alert("Error saving vehicle type.");
+            console.error("Error saving vehicle type:", error);
+            alert("Error saving vehicle type.");
         }
-      };
-    
+    };
+
 
     useEffect(() => {
+        setIsLoading(true);
         const fetchVehicleTypes = async () => {
             try {
-                const response = await axios.get("http://localhost:8000/vehicleType");
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/vehicleType`);
 
                 console.log("Response Data:", response.data); // Log the response data
 
@@ -51,6 +54,8 @@ function VehicleType() {
             } catch (error) {
                 console.error("Error fetching vehicle types:", error.message);
                 setVehicleTypeList([]); // Fallback to prevent error
+            } finally {
+                setTimeout(() => setIsLoading(false), 2000); // Stop loading after 2 seconds
             }
         };
 
@@ -63,45 +68,46 @@ function VehicleType() {
     const handleEdit = async (id) => {
         const updatedVehicle = prompt("Enter the new Vehicle name:");
         if (!updatedVehicle) return;
-    
-        try {
-          const response = await axios.put(
-            `${process.env.REACT_APP_API_URL}/vehicleType/${id}`,
-            { vehicleTypes: updatedVehicle }
-          );
-    
-          if (response.status === 200) {
-            // Update the specific item in the list
-            setVehicleTypeList((prevList) =>
-              prevList.map((vehicle) =>
-                vehicle._id === id
-                  ? { ...vehicle, vehicleTypes: updatedVehicle }
-                  : vehicle
-              )
-            );
-            alert("Vehicle updated successfully.");
-          }
-        } catch (error) {
-          console.error("Error updating vehicle type:", error);
-        }
-      };    
-    
-  // Handle Delete
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this vehicle type?"))
-      return;
 
-    try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/vehicleType/${id}`);
-      setVehicleTypeList((prevList) =>
-        prevList.filter((vehicle) => vehicle._id !== id)
-      );
-    } catch (error) {
-      console.error("Error deleting vehicle type:", error);
-    }
-  };
+        try {
+            const response = await axios.put(
+                `${process.env.REACT_APP_API_URL}/vehicleType/${id}`,
+                { vehicleTypes: updatedVehicle }
+            );
+
+            if (response.status === 200) {
+                // Update the specific item in the list
+                setVehicleTypeList((prevList) =>
+                    prevList.map((vehicle) =>
+                        vehicle._id === id
+                            ? { ...vehicle, vehicleTypes: updatedVehicle }
+                            : vehicle
+                    )
+                );
+                alert("Vehicle updated successfully.");
+            }
+        } catch (error) {
+            console.error("Error updating vehicle type:", error);
+        }
+    };
+
+    // Handle Delete
+    const handleDelete = async (id) => {
+        if (!window.confirm("Are you sure you want to delete this vehicle type?"))
+            return;
+
+        try {
+            await axios.delete(`${process.env.REACT_APP_API_URL}/vehicleType/${id}`);
+            setVehicleTypeList((prevList) =>
+                prevList.filter((vehicle) => vehicle._id !== id)
+            );
+        } catch (error) {
+            console.error("Error deleting vehicle type:", error);
+        }
+    };
     return (
         <>
+
             <nav className='flex justify-between my-4 mx-10'>
                 <div className='text-2xl font-extrabold text-[#0096FF] tracking-wide '>
                     Vehicle Types
@@ -159,48 +165,54 @@ function VehicleType() {
                     </div>
                 </div>
             )}
-
-            <div className=" max-w-full mx-10">
-                <table className="min-w-full shadow-xl border-collapse border border-gray-200">
-                    <thead className="text-sm bg-[#0096FF] text-gray-50">
-                        <tr>
-                            <th className="border px-1 py-1">SR.#</th>
-                            <th className="border px-1 py-1">VEHICLE TYPE</th>
-                            <th className="border px-2 py-2">ACTIONS</th>
-                        </tr>
-                    </thead>
-                    <tbody className="text-sm">
-                        {Array.isArray(vehicleTypeList) && vehicleTypeList.length > 0 ? (
-                            vehicleTypeList.map((vehicle, index) => (
-                                <tr key={vehicle._id}>
-                                    <td className="border px-4 py-2">{index + 1}</td>
-                                    <td className="border px-4 py-2">{vehicle.vehicleTypes}</td>
-                                    <td className="border px-4 py-3 flex justify-center space-x-4">
-                                        <FaEdit
-                                            className="text-blue-600 cursor-pointer"
-                                            onClick={() => handleEdit(vehicle._id)}
-                                            aria-label={`Edit ${vehicle.vehicle}`}
-                                        />
-                                        <FaTrashAlt
-                                            className="text-red-600 cursor-pointer"
-                                            onClick={() => handleDelete(vehicle._id)}
-                                            aria-label={`Delete ${vehicle.vehicle}`}
-                                        />
+            {isLoading ? (
+                <div className="flex justify-center mt-48 min-h-screen">
+                    <FadeLoader
+                        color="#0fdaee" size={15} margin={5} />
+                </div>
+            ) : (
+                <div className=" max-w-full mx-10">
+                    <table className="min-w-full shadow-xl border-collapse border border-gray-200">
+                        <thead className="text-sm bg-[#0096FF] text-gray-50">
+                            <tr>
+                                <th className="border px-1 py-1">SR.#</th>
+                                <th className="border px-1 py-1">VEHICLE TYPE</th>
+                                <th className="border px-2 py-2">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody className="text-sm">
+                            {Array.isArray(vehicleTypeList) && vehicleTypeList.length > 0 ? (
+                                vehicleTypeList.map((vehicle, index) => (
+                                    <tr key={vehicle._id}>
+                                        <td className="border px-4 py-2">{index + 1}</td>
+                                        <td className="border px-4 py-2">{vehicle.vehicleTypes}</td>
+                                        <td className="border px-4 py-3 flex justify-center space-x-4">
+                                            <FaEdit
+                                                className="text-blue-600 cursor-pointer"
+                                                onClick={() => handleEdit(vehicle._id)}
+                                                aria-label={`Edit ${vehicle.vehicle}`}
+                                            />
+                                            <FaTrashAlt
+                                                className="text-red-600 cursor-pointer"
+                                                onClick={() => handleDelete(vehicle._id)}
+                                                aria-label={`Delete ${vehicle.vehicle}`}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="5" className="border px-4 font-semibold py-2 text-center">
+                                        No data found.
                                     </td>
                                 </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="5" className="border px-4 font-semibold py-2 text-center">
-                                    No data found.
-                                </td>
-                            </tr>
-                        )}
+                            )}
 
-                    </tbody>
+                        </tbody>
 
-                </table>
-            </div>
+                    </table>
+                </div>
+            )}
         </>
     );
 }

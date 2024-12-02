@@ -4,6 +4,10 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 import { Link } from 'react-router-dom';
+import { FiUsers } from 'react-icons/fi';
+import { MdBusinessCenter } from 'react-icons/md';
+
+import { FaCar } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
 
 const Widget = ({ type }) => {
@@ -16,14 +20,14 @@ const Widget = ({ type }) => {
       let response;
       try {
         switch (type) {
-          case "user":
-            response = await fetch("/api/users");
+          case "total vehicles":
+            response = await fetch(`${process.env.REACT_APP_API_URL}/vehicle-details`);
             break;
-          case "hotels":
-            response = await fetch("/api/hotels");
+          case "customers":
+            response = await fetch(`${process.env.REACT_APP_API_URL}/customer-details`);
             break;
-          case "rooms":
-            response = await fetch("/api/rooms");
+          case "owners":
+            response = await fetch(`${process.env.REACT_APP_API_URL}/owner-details`);
             break;
           default:
             return;
@@ -41,13 +45,14 @@ const Widget = ({ type }) => {
   }, [type]);
 
   switch (type) {
-    case "user":
+    case "total vehicles":
       data = {
-        title: "USERS",
-        link: "See all users",
-        route: "/users",
+        title: "TOTAL VEHICLES",
+        link: "See all Vehicles",
+        route: "/vehicle-details",
         icon: (
-          <PersonOutlinedIcon
+          <FaCar
+              size={40} 
             className="icon"
             style={{
               color: "crimson",
@@ -57,29 +62,14 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-    case "hotels":
+      case "owners":
       data = {
-        title: "HOTELS",
-        link: "View all hotels",
-        route: "/hotels",
+        title: "OWNERS",
+        link: "View all Owners",
+        route: "/owner-details",
         icon: (
-          <ShoppingCartOutlinedIcon
-            className="icon"
-            style={{
-              backgroundColor: "rgba(218, 165, 32, 0.2)",
-              color: "goldenrod",
-            }}
-          />
-        ),
-      };
-      break;
-    case "rooms":
-      data = {
-        title: "ROOMS",
-        link: "View all rooms",
-        route: "/rooms",
-        icon: (
-          <MonetizationOnOutlinedIcon
+          <MdBusinessCenter
+          size={40}
             className="icon"
             style={{
               backgroundColor: "rgba(0, 128, 0, 0.2)",
@@ -89,6 +79,25 @@ const Widget = ({ type }) => {
         ),
       };
       break;
+    case "customers":
+      data = {
+        title: "CUSTOMERS",
+        link: "View all customers",
+        route: "/customer-details",
+        icon: (
+          <FiUsers
+            size={40}
+            className="icon"
+            style={{
+              
+              backgroundColor: "rgba(218, 165, 32, 0.2)",
+              color: "goldenrod",
+            }}
+          />
+        ),
+      };
+      break;
+    
     default:
       break;
   }
@@ -98,8 +107,9 @@ const Widget = ({ type }) => {
       <div className="left">
         <span className="title">{data?.title}</span>
         <span className="counter">{dataCount}</span>
-        <Link to={data?.route}>
-          <span className="link">{data?.link}</span>
+        <Link to={data?.route}
+        >
+          <span className="no-underline text-[#dc143c] hover:font-bold">{data?.link}</span>
         </Link>
       </div>
       <div className="right">{data?.icon}</div>

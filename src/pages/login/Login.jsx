@@ -1,7 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 import axios from "axios";
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import "./login.scss";
 
@@ -21,29 +21,31 @@ const Login = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    dispatch({ type: "LOGIN_START" });
-    try {
-      const res = await axios.post(`${process.env.REACT_APP_API}/auth/login`, credentials, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+    alert("Login Successfully.")
+    navigate("/")
+    // dispatch({ type: "LOGIN_START" });
+    // try {
+    //   const res = await axios.post(`${process.env.REACT_APP_API}/auth/login`, credentials, {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //   });
 
-      console.log("Full response data:", res.data);
+    //   console.log("Full response data:", res.data);
 
-      if (res.data.isAdmin) {
-        dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
-        navigate("/");
-      } else {
-        dispatch({
-          type: "LOGIN_FAILURE",
-          payload: { message: "You are not allowed!" },
-        });
-      }
-    } catch (err) {
-      const errorMessage = err.response?.data?.message || "Something went wrong!";
-      dispatch({ type: "LOGIN_FAILURE", payload: { message: errorMessage } });
-    }
+    //   if (res.data.isAdmin) {
+    //     dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
+    //     navigate("/");
+    //   } else {
+    //     dispatch({
+    //       type: "LOGIN_FAILURE",
+    //       payload: { message: "You are not allowed!" },
+    //     });
+    //   }
+    // } catch (err) {
+    //   const errorMessage = err.response?.data?.message || "Something went wrong!";
+    //   dispatch({ type: "LOGIN_FAILURE", payload: { message: errorMessage } });
+    // }
   };
 
   // Toggle password visibility
@@ -56,13 +58,14 @@ const Login = () => {
       <div
         className="flex justify-center items-center font-[sans-serif] h-full min-h-screen p-4"
         style={{
-          backgroundImage: 'url(./Blog.jpg)',
+          backgroundImage: 'url(./login.png)',
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
         }}
       >
         <div className="max-w-md w-full mx-auto">
-          <form className="bg-opacity-60 bg-white rounded-2xl p-6 shadow-[0_2px_16px_-3px_rgba(6,81,237,0.3)]">
+          <form className="bg-opacity-60 bg-white rounded-2xl p-6 
+          shadow-[0_2px_16px_-3px_rgba(6,81,237,0.3)]">
             <div className="mb-10">
               <h3 className="text-gray-800 text-3xl font-extrabold">Login</h3>
             </div>
@@ -127,6 +130,7 @@ const Login = () => {
 
             {/* Login Button */}
             <div className="mt-10 mb-4">
+              <Link to="/">
               <button
                 type="button"
                 disabled={loading}
@@ -135,6 +139,7 @@ const Login = () => {
               >
                 Login
               </button>
+              </Link>
             </div>
           </form>
         </div>

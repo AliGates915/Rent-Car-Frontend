@@ -95,9 +95,22 @@ function CustomerVehicle() {
     }, []);
 
 
-    const handleDelete = (serialNo) => {
-        if (window.confirm("Are you sure you want to delete this product?")) {
-            setProducts(products.filter((product) => product.serialNo !== serialNo));
+    const handleDelete = async (id) => {
+        if (!id) {
+            console.error("Head ID is undefined.");
+            return;
+        }
+
+        if (!window.confirm("Are you sure you want to delete this head?"))
+            return;
+
+        try {
+            await axios.delete(`${process.env.REACT_APP_API_URL}/customer-details/${id}`);
+            setHeadTypes(headTypes.filter((head) => head._id !== id));
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                console.error("Error deleting head:", error);
+            }
         }
     };
 
@@ -166,14 +179,15 @@ function CustomerVehicle() {
                                     rounded-full ">
                                             <FaEdit size={20}/>
                                         </button>
-                                        <Link to="/">
                                             <button className="bg-blue 
                                             hover:bg-[#005a59] text-white px-3 py-3 
                                     rounded-full ">
-                                                < AiFillDelete size={20} />
-                                                
+                                                < AiFillDelete size={20} 
+                                                    onClick={() => handleDelete(profile._id)}
+                                                />
+    
                                             </button>
-                                        </Link>
+                                        
                                         <button className="bg-green hover:bg-[#005a59]  text-white px-2 py-2  rounded-full ">
                                             Complete Profile
                                         </button>

@@ -11,13 +11,16 @@ import { LuCigarette } from "react-icons/lu";
 import IconTooltip from '../IconTooltip';
 
 
-import { PulseLoader } from 'react-spinners';
+import {
+    FadeLoader
+} from 'react-spinners';
 
 
 import axios from "axios";
 
 function SaveVehicle() {
     const [vehicles, setVehicles] = useState([]);
+    const [saveVehicle, setSaveVehicles] = useState([]);
     const [currentIndices, setCurrentIndices] = useState({});
     const [customerInfo, setCustomerInfo] = useState([]);
 
@@ -25,92 +28,95 @@ function SaveVehicle() {
     // Fetch vehicle data once when the component mounts
 
     // vehicle details
-    useEffect(() => {
-        const fetchVehicle = async () => {
-            setIsLoading(true);
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/vehicle-details`);
-                setVehicles(response.data);
+    // useEffect(() => {
+    //     const fetchVehicle = async () => {
+    //         setIsLoading(true);
+    //         try {
+    //             const response = await axios.get(`${process.env.REACT_APP_API_URL}/vehicle-details`);
+    //             setVehicles(response.data);
 
-                // Initialize current index for each vehicle
-                const initialIndices = {};
-                response.data.forEach((vehicle) => {
-                    if (vehicle.photos && vehicle.photos.length > 0) {
-                        initialIndices[vehicle.id] = 0; // Ensure each vehicle has a unique id and valid photos array
-                    }
-                });
-                setCurrentIndices(initialIndices);
-            } catch (error) {
-                console.error("Error fetching vehicles:", error);
-            } finally {
-                setTimeout(() => setIsLoading(false), 2000); // Stop loading after 2 seconds
-            }
-        };
+    //             // Initialize current index for each vehicle
+    //             const initialIndices = {};
+    //             response.data.forEach((vehicle) => {
+    //                 if (vehicle.photos && vehicle.photos.length > 0) {
+    //                     initialIndices[vehicle.id] = 0; // Ensure each vehicle has a unique id and valid photos array
+    //                 }
+    //             });
+    //             setCurrentIndices(initialIndices);
+    //         } catch (error) {
+    //             console.error("Error fetching vehicles:", error);
+    //         } finally {
+    //             setTimeout(() => setIsLoading(false), 2000); // Stop loading after 2 seconds
+    //         }
+    //     };
 
-        fetchVehicle();
-    }, []);
+    //     fetchVehicle();
+    // }, []);
 
     // Customer details
-    useEffect(() => {
-        const fetchVehicle = async () => {
-            setIsLoading(true);
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/customer-details`);
-                console.log("Data", response.data);
-                if (Array.isArray(response.data)) {
-                    setCustomerInfo(response.data);
-                } else {
-                    console.error("Data is not an array. Resetting to empty array.");
-                    setCustomerInfo([]); // Set as empty array if response isn't an array
-                }
-                // Initialize current index for each vehicle
+    // useEffect(() => {
+    //     const fetchVehicle = async () => {
+    //         setIsLoading(true);
+    //         try {
+    //             const response = await axios.get(`${process.env.REACT_APP_API_URL}/customer-details`);
+    //             console.log("Data", response.data);
+    //             if (Array.isArray(response.data)) {
+    //                 setCustomerInfo(response.data);
+    //             } else {
+    //                 console.error("Data is not an array. Resetting to empty array.");
+    //                 setCustomerInfo([]); // Set as empty array if response isn't an array
+    //             }
+    //             // Initialize current index for each vehicle
 
 
-            } catch (error) {
-                console.error("Error fetching vehicles:", error);
-            } finally {
-                setTimeout(() => setIsLoading(false), 2000); // Stop loading after 2 seconds
-            }
-        };
+    //         } catch (error) {
+    //             console.error("Error fetching vehicles:", error);
+    //         } finally {
+    //             setTimeout(() => setIsLoading(false), 2000); // Stop loading after 2 seconds
+    //         }
+    //     };
 
-        fetchVehicle();
-    }, []);
+    //     fetchVehicle();
+    // }, []);
 
     // Rent Vehicle Page (Displaying Booked Vehicles)
     useEffect(() => {
-        const fetchRentedVehicles = async () => {
+        setIsLoading(true)
+        const fetchSaveVehicles = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/save-vehicle`);
-                console.log(" rented Data", response.data)
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/vehicle-details/save-vehicle`);
+                console.log("Rented Data", response.data)
                 if (Array.isArray(response.data)) {
-                    setVehicles(response.data);
+                    setSaveVehicles(response.data);
                 }
                 else {
                     console.error("Data is not an array. Resetting to empty array.");
-                    setVehicles([]); // Set as empty array if response isn't an array
+                    setSaveVehicles([]); // Set as empty array if response isn't an array
                 }
             } catch (error) {
                 console.error('Error fetching rented vehicles:', error);
+            }finally {
+                setTimeout(() => setIsLoading(false), 2000); // Stop loading after 2 seconds
             }
         };
 
-        fetchRentedVehicles();
+        fetchSaveVehicles();
     }, []);
 
     // Handle rent button click
 
     const handleSave = async (id) => {
         try {
-          const response = await axios.post(
-            `${process.env.REACT_APP_API_URL}/vehicle-details/save-vehicle/${id}`);
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/vehicle-details/save-form/${id}`);
             alert("Vehicle Saved Successfully.")
             console.log('Vehicle returned:', response.data);
             setVehicles((prevVehicles) => prevVehicles.filter((vehicle) => vehicle._id !== id));
 
         } catch (error) {
-          console.error('Error returning vehicle:', error.response?.data || error.message);
+            console.error('Error returning vehicle:', error.response?.data || error.message);
         }
-      };
+    };
 
 
 
@@ -141,7 +147,7 @@ function SaveVehicle() {
         <>
             <nav className='flex justify-between my-4 mx-8'>
                 <div className='text-2xl font-extrabold text-[#0096FF] tracking-wide '>
-                    All Return Vehicles
+                    All Save Vehicles
                 </div>
                 <Link to='/new-vehicle'>
                     <button className='bg-[#0096FF] font-extrabold px-3 py-1 rounded-full transition-all duration-300 
@@ -160,15 +166,13 @@ function SaveVehicle() {
                 <section className="w-fit mx-auto grid grid-cols-3 justify-items-center justify-center gap-y-20 gap-x-6 mt-10 mb-5">
                     {isLoading ? (
                         <div className="flex justify-center mt-48 min-h-screen">
-                            <PulseLoader color="#0fdaee" size={15} margin={5} />
+                            <FadeLoader
+                                color="#0fdaee" size={15} margin={5} />
                         </div>
                     ) : (
-                        Array.isArray(vehicles) &&
-                        vehicles.length > 0 &&
-                        vehicles.map((vehicle, index) => {
-                            const customer = customerInfo.find(
-                                (info) => info.vehicleId === vehicle._id
-                            );
+                        Array.isArray(saveVehicle) &&
+                        saveVehicle.length > 0 &&
+                        saveVehicle.map((vehicle, index) => {
 
                             return (
                                 <div
@@ -205,22 +209,22 @@ function SaveVehicle() {
                                             </p>
                                         </div>
 
-                                        {/* Customer Info */}
-                                        {customer ? (
+                                        {/* Customer Info
+                                        {vehicle ? (
                                             <div className="mt-4">
                                                 <p className="text-[#5c6f9d] truncate text-sm block">
                                                     Customer Name:{" "}
                                                     <span className="font-bold mr-2">
-                                                        {customer.customerName}
+                                                        {vehicle.customerName}
                                                     </span>
                                                     Date From:{" "}
-                                                    <span className="font-bold mr-2">{customer.dateFrom}</span>
-                                                    Date To: <span className="font-bold">{customer.dateTo}</span>
+                                                    <span className="font-bold mr-2">{vehicle.dateFrom}</span>
+                                                    Date To: <span className="font-bold">{vehicle.dateTo}</span>
                                                 </p>
                                             </div>
                                         ) : (
                                             <p className="text-red-500 mt-4">No customer info available</p>
-                                        )}
+                                        )} */}
                                     </div>
 
                                     {/* Icon Section */}
@@ -265,7 +269,7 @@ function SaveVehicle() {
                                         <Link to='/save-vehicle'>
                                             <button
                                                 className="bg-[#0096FF] hover:font-extrabold px-8 py-2 rounded-lg transition-all duration-300 text-xl text-white tracking-wide flex items-center justify-center hover:bg-[#4a32b3] hover:scale-105 hover:shadow-lg hover:shadow-[#0096FF]/80"
-                                                onClick={() => handleSave(vehicle._id)} 
+                                                onClick={() => handleSave(vehicle._id)}
                                             >
                                                 Save Vehicle
                                             </button>
