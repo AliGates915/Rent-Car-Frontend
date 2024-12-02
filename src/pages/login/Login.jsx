@@ -134,7 +134,7 @@ const Login = () => {
               <button
                 type="button"
                 disabled={loading}
-                onClick={handleClick}
+                // onClick={handleClick}
                 className="w-full py-2.5 px-4 text-sm font-semibold tracking-wider rounded-full text-white bg-[#0071c2] hover:bg-[#3a90f3] focus:outline-none"
               >
                 Login

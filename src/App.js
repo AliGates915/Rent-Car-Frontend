@@ -30,8 +30,8 @@ function App() {
     const { user } = useContext(AuthContext);
 
     // If no user or no authentication cookie, redirect to login
-    if (!user&& user) {
-      return <Navigate to="/" />;
+    if (!user && user) {
+      return <Navigate to="/home" />;
     }
 
     return children;
@@ -41,170 +41,157 @@ function App() {
     <div className={darkMode ? "app dark" : "app"}>
       <BrowserRouter>
         <Routes>
-          <Route path="/">
-            <Route path="" element={<Login />} />
-            <Route
-            path="home"
-              index
-              element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              }
-            />
+          {/* <Route path="/"> */}
+          <Route path="/" element={<Login />} />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
 
-            <Route
-              path="vechile-type"
-              index
-              element={
-                <Layout>
-                  <VehicleTypes />
-                </Layout>
-              }
-            />
+          <Route
+            path="/vechile-type"
+            index
+            element={
+              <Layout>
+                <VehicleTypes />
+              </Layout>
+            }
+          />
 
-            <Route
-              path="vehicle-maintenance"
-              index
-              element={
-                <Layout>
-                  <VehicleMaintenance />
-                </Layout>
-              }
-            />
+          <Route
+            path="/vehicle-maintenance"
+            index
+            element={
+              <Layout>
+                <VehicleMaintenance />
+              </Layout>
+            }
+          />
 
-            <Route
-              path="rent-type"
-              index
-              element={
-                <Layout>
-                  <RentType />
-                </Layout>
-              }
-            />
-            <Route
-              path="vehicle-details"
-              index
-              element={
-                <Layout>
-                  <VehicleDetails />
-                </Layout>
-              }
-            />
+          <Route
+            path="/rent-type"
+            index
+            element={
+              <Layout>
+                <RentType />
+              </Layout>
+            }
+          />
+          <Route
+            path="/vehicle-details"
+            index
+            element={
+              <Layout>
+                <VehicleDetails />
+              </Layout>
+            }
+          />
 
-            <Route
-              path="new-vehicle"
-              index
-              element={
-                <Layout>
-                  <NewVehicle />
-                </Layout>
-              }
-            />
-            <Route
-              path="save-vehicle"
-              index
-              element={
-                <Layout>
-                  <SaveVehicle />
-                </Layout>
-              }
-            />
-            <Route
-              path="save-vehicle"
-              index
-              element={
-                <Layout>
-                  <SaveVehicle />
-                </Layout>
-              }
-            />
-            <Route
-              path="new-owner"
-              index
-              element={
-                <Layout>
-                  <NewOwner />
-                </Layout>
-              }
-            />
-            <Route
-              path="save-form"
-              index
-              element={
-                <Layout>
-                  <ReturnVehicleForm />
-                </Layout>
-              }
-            />
-            
-            <Route
-              path="owner-details"
-              index
-              element={
-                <Layout>
-                  <OwnerVehicle />
-                </Layout>
-              }
-            />
-            <Route
-              path="new-customer"
-              index
-              element={
-                <Layout>
-                  <NewCustomer />
-                </Layout>
-              }
-            />
-            <Route
-              path="customer-details"
-              index
-              element={
-                <Layout>
-                  <CustomerVehicle />
-                </Layout>
-              }
-            />
-            <Route
-              path="rent-receipt"
-              index
-              element={
-                <Layout>
-                  <RentReceipt />
-                </Layout>
-              }
-            />
+          <Route
+            path="/new-vehicle"
+            index
+            element={
+              <Layout>
+                <NewVehicle />
+              </Layout>
+            }
+          />
+          <Route
+            path="/save-vehicle"
+            index
+            element={
+              <Layout>
+                <SaveVehicle />
+              </Layout>
+            }
+          />
+          <Route
+            path="/save-vehicle"
+            index
+            element={
+              <Layout>
+                <SaveVehicle />
+              </Layout>
+            }
+          />
+          <Route
+            path="/new-owner"
+            index
+            element={
+              <Layout>
+                <NewOwner />
+              </Layout>
+            }
+          />
+          <Route
+            path="/save-form"
+            index
+            element={
+              <Layout>
+                <ReturnVehicleForm />
+              </Layout>
+            }
+          />
 
-            <Route
-              path="rent-vehicle"
-              index
-              element={
-                <Layout>
-                  <RentVehicle />
-                </Layout>
-              }
-            />
-            <Route
-              path="save-vehicle"
-              index
-              element={
-                <Layout>
-                  <ReturnVehicleForm />
-                </Layout>
-              }
-            />
+          <Route
+            path="/owner-details"
+            index
+            element={
+              <Layout>
+                <OwnerVehicle />
+              </Layout>
+            }
+          />
+          <Route
+            path="/new-customer"
+            index
+            element={
+              <Layout>
+                <NewCustomer />
+              </Layout>
+            }
+          />
+          <Route
+            path="/customer-details"
+            index
+            element={
+              <Layout>
+                <CustomerVehicle />
+              </Layout>
+            }
+          />
+          <Route
+            path="/rent-receipt"
+            index
+            element={
+              <Layout>
+                <RentReceipt />
+              </Layout>
+            }
+          />
 
-            <Route
-              path="destination"
-              index
-              element={
-                <Layout>
-                  <Head />
-                </Layout>
-              }
-            />
-            <Route path="users"></Route>
-          </Route>
+          <Route
+            path="/rent-vehicle"
+            index
+            element={
+              <Layout>
+                <RentVehicle />
+              </Layout>
+            }
+          />
+          <Route
+            path="/save-vehicle"
+            index
+            element={
+              <Layout>
+                <ReturnVehicleForm />
+              </Layout>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </div>
