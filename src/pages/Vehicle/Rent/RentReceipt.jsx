@@ -269,7 +269,7 @@ function RentVehicle() {
         fetchSerialNo();
     }, [serialNo]);
     
-    console.log("data", selectedVehicle);
+    console.log("data", customerInfo);
 
     // Function to handle date change and calculate total days
     const handleDateChange = (from, to) => {
@@ -371,10 +371,11 @@ function RentVehicle() {
             const year = date.getFullYear();
             return `${day}/${month}/${year}`;
         };
-        doc.text(`Date From: ${formatDate(data.rentalInfo.dateFrom)}`, 20, yPosition + 100);
-        doc.text(`Date To: ${formatDate(data.rentalInfo.dateTo)}`, 20, yPosition + 110);
-        doc.text(`Total Amount: ${data.rentalInfo.totalAmount || 'N/A'}`, 20, yPosition + 120);
-        doc.text(`Advance Amount: ${data.rentalInfo.advanceAmount || 'N/A'}`, 20, yPosition + 130);
+        doc.text(`Date From: ${formatDate(data.dateFrom)}`, 20, yPosition + 100);
+        doc.text(`Date To: ${formatDate(data.dateTo)}`, 20, yPosition + 110);
+        doc.text(`Total Amount: ${data.totalAmount || 'N/A'}`, 20, yPosition + 120);
+        doc.text(`Advance Amount: ${data.advanceAmount || 'N/A'}`, 20, yPosition + 130);
+        doc.text(`Balance Amount: ${data.balanceAmount || 'N/A'}`, 20, yPosition + 130);
 
         // Features Section
         doc.setFontSize(16);
