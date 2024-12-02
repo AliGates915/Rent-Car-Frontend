@@ -1,8 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope */
 import "./widget.scss";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 import { Link } from 'react-router-dom';
 import { FiUsers } from 'react-icons/fi';
 import { MdBusinessCenter } from 'react-icons/md';
@@ -21,7 +18,7 @@ const Widget = ({ type }) => {
       try {
         switch (type) {
           case "total vehicles":
-            response = await fetch(`${process.env.REACT_APP_API_URL}/vehicle-details`);
+            response = await fetch(`${process.env.REACT_APP_API_URL}/vehicle-details/display`);
             break;
           case "customers":
             response = await fetch(`${process.env.REACT_APP_API_URL}/customer-details`);
@@ -64,9 +61,9 @@ const Widget = ({ type }) => {
       break;
       case "owners":
       data = {
-        title: "OWNERS",
-        link: "View all Owners",
-        route: "/owner-details",
+        title: "ON RENT",
+        link: "View all Rent Vehicles",
+        route: "/rent-vehicle",
         icon: (
           <MdBusinessCenter
           size={40}

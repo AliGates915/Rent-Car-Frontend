@@ -80,7 +80,7 @@ function VehicleMaintenanceType() {
                             : vehicle
                     )
                 );
-                alert("Vehicle updated successfully.");
+                // alert("Vehicle updated successfully.");
             }
         } catch (error) {
             console.error("Error updating vehicle type:", error);
@@ -172,9 +172,9 @@ function VehicleMaintenanceType() {
                     <table className="min-w-full shadow-xl border-collapse border border-gray-200">
                         <thead className="text-sm bg-[#0096FF] text-gray-50">
                             <tr>
-                                <th className="border px-1 py-1">SR.#</th>
+                                <th className="border w-14 px-1 py-1">SR.#</th>
                                 <th className="border px-1 py-1">VEHICLE MAINTENANCE TYPE</th>
-                                <th className="border px-2 py-2">ACTIONS</th>
+                                <th className="border w-40 px-2 py-2">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody className="text-sm">

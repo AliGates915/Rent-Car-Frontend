@@ -28,7 +28,7 @@ function VehicleType() {
             );
             setVehicleTypeList([...vehicleTypeList, response.data]); // Append the new item to the list
             setVehicleTypes(""); // Reset input field
-            alert("Data is successfully saved.");
+            // alert("Data is successfully saved.");
         } catch (error) {
             console.error("Error saving vehicle type:", error);
             alert("Error saving vehicle type.");
@@ -62,7 +62,7 @@ function VehicleType() {
         fetchVehicleTypes();
 
 
-    }, [vehicleTypes]);
+    }, []);
 
 
     const handleEdit = async (id) => {
@@ -175,18 +175,19 @@ function VehicleType() {
                     <table className="min-w-full shadow-xl border-collapse border border-gray-200">
                         <thead className="text-sm bg-[#0096FF] text-gray-50">
                             <tr>
-                                <th className="border px-1 py-1">SR.#</th>
+                                <th className="border w-14 py-1">SR.#</th>
                                 <th className="border px-1 py-1">VEHICLE TYPE</th>
-                                <th className="border px-2 py-2">ACTIONS</th>
+                                <th className="border w-40 py-2">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody className="text-sm">
                             {Array.isArray(vehicleTypeList) && vehicleTypeList.length > 0 ? (
                                 vehicleTypeList.map((vehicle, index) => (
                                     <tr key={vehicle._id}>
-                                        <td className="border px-4 py-2">{index + 1}</td>
+                                        <td className="border pl-2 py-2">{index + 1}</td>
                                         <td className="border px-4 py-2">{vehicle.vehicleTypes}</td>
-                                        <td className="border px-4 py-3 flex justify-center space-x-4">
+                                        <td className="border py-3 flex justify-center 
+                                        space-x-4">
                                             <FaEdit
                                                 className="text-blue-600 cursor-pointer"
                                                 onClick={() => handleEdit(vehicle._id)}

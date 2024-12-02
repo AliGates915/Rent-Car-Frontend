@@ -21,11 +21,10 @@ const ProfileCard = ({ name, icon, address, avatar, company, children  }) => {
             <div className="">Owner Name : 
               <span className="font-bold text-xl ml-4 text-Green">{name}</span>
             </div>
-            <div className="">Phone No. :
+            <div className="">Mobile No. :
             <span className="ml-14 text-slate-400">{company}</span>
             </div>
             <div className="mt-2"> Total Vehicles :
-              
             <span className="ml-7 text-orange-600 font-bold">{address}</span>
             </div>
             {children}

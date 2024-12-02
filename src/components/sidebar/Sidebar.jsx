@@ -11,7 +11,7 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="top">
-        <Link to="/" style={{ textDecoration: "none" }}>
+        <Link to="/home" style={{ textDecoration: "none" }}>
           <span className="logo">AdminBoard</span>
         </Link>
       </div>
@@ -19,10 +19,12 @@ const Sidebar = () => {
       <div className="center">
         <ul>
           <p className="title">MAIN</p>
+          <Link to="/home" style={{ textDecoration: "none" }}>
           <li>
             <DashboardIcon className="icon" />
             <span>Dashboard</span>
           </li>
+          </Link>
           <p className="title">LISTS</p>
           
           <Link to="/vechile-type" style={{ textDecoration: "none" }}>
@@ -45,6 +47,14 @@ const Sidebar = () => {
             <span>Rent Type</span>
           </li>
           </Link>
+          
+          <Link to="/vehicle-details" style={{ textDecoration: "none" }}>
+          <li>
+            <ListAltIcon className="icon" />
+            <span>Vehicle Details
+            </span>
+          </li>
+          </Link> 
 
           <Link to="/owner-details" style={{ textDecoration: "none" }}>
           <li>
@@ -61,13 +71,6 @@ const Sidebar = () => {
           </li>
           </Link>
 
-          <Link to="/vehicle-details" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Vehicle Details
-            </span>
-          </li>
-          </Link> 
           <Link to="/rent-receipt" style={{ textDecoration: "none" }}>
           <li>
             <ListAltIcon className="icon" />

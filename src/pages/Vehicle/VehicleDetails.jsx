@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { FaEdit } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { TbAirConditioning } from "react-icons/tb";
 import { SiAirplayvideo } from "react-icons/si";
 import { GiCctvCamera } from "react-icons/gi";
@@ -22,6 +22,7 @@ function VehicleDetails() {
     const [currentIndices, setCurrentIndices] = useState({});
     const [isLoading, setIsLoading] = useState(true);
 
+    const navigate = useNavigate();
     // Fetch vehicle data once when the component mounts
     useEffect(() => {
         const fetchVehicle = async () => {
@@ -32,7 +33,7 @@ function VehicleDetails() {
                 if (Array.isArray(response.data)) {
                     setVehicles(response.data);
                     console.log("data", response.data);
-                    
+
                 } else {
                     setVehicles([]);
                 }
@@ -61,41 +62,54 @@ function VehicleDetails() {
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/vehicle-details/book-vehicle/${id}`);
             console.log('Vehicle booked:', response.data);
+            navigate('/rent-vehicle')
+            // alert('Vehicle booked successfully!');
 
-            alert('Vehicle booked successfully!');
-    
             // Refetch vehicles or update the list of vehicles in your component state
             const updatedVehicles = await axios.get(`${process.env.REACT_APP_API_URL}/vehicle-details`);
             setVehicles(updatedVehicles.data); // Update the state with the new vehicle list
-    
+
         } catch (error) {
             console.error('Error booking vehicle:', error.response?.data || error.message);
             alert('Error booking vehicle, please try again!');
         }
     };
-    
+
 
 
     // Automatic Image Slide every 3 seconds
     useEffect(() => {
+        if (!vehicles || vehicles.length === 0) return;
+
+        // Initialize the indices if necessary
+        const initialIndices = {};
+        vehicles.forEach((vehicle) => {
+            if (vehicle.photos && vehicle.photos.length > 0) {
+                initialIndices[vehicle._id] = 0; // Initialize with first image
+            }
+        });
+        setCurrentIndices(initialIndices);
+
         const interval = setInterval(() => {
             setCurrentIndices((prevIndices) => {
                 const newIndices = { ...prevIndices };
 
                 vehicles.forEach((vehicle) => {
                     if (vehicle.photos && vehicle.photos.length > 0) {
-                        const currentIndex = prevIndices[vehicle.id] || 0;
-                        const nextIndex = (currentIndex + 1) % vehicle.photos.length; // Loop within available images
-                        newIndices[vehicle.id] = nextIndex;
+                        const currentIndex = prevIndices[vehicle._id] || 0;
+                        const nextIndex = (currentIndex + 1) % vehicle.photos.length;
+                        newIndices[vehicle._id] = nextIndex;
                     }
                 });
 
+                console.log("Updated Indices:", newIndices); // Log updated indices
                 return newIndices;
             });
-        }, 3000); // Change image every 3 seconds
+        }, 3000);
 
-        return () => clearInterval(interval); // Clear interval on component unmount
+        return () => clearInterval(interval); // Cleanup on unmount
     }, [vehicles]);
+
 
     // Delete item
     const handleDelete = async (id) => {
@@ -146,14 +160,19 @@ function VehicleDetails() {
                         vehicles.map((product, index) => (
                             <div
                                 key={product._id || index} // Use product._id for key if available
-                                className="w-[320px] bg-white shadow-xl shadow-gray-400 rounded-xl duration-500 hover:scale-105 hover:shadow-xl relative"
+                                className="w-[320px] bg-white shadow-xl shadow-gray-400 rounded-xl 
+                                duration-500 hover:scale-105 hover:shadow-xl relative"
                             >
                                 {/* Image */}
                                 {product?.photos?.length > 0 ? (
                                     <img
-                                        src={product.photos[currentIndices[product._id] || 0]} // Use product._id for indexing
+                                        src={
+                                            product.photos && product.photos.length > 0
+                                                ? product.photos[currentIndices[product._id] || 0]
+                                                : "https://via.placeholder.com/300x200?text=No+Image+Available"
+                                        }
                                         alt={`Slide ${currentIndices[product._id] || 0}`}
-                                        className="h-80 w-[22rem] object-cover rounded-t-xl"
+                                        className="h-80 rounded-t-xl"
                                     />
                                 ) : (
                                     <p className="text-center">No images available</p>
@@ -166,10 +185,10 @@ function VehicleDetails() {
                                     </span>
 
                                     <div className="ml-2 flex justify-between w-[22rem]">
-                                        <p className="text-[#5c6f9d] truncate text-sm block">
+                                        <p className="text-[#5c6f9d] truncate text-[16px] block">
                                             Make: <span className="font-bold mr-2">{product.carMake}</span>
                                             Model: <span className="font-bold mr-2">{product.carModel}</span>
-                                            Type: <span className="font-bold">{product.carType}</span>
+                                            Year: <span className="font-bold">{product.yearOfModel}</span>
                                         </p>
                                     </div>
 
@@ -180,12 +199,12 @@ function VehicleDetails() {
                                         </p>
                                     </div>
 
-                                    <div className="ml-4 flex justify-between w-80">
+                                    {/* <div className="ml-4 flex justify-between w-80">
                                         <p className="text-[#76d930] text-[0.79rem] block">
                                             VehicleCompany: <span className="font-bold mr-1">{product.carMake}</span>
                                             ModelOfYear: <span className="font-bold">{product.yearOfModel || 2012}</span>
                                         </p>
-                                    </div>
+                                    </div> */}
 
                                     <div className="mt-2 ml-10 w-80">
                                         <p className="text-[#c138d9] flex justify-start gap-8">
@@ -211,11 +230,13 @@ function VehicleDetails() {
                                             <button
                                                 // onClick={() => handleEdit(product._id)}
                                                 className="text-gray-900 hover:text-green"
+                                                disabled
                                             >
                                                 <FaEdit size={24} />
                                             </button>
 
                                             <button
+                                                disabled
                                                 onClick={() => handleDelete(product._id)}
                                                 className="text-gray-900 hover:text-red"
                                             >
@@ -225,10 +246,10 @@ function VehicleDetails() {
                                     </div>
                                     <div className="my-2 flex justify-center">
                                         <button className="bg-[#0096FF] hover:font-extrabold px-8 py-2 
-                            rounded-lg transition-all duration-300 
-                            text-xl text-white tracking-wide flex items-center justify-center
-                            hover:bg-[#4a32b3] 
-                            hover:scale-105 hover:shadow-lg hover:shadow-[#0096FF]/80"
+                                            rounded-lg transition-all duration-300 
+                                                text-xl text-white tracking-wide flex items-center justify-center
+                                         hover:bg-[#4a32b3] 
+                                            hover:scale-105 hover:shadow-lg hover:shadow-[#0096FF]/80"
                                             onClick={() => handleBook(product._id)}
                                         >
                                             Book

@@ -19,6 +19,7 @@ function RentVehicle() {
         mobileNo: "",
         phone: "",
         referenceName: "",
+        profilePhotoUrl: "",
         referenceMobile: "",
 
     });
@@ -33,6 +34,8 @@ function RentVehicle() {
         chassisNo: "",
         engineNo: "",
         ratePerDay: "",
+        photos: "",
+
     });
     const [airConditioner, setAirConditioner] = useState(false)
     const [heater, setHeater] = useState(false)
@@ -61,7 +64,7 @@ function RentVehicle() {
     const [totalAmount, setTotalAmount] = useState("");
     const [advanceAmount, setAdvanceAmount] = useState("");
     const [balanceAmount, setBalanceAmount] = useState("");
-    
+
     const [ratePerDay, setRatePerDay] = useState(selectedVehicle?.ratePerDay || 1000);
     const [Loading, setLoading] = useState(false);
 
@@ -121,7 +124,7 @@ function RentVehicle() {
             // Optional: Simulated delay for UX purposes (optional)
             setTimeout(() => {
                 setLoading(false);
-                alert('Data saved successfully!');
+                // alert('Data saved successfully!');
                 resetForm()
             }, 2000);
 
@@ -175,6 +178,7 @@ function RentVehicle() {
 
         if (selectedCustomerData) {
             setSelectedCustomerInfo({
+                customerName: selectedCustomerData.customerName,
                 cinc: selectedCustomerData.cinc,
                 address: selectedCustomerData.address,
                 carModel: selectedCustomerData.carModel,
@@ -184,6 +188,7 @@ function RentVehicle() {
                 phone: selectedCustomerData.phone,
                 referenceName: selectedCustomerData.referenceName,
                 referenceMobile: selectedCustomerData.referenceMobile,
+                profilePhotoUrl: selectedCustomerData.profilePhotoUrl,
             });
         }
     };
@@ -224,9 +229,10 @@ function RentVehicle() {
                 chassisNo: selectedVehicleData.chassisNo,
                 engineNo: selectedVehicleData.engineNo,
                 ratePerDay: selectedVehicleData.ratePerDay,
+                photos: selectedVehicleData.photos[0],
             });
             console.log(ratePerDay);
-            
+
         }
     };
 
@@ -259,87 +265,168 @@ function RentVehicle() {
             }
         };
 
+
         fetchSerialNo();
     }, [serialNo]);
+    
+    console.log("data", selectedVehicle);
 
-
-  // Function to handle date change and calculate total days
-const handleDateChange = (from, to) => {
-    if (from && to) {
-        const startDate = new Date(from);
-        const endDate = new Date(to);
-        const diffTime = endDate - startDate;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Include the end date
-        setTotalDays(diffDays >= 0 ? diffDays : 0); // Ensure no negative days
-    } else {
-        setTotalDays(0); // Reset total days if either date is missing
-    }
-};
+    // Function to handle date change and calculate total days
+    const handleDateChange = (from, to) => {
+        if (from && to) {
+            const startDate = new Date(from);
+            const endDate = new Date(to);
+            const diffTime = endDate - startDate;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Include the end date
+            setTotalDays(diffDays >= 0 ? diffDays : 0); // Ensure no negative days
+        } else {
+            setTotalDays(0); // Reset total days if either date is missing
+        }
+    };
 
 
     // Effect to recalculate total amount when dates or rate change
     useEffect(() => {
         const total = totalDays * ratePerDay;
         console.log("Amount", totalDays);
-        
+
         setTotalAmount(total);
         setBalanceAmount(total - advanceAmount); // Recalculate balance
     }, [totalDays, ratePerDay, advanceAmount]);
 
-useEffect(() => {
-    setRatePerDay(selectedVehicle.ratePerDay); // Update rate per day if it changes
-}, [selectedVehicle]);
+    useEffect(() => {
+        setRatePerDay(selectedVehicle.ratePerDay); // Update rate per day if it changes
+    }, [selectedVehicle]);
 
     // Function to update total amount and balance
 
+    // Function to convert an image URL to Base64
+
     // Generate PDF
-    const generatePDF = (data) => {
+    const generatePDF = async (data) => {
         const doc = new jsPDF();
+
+        // Centered Title
+        doc.setFontSize(20);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Vehicle Rental Receipt', doc.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
+
+        // Separator Line
+        doc.setLineWidth(0.5);
+        doc.line(10, 25, 200, 25);
+
+        // Customer Info Section
         doc.setFontSize(16);
-        doc.text('Vehicle Rental Receipt', 20, 20);
-
-        // Customer Info
-        doc.setFontSize(14);
-        doc.text('Customer Information:', 20, 40);
+        doc.text('Customer Information', 20, 40);
+        doc.setFont('helvetica', 'normal');
         doc.setFontSize(12);
+        doc.text(`Name: ${data.selectedCustomerInfo.customerName || 'N/A'}`, 20, 50);
+        doc.text(`CINC: ${data.selectedCustomerInfo.cinc || 'N/A'}`, 20, 60);
+        doc.text(`Mobile: ${data.selectedCustomerInfo.mobileNo || 'N/A'}`, 20, 70);
 
-        doc.text(`Name: ${data.customerInfo.name || 'N/A'}`, 20, 50);
-        doc.text(`CINC: ${data.customerInfo.cinc || 'N/A'}`, 20, 60);
-        doc.text(`Mobile: ${data.customerInfo.mobileNo || 'N/A'}`, 20, 70);
-        // Driving License Image (if available)
-        if (data.customerInfo.DrivingLicense) {
-            const imageUrl = data.customerInfo.DrivingLicense; // Assuming this is a URL or base64 string
-            doc.addImage(imageUrl, 'JPEG', 20, 240, 50, 30); // Adjust position and size
+        // Display Customer Image
+        if (data.selectedCustomerInfo.profilePhotoUrl) {
+            const image = new Image();
+            image.onload = function () {
+                doc.addImage(image, 'JPEG', 140, 45, 40, 30);
+            };
+            image.src = data.selectedCustomerInfo.profilePhotoUrl;
         } else {
-            doc.text('Driving License not available.', 20, 270);
+            doc.text('Customer Image not available.', 140, 70);
         }
 
-        // Vehicle Info
-        doc.setFontSize(14);
-        doc.text('Vehicle Information:', 20, 90);
+        let yPosition = 90;
+        // Vehicle Info Section
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Vehicle Information', 20, yPosition);
         doc.setFontSize(12);
-        doc.text(`Car Type: ${data.vehicleInfo.carType || 'N/A'}`, 20, 100);
-        doc.text(`Car Make: ${data.vehicleInfo.carMake || 'N/A'}`, 20, 110);
-        doc.text(`Engine No: ${data.vehicleInfo.engineNo || 'N/A'}`, 20, 120);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`Car Type: ${data.selectedVehicle.carType || 'N/A'}`, 20, yPosition + 10);
+        doc.text(`Car Make: ${data.selectedVehicle.carMake || 'N/A'}`, 20, yPosition + 20);
+        doc.text(`Engine No: ${data.selectedVehicle.engineNo || 'N/A'}`, 20, yPosition + 30);
 
-        // Rental Info
-        doc.setFontSize(14);
-        doc.text('Rental Information:', 20, 140);
+        // Display Vehicle Image
+        if (data.selectedVehicle.photos) {
+            const vehicleImage = new Image();
+            vehicleImage.onload = function () {
+                doc.addImage(vehicleImage, 'JPEG', 140, yPosition + 40, 40, 30);
+            };
+            vehicleImage.src = data.selectedVehicle.photos;
+        } else {
+            doc.text('Vehicle Image not available.', 140, yPosition + 40);
+        }
+
+        // Rental Info Section
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Rental Information', 20, yPosition + 90);
         doc.setFontSize(12);
-        doc.text(`Date From: ${data.rentalInfo.dateFrom || 'N/A'}`, 20, 150);
-        doc.text(`Date To: ${data.rentalInfo.dateTo || 'N/A'}`, 20, 160);
-        doc.text(`Total Amount: ${data.rentalInfo.totalAmount || 'N/A'}`, 20, 170);
+        doc.setFont('helvetica', 'normal');
+        const formatDate = (dateString) => {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        };
+        doc.text(`Date From: ${formatDate(data.rentalInfo.dateFrom)}`, 20, yPosition + 100);
+        doc.text(`Date To: ${formatDate(data.rentalInfo.dateTo)}`, 20, yPosition + 110);
+        doc.text(`Total Amount: ${data.rentalInfo.totalAmount || 'N/A'}`, 20, yPosition + 120);
+        doc.text(`Advance Amount: ${data.rentalInfo.advanceAmount || 'N/A'}`, 20, yPosition + 130);
 
-        // Features
-        doc.setFontSize(14);
-        doc.text('Features:', 20, 190);
+        // Features Section
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Features', 20, yPosition + 160);
         doc.setFontSize(12);
-        doc.text(`Air Conditioner: ${data.features.airConditioner ? 'Yes' : 'No'}`, 20, 200);
-        doc.text(`Heater: ${data.features.heater ? 'Yes' : 'No'}`, 20, 210);
-        doc.text(`Sun Roof: ${data.features.sunRoof ? 'Yes' : 'No'}`, 20, 220);
+        doc.setFont('helvetica', 'normal');
+        const addFeatureText = (featureName, featureValue, yPos) => {
+            if (featureValue) {
+                doc.text(`${featureName}: Yes`, 20, yPos);
+                return 10; // Increment position
+            }
+            return 0; // No increment
+        };
+        // Check and render each feature
+        yPosition += addFeatureText(doc, 'Air Conditioner', data.features.airConditioner, yPosition);
+        yPosition += addFeatureText(doc, 'Heater', data.features.heater, yPosition);
+        yPosition += addFeatureText(doc, 'Sun Roof', data.features.sunRoof, yPosition);
+        yPosition += addFeatureText(doc, 'CD/DVD', data.features.cdDVD, yPosition);
+        yPosition += addFeatureText(doc, 'Android', data.features.andriod, yPosition);
+        yPosition += addFeatureText(doc, 'Front Camera', data.features.frontCamera, yPosition);
+        yPosition += addFeatureText(doc, 'Rear Camera', data.features.rearCamera, yPosition);
+        yPosition += addFeatureText(doc, 'Cigarette Lighter', data.features.cigarette, yPosition);
+        yPosition += addFeatureText(doc, 'Steering', data.features.sterring, yPosition);
+        yPosition += addFeatureText(doc, 'Wheel Cup', data.features.wheelCup, yPosition);
+        yPosition += addFeatureText(doc, 'Spare Wheel', data.features.spareWheel, yPosition);
+        yPosition += addFeatureText(doc, 'Air Compressor', data.features.airCompressor, yPosition);
+        yPosition += addFeatureText(doc, 'Jack Handle', data.features.jackHandle, yPosition);
+        yPosition += addFeatureText(doc, 'Wheel Panna', data.features.wheelPanna, yPosition);
+        yPosition += addFeatureText(doc, 'Mud Flaps', data.features.mudFlaps, yPosition);
+        yPosition += addFeatureText(doc, 'Floor Mat', data.features.floorMat, yPosition);
 
+        // Driving License Section
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Driving License Certificate', 20, yPosition + 20);
+        if (data.customerInfo.DrivingLicense) {
+            const licenseImage = new Image();
+            licenseImage.onload = function () {
+                doc.addImage(licenseImage, 'JPEG', 140, yPosition + 40, 40, 30);
+            };
+            licenseImage.src = data.customerInfo.DrivingLicense;
+        } else {
+            doc.setFont('helvetica', 'normal');
+            doc.text('Driving License not available.', 20, yPosition + 50);
+        }
+
+        // Save the PDF
         doc.save(`Rental_Receipt_${data.serialNo}.pdf`);
     };
+
+
 
     // Total Amount Calculation depend on the Days x RatePerDay
 
@@ -429,12 +516,14 @@ useEffect(() => {
                         <div className="mt-4 grid grid-cols-8 gap-3 px-4">
                             {/* CINC No. */}
                             <div className="col-span-3">
-                                <label className="block text-gray-700 font-semibold mb-2">CINC No.</label>
+                                <label className="block text-gray-700 font-semibold 
+                                mb-2">CINC No.</label>
                                 <input
                                     type="text"
                                     readOnly
                                     value={selectedCustomerInfo.cinc || "N/A"}
-                                    className="w-[11rem] bg-white border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue"
+                                    className="w-[11rem] bg-white border border-gray-300 
+                                    rounded-md px-3 py-2 text-sm focus:outline-none "
                                 />
                             </div>
                             {/*  Driving License Image */}
@@ -466,7 +555,7 @@ useEffect(() => {
                                 <label className="block text-gray-700 font-semibold mb-2">Address</label>
                                 <input
                                     type="text"
-                                    className="w-[39rem] bg-white border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-300"
+                                    className="w-[39rem] bg-white border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none"
                                     value={selectedCustomerInfo.address || "N/A"}
                                 />
                             </div>
@@ -479,7 +568,8 @@ useEffect(() => {
                             <input
                                 type="text"
                                 readOnly
-                                className="w-[12rem] bg-white border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-300"
+                                className="w-[12rem] bg-white border border-gray-300 rounded-md
+                                 px-3 py-2 text-sm focus:outline-none "
                                 value={selectedCustomerInfo.city || "N/A"}
                             />
                         </div>
@@ -492,7 +582,8 @@ useEffect(() => {
                                     type="text"
                                     readOnly
                                     className="w-[12rem] bg-white border border-gray-300 
-                                    rounded-md px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue"
+                                    rounded-md px-3 py-2 text-sm focus:outline-none "
+
                                     value={selectedCustomerInfo.mobileNo || "N/A"}
                                 />
                             </div>
@@ -503,7 +594,8 @@ useEffect(() => {
                                 <input
                                     type="text"
                                     readOnly
-                                    className="w-[11rem] bg-white border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-300"
+                                    className="w-[11rem] bg-white border border-gray-300
+                                     rounded-md px-3 py-2 text-sm focus:outline-none "
                                     value={selectedCustomerInfo.phone || "N/A"}
                                 />
                             </div>
@@ -528,7 +620,8 @@ useEffect(() => {
                                     <input
                                         type="text"
                                         readOnly
-                                        className="w-[39rem] bg-white border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-300"
+                                        className="w-[39rem] bg-white border border-gray-300 
+                                        rounded-md px-3 py-2 text-sm focus:outline-none "
                                         value={selectedCustomerInfo.referenceName}
                                     />
                                 </div>
@@ -541,7 +634,8 @@ useEffect(() => {
                                     <input
                                         type="text"
                                         readOnly
-                                        className="w-[12rem] bg-white border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-300"
+                                        className="w-[12rem] bg-white border border-gray-300 
+                                        rounded-md px-3 py-2 text-sm focus:outline-none"
                                         value={selectedCustomerInfo.referenceMobile || "N/A"}
                                     />
                                 </div>

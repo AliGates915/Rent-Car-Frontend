@@ -91,9 +91,9 @@ function OwnerVehicle() {
                                 <ProfileCard
                                     key={index}
                                     name={profile.ownerName}
+                                    avatar={profile.profilePhotoUrl || "https://i.ibb.co/MBtjqXQ/no-avatar.gif"}
+                                    company={profile.mobileNo}
                                     address={profile.totalVehicles}
-                                    avatar={profile.profilePhotoUrl}
-                                    company={profile.phone}
                                 >
                                     
                                     <div className="mt-4 flex space-x-2 text-md">

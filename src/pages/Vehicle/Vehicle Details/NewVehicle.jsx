@@ -71,6 +71,14 @@ function NewVehicle() {
     const swiperRef = useRef(null);
     // Handle file input change
 
+    // selection of carMake and fuel Type
+    const fuelOptions = {
+        Honda: ["Petrol", "Diesel"],
+        Suzuki: ["Petrol", "CNG"],
+        Toyota: ["Petrol", "Diesel", "CNG"],
+        KIA: ["Petrol", "Diesel"],
+        Hyundai: ["Petrol", "CNG"],
+    };
     // Handle Submit
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -127,16 +135,15 @@ function NewVehicle() {
                 // After 3 seconds, stop the loader
                 setLoading(false);
 
-                // Simulate successful save action (optional)
-                alert('Data saved successfully!');
+                // alert('Data saved successfully!');
             }, 2000);
             console.log('Vehicle data submitted successfully:', response.data);
         } catch (error) {
             console.error("Error:", error.response ? error.response.data : error.message); alert(error.message);
         }
     };
-     // Reset form fields
-     const resetForm = () => {
+    // Reset form fields
+    const resetForm = () => {
         setPictures([]);
         setFiles("");
         setRegistrationNo('');
@@ -176,19 +183,19 @@ function NewVehicle() {
         setMudFlaps(false);
         setFloorMat(false);
     };
-    
-    
+
+
     // current date 
     useEffect(() => {
         // Current date in YYYY-MM-DD format
         const currentDate = new Date().toISOString().split('T')[0];
-        setInspectionDate(currentDate); 
+        setInspectionDate(currentDate);
     }, []);
 
     // Fetch data when car type is selected and updated
     useEffect(() => {
         const fetchDataForCarType = async () => {
-    
+
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/vehicleType`);
                 // console.log("Vehicle Data:", response.data);
@@ -203,14 +210,14 @@ function NewVehicle() {
         };
 
         fetchDataForCarType();
-    }, [carType.length, selectedCarType]); 
+    }, [carType.length, selectedCarType]);
 
 
-    
+
 
     const handleCarTypeSelect = (e) => {
         setSelectedCarType(e.target.value);
-        console.log("Selected Car Type:", e.target.value); 
+        console.log("Selected Car Type:", e.target.value);
     };
 
 
@@ -282,7 +289,8 @@ function NewVehicle() {
             <hr className='bg-gray-400 mb-4' />
 
 
-            <div className="bg-white mx-auto w-[68rem] border my-4 p-5  shadow-xl rounded-md z-50 relative">
+            <div className="bg-white mx-auto w-[64rem] border my-4 p-5  shadow-xl 
+            rounded-md z-50 relative">
                 <div className='text-2xl font-extrabold text-[#0096FF] '>
                     Vehicle Information
                 </div>
@@ -420,15 +428,17 @@ function NewVehicle() {
                                     px-2 py-2 cursor-pointer"
                                 >
                                     <select
-                                        className="w-full bg-transparent border-none focus:outline-none 
-                                        cursor-pointer text-gray-700"
+                                        className="w-full bg-transparent border-none focus:outline-none cursor-pointer text-gray-700"
                                         value={carMake}
                                         required
-                                        onChange={(e) => setCarMake(e.target.value)}
+                                        onChange={(e) => {
+                                            setCarMake(e.target.value);
+                                            setFuelType(""); // Reset fuelType when carMake changes
+                                        }}
                                     >
-                                        <option value="">Select</option>
-                                        <option value="Petrol">Honda</option>
-                                        <option value="Diesel">Suzuki</option>
+                                        <option value="">Select Car Make</option>
+                                        <option value="Honda">Honda</option>
+                                        <option value="Suzuki">Suzuki</option>
                                         <option value="Toyota">Toyota</option>
                                         <option value="KIA">KIA</option>
                                         <option value="Hyundai">Hyundai</option>
@@ -610,11 +620,16 @@ function NewVehicle() {
                                         value={fuelType}
                                         required
                                         onChange={(e) => setFuelType(e.target.value)}
+                                        disabled={!carMake} // Disable fuelType if no carMake is selected
                                     >
-                                        <option value="">Select</option>
-                                        <option value="Petrol">Petrol</option>
-                                        <option value="Diesel">Diesel</option>
-                                        <option value="CNG">CNG</option>
+                                        <option value="">Select Fuel Type</option>
+                                        {/* Render available fuel types based on selected car make */}
+                                        {carMake &&
+                                            fuelOptions[carMake]?.map((fuel) => (
+                                                <option key={fuel} value={fuel}>
+                                                    {fuel}
+                                                </option>
+                                            ))}
                                     </select>
                                 </div>
                             </div>
@@ -790,7 +805,7 @@ function NewVehicle() {
 
                         <div className="flex flex-wrap my-3 border-2 px-2 py-2 mr-10 gap-3">
                             {/* Checkbox 1 */}
-                            <div className="flex items-center mr-20">
+                            <div className="flex items-center mr-12">
                                 <label className="text-gray-800 font-semibold">
                                     Air Conditioner
                                     <input
@@ -803,12 +818,12 @@ function NewVehicle() {
                             </div>
 
                             {/* Checkbox 2 */}
-                            <div className="flex items-center mx-20">
+                            <div className="flex items-center mx-12">
                                 <label className="text-gray-800 font-semibold">
                                     Heater
                                     <input
                                         type="checkbox"
-                                        className="form-checkbox pt-3 ml-4 h-[18px] w-5 focus:ring"
+                                        className="form-checkbox pt-3 ml-14 h-[18px] w-5 focus:ring"
                                         checked={heater}
                                         onChange={(e) => setHeater(e.target.checked)}
                                     />
@@ -816,24 +831,24 @@ function NewVehicle() {
                             </div>
 
                             {/* Checkbox 3 */}
-                            <div className="flex items-center mx-20">
+                            <div className="flex items-center mx-12">
                                 <label className="text-gray-800 font-semibold">
                                     Sun Roof
                                     <input
                                         type="checkbox"
-                                        className="form-checkbox pt-3 ml-2 h-[18px] w-5 focus:ring"
+                                        className="form-checkbox pt-3 ml-8 h-[18px] w-5 focus:ring"
                                         checked={sunRoof}
                                         onChange={(e) => setSunRoof(e.target.checked)}
                                     />
                                 </label>
                             </div>
                             {/* Checkbox 4 */}
-                            <div className="flex items-center ml-20">
+                            <div className="flex items-center ml-16">
                                 <label className="text-gray-800 font-semibold">
                                     CD/DVD Player
                                     <input
                                         type="checkbox"
-                                        className="form-checkbox pt-3 ml-2 h-[18px] w-5 focus:ring"
+                                        className="form-checkbox pt-3 ml-4 h-[18px] w-5 focus:ring"
                                         checked={cdDVD}
                                         onChange={(e) => setCdDVD(e.target.checked)}
                                     />
@@ -841,7 +856,7 @@ function NewVehicle() {
                             </div>
 
                             {/* Checkbox 5 */}
-                            <div className="flex items-center mr-20">
+                            <div className="flex items-center mr-12">
                                 <label className="text-gray-800 font-semibold">
                                     Andriod Player
                                     <input
@@ -853,7 +868,7 @@ function NewVehicle() {
                                 </label>
                             </div>
                             {/* Checkbox 6*/}
-                            <div className="flex items-center mx-10">
+                            <div className="flex items-center mx-12">
                                 <label className="text-gray-800 font-semibold">
                                     Front Camera
                                     <input
@@ -865,12 +880,12 @@ function NewVehicle() {
                                 </label>
                             </div>
                             {/* Checkbox 7 */}
-                            <div className="flex items-center mx-20">
+                            <div className="flex items-center mx-12">
                                 <label className="text-gray-800 font-semibold">
                                     Rear Camera
                                     <input
                                         type="checkbox"
-                                        className="form-checkbox pt-3 ml-[20px] h-[18px] w-5 focus:ring"
+                                        className="form-checkbox pt-3 ml-1 h-[18px] w-5 focus:ring"
                                         checked={rearCamera}
                                         onChange={(e) => setRearCamera(e.target.checked)}
                                     />
@@ -878,7 +893,7 @@ function NewVehicle() {
                             </div>
 
                             {/* Checkbox 8 */}
-                            <div className="flex items-center ml-[70px]">
+                            <div className="flex items-center ml-16">
                                 <label className="text-gray-800 font-semibold">
                                     Cigarette Lighter
                                     <input
@@ -891,7 +906,7 @@ function NewVehicle() {
                             </div>
 
                             {/* Checkbox 9 */}
-                            <div className="flex items-center mr-20">
+                            <div className="flex items-center mr-12">
                                 <label className="text-gray-800 font-semibold">
                                     Sterring Lock
                                     <input
@@ -908,38 +923,38 @@ function NewVehicle() {
                                     Wheel Cups
                                     <input
                                         type="checkbox"
-                                        className="form-checkbox pt-3 ml-2 h-[18px] w-5 focus:ring"
+                                        className="form-checkbox pt-3 ml-4 h-[18px] w-5 focus:ring"
                                         checked={wheelCup}
                                         onChange={(e) => setWheelCup(e.target.checked)}
                                     />
                                 </label>
                             </div>
                             {/* Checkbox 11 */}
-                            <div className="flex items-center mx-20">
+                            <div className="flex items-center mx-12">
                                 <label className="text-gray-800 font-semibold">
                                     Spare Wheel
                                     <input
                                         type="checkbox"
-                                        className="form-checkbox pt-3 ml-3 h-[18px] w-5 focus:ring"
+                                        className="form-checkbox pt-3 ml-1 h-[18px] w-5 focus:ring"
                                         checked={spareWheel}
                                         onChange={(e) => setSpareWheel(e.target.checked)}
                                     />
                                 </label>
                             </div>
                             {/* Checkbox 12 */}
-                            <div className="flex items-center ml-20">
+                            <div className="flex items-center ml-16">
                                 <label className="text-gray-800 font-semibold">
                                     Air Compressor
                                     <input
                                         type="checkbox"
-                                        className="form-checkbox pt-3 ml-2 h-[18px] w-5 focus:ring"
+                                        className="form-checkbox pt-3 ml-4 h-[18px] w-5 focus:ring"
                                         checked={airCompressor}
                                         onChange={(e) => setAirCompressor(e.target.checked)}
                                     />
                                 </label>
                             </div>
                             {/* Checkbox 13 */}
-                            <div className="flex items-center mr-20">
+                            <div className="flex items-center mr-12">
                                 <label className="text-gray-800 font-semibold">
                                     Jack & Handle
                                     <input
@@ -951,7 +966,7 @@ function NewVehicle() {
                                 </label>
                             </div>
                             {/* Checkbox 14 */}
-                            <div className="flex items-center mx-10">
+                            <div className="flex items-center mx-12">
                                 <label className="text-gray-800 font-semibold">
                                     Wheel Panna
                                     <input
@@ -963,24 +978,24 @@ function NewVehicle() {
                                 </label>
                             </div>
                             {/* Checkbox 15 */}
-                            <div className="flex items-center mx-28">
+                            <div className="flex items-center mx-12">
                                 <label className="text-gray-800 font-semibold">
                                     Mud Flaps
                                     <input
                                         type="checkbox"
-                                        className="form-checkbox pt-3 ml-2 h-[18px] w-5 focus:ring"
+                                        className="form-checkbox pt-3 ml-6 h-[18px] w-5 focus:ring"
                                         checked={mudFlaps}
                                         onChange={(e) => setMudFlaps(e.target.checked)}
                                     />
                                 </label>
                             </div>
                             {/* Checkbox 16 */}
-                            <div className="flex items-center ml-20">
+                            <div className="flex items-center ml-16">
                                 <label className="text-gray-800 font-semibold">
                                     Floor Mats
                                     <input
                                         type="checkbox"
-                                        className="form-checkbox pt-3 ml-2 h-[18px] w-5 focus:ring"
+                                        className="form-checkbox pt-3 ml-12 h-[18px] w-5 focus:ring"
                                         checked={floorMat}
                                         onChange={(e) => setFloorMat(e.target.checked)}
                                     />

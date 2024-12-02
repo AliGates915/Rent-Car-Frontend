@@ -8,7 +8,7 @@ import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNone
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const { dispatch } = useContext(DarkModeContext);
@@ -16,13 +16,13 @@ const Navbar = () => {
   console.log("Username", user)
 
   return (
-    <div className="navbar1">
+    <div className="navbar1 ">
       <div className="wrapper1">
-        <div className="search1">
+        {/* <div className="search1">
           <input type="text" placeholder="Search..." />
           <SearchOutlinedIcon />
-        </div>
-        <div className="items1">
+        </div> */}
+        <div className="items1 ml-[49rem]">
           <div className="mr-4 font-bold">
             {/* <Link to='/user-panel'>
               User Panel

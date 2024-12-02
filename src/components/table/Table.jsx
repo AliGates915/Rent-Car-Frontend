@@ -1,5 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 import "./table.scss";
+import axios from "axios";
+import { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -9,6 +11,31 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
 const List = () => {
+
+
+  const [vehicles, setVehicles] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const fetchCustomer = async () => {
+        setIsLoading(true);
+        try {
+            const response = await axios.get(
+              `${process.env.REACT_APP_API_URL}/vehicle-details/display`);
+            if (Array.isArray(response.data)) {
+                console.log("Data is an array.", response.data);
+                setVehicles(response.data);
+            } else {
+                console.error("Data is not an array. Resetting to empty array.");
+                setVehicles([]); // Set as empty array if response isn't an array
+            }
+        } finally {
+            setTimeout(() => setIsLoading(false), 2000); // Stop loading after 2 seconds
+        }
+    };
+
+    fetchCustomer();
+}, []);
+
   const rows = [
     {
       id: 1143155,
@@ -66,29 +93,29 @@ const List = () => {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell className="tableCell">Tracking ID</TableCell>
-            <TableCell className="tableCell">Product</TableCell>
-            <TableCell className="tableCell">Customer</TableCell>
-            <TableCell className="tableCell">Date</TableCell>
-            <TableCell className="tableCell">Amount</TableCell>
-            <TableCell className="tableCell">Payment Method</TableCell>
+            <TableCell className="tableCell">ID</TableCell>
+            <TableCell className="tableCell">Vehicle Image</TableCell>
+            <TableCell className="tableCell">Make</TableCell>
+            <TableCell className="tableCell">Model</TableCell>
+            <TableCell className="tableCell">YearOfModel</TableCell>
+            <TableCell className="tableCell">Color</TableCell>
             <TableCell className="tableCell">Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell className="tableCell">{row.id}</TableCell>
+          {vehicles.map((row, index) => (
+            <TableRow key={index}>
+              <TableCell className="tableCell">{index + 1}</TableCell>
               <TableCell className="tableCell">
                 <div className="cellWrapper">
-                  <img src={row.img} alt="" className="image" />
+                  <img src={row?.photos[0]} alt="" className="image" />
                   {row.product}
                 </div>
               </TableCell>
-              <TableCell className="tableCell">{row.customer}</TableCell>
-              <TableCell className="tableCell">{row.date}</TableCell>
-              <TableCell className="tableCell">{row.amount}</TableCell>
-              <TableCell className="tableCell">{row.method}</TableCell>
+              <TableCell className="tableCell">{row.carMake}</TableCell>
+              <TableCell className="tableCell">{row.carModel}</TableCell>
+              <TableCell className="tableCell">{row.yearOfModel}</TableCell>
+              <TableCell className="tableCell">{row.color}</TableCell>
               <TableCell className="tableCell">
                 <span className={`status ${row.status}`}>{row.status}</span>
               </TableCell>
