@@ -166,120 +166,107 @@ function SaveVehicle() {
                 <section className="w-fit mx-auto grid grid-cols-3 justify-items-center justify-center gap-y-20 gap-x-6 mt-10 mb-5">
                     {isLoading ? (
                         <div className="flex justify-center mt-48 min-h-screen">
-                            <FadeLoader
-                                color="#0fdaee" size={15} margin={5} />
+                            <FadeLoader color="#0fdaee" size={15} margin={5} />
                         </div>
                     ) : (
-                        Array.isArray(saveVehicle) &&
-                        saveVehicle.length > 0 &&
-                        saveVehicle.map((vehicle, index) => {
+                        Array.isArray(saveVehicle) && saveVehicle.length > 0 ? (
+                            saveVehicle.map((vehicle, index) => {
+                                // Render each vehicle card
+                                return (
+                                    <div
+                                        key={index}
+                                        className="w-[320px] bg-white shadow-xl shadow-gray-400 rounded-xl duration-500 hover:scale-105 hover:shadow-xl relative"
+                                    >
+                                        {/* Image Section */}
+                                        {vehicle?.photos?.length > 0 ? (
+                                            <img
+                                                src={vehicle.photos[currentIndices[vehicle.id] || 0]}
+                                                alt={`Slide ${currentIndices[vehicle.id] || 0}`}
+                                                className="h-80 w-[22rem] object-cover rounded-t-xl"
+                                            />
+                                        ) : (
+                                            <p className="text-center">No images available</p>
+                                        )}
 
-                            return (
-                                <div
-                                    key={index}
-                                    className="w-[320px] bg-white shadow-xl shadow-gray-400 rounded-xl duration-500 hover:scale-105 hover:shadow-xl relative"
-                                >
-                                    {/* Image Section */}
-                                    {vehicle?.photos?.length > 0 ? (
-                                        <img
-                                            src={vehicle.photos[currentIndices[vehicle.id] || 0]}
-                                            alt={`Slide ${currentIndices[vehicle.id] || 0}`}
-                                            className="h-80 w-[22rem] object-cover rounded-t-xl"
-                                        />
-                                    ) : (
-                                        <p className="text-center">No images available</p>
-                                    )}
-
-                                    {/* Vehicle Info */}
-                                    <div className="px-4 text-center font-sans py-3 w-[20rem]">
-                                        <span className="flex justify-center text-[#979ead] uppercase text-sm">
-                                            Register No:{" "}
-                                            <span className="uppercase font-bold ml-1">
-                                                {vehicle.registrationNo}
+                                        {/* Vehicle Info */}
+                                        <div className="px-4 text-center font-sans py-3 w-[20rem]">
+                                            <span className="flex justify-center text-[#979ead] uppercase text-sm">
+                                                Register No:{" "}
+                                                <span className="uppercase font-bold ml-1">
+                                                    {vehicle.registrationNo}
+                                                </span>
                                             </span>
-                                        </span>
 
-                                        <div className="ml-2 flex justify-between w-[22rem]">
-                                            <p className="text-[#5c6f9d] truncate text-sm block">
-                                                Make:{" "}
-                                                <span className="font-bold mr-2">{vehicle.carMake}</span>
-                                                Model:{" "}
-                                                <span className="font-bold mr-2">{vehicle.carModel}</span>
-                                                Type: <span className="font-bold">{vehicle.carType}</span>
+                                            <div className="ml-2 flex justify-between w-[22rem]">
+                                                <p className="text-[#5c6f9d] truncate text-sm block">
+                                                    Make:{" "}
+                                                    <span className="font-bold mr-2">{vehicle.carMake}</span>
+                                                    Model:{" "}
+                                                    <span className="font-bold mr-2">{vehicle.carModel}</span>
+                                                    Type: <span className="font-bold">{vehicle.carType}</span>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* Icon Section */}
+                                        <div className="mt-2 ml-10 w-80">
+                                            <p className="text-[#c138d9] flex justify-start gap-8">
+                                                <IconTooltip
+                                                    icon={<TbAirConditioning size={23} />}
+                                                    tooltipText="Air Conditioning"
+                                                />
+                                                <IconTooltip
+                                                    icon={<SiAirplayvideo size={20} />}
+                                                    tooltipText="Airplay Video"
+                                                />
+                                                <IconTooltip
+                                                    icon={<GiCctvCamera size={20} />}
+                                                    tooltipText="CCTV Camera"
+                                                />
+                                                <IconTooltip
+                                                    icon={<GiCarWheel size={20} />}
+                                                    tooltipText="Car Wheel"
+                                                />
+                                                <IconTooltip
+                                                    icon={<LuCigarette size={20} />}
+                                                    tooltipText="Cigarette"
+                                                />
                                             </p>
                                         </div>
 
-                                        {/* Customer Info
-                                        {vehicle ? (
-                                            <div className="mt-4">
-                                                <p className="text-[#5c6f9d] truncate text-sm block">
-                                                    Customer Name:{" "}
-                                                    <span className="font-bold mr-2">
-                                                        {vehicle.customerName}
-                                                    </span>
-                                                    Date From:{" "}
-                                                    <span className="font-bold mr-2">{vehicle.dateFrom}</span>
-                                                    Date To: <span className="font-bold">{vehicle.dateTo}</span>
-                                                </p>
-                                            </div>
-                                        ) : (
-                                            <p className="text-red-500 mt-4">No customer info available</p>
-                                        )} */}
+                                        {/* Actions Section */}
+                                        <div className="flex justify-center mt-3 px-4">
+                                            <p className="text-[16px] text-black">
+                                                Total Amount:
+                                                <span className="ml-1 text-[22px] text-sky-500 font-semibold">
+                                                    Rs.{vehicle.ratePerDay || 1000}
+                                                </span>
+                                            </p>
+                                        </div>
+
+                                        {/* Return Vehicle Button */}
+                                        <div className="mt-2 mb-4 flex justify-center">
+                                            <button
+                                                className="bg-[#0096FF] hover:font-extrabold px-8 py-2 rounded-lg transition-all duration-300 text-xl text-white tracking-wide flex items-center justify-center hover:bg-[#4a32b3] hover:scale-105 hover:shadow-lg hover:shadow-[#0096FF]/80"
+                                                onClick={() => handleSave(vehicle._id)}
+                                            >
+                                                Return to Available
+                                            </button>
+                                        </div>
                                     </div>
-
-                                    {/* Icon Section */}
-                                    <div className="mt-2 ml-10 w-80">
-                                        <p className="text-[#c138d9] flex justify-start gap-8">
-                                            <IconTooltip
-                                                icon={<TbAirConditioning size={23} />}
-                                                tooltipText="Air Conditioning"
-                                            />
-                                            <IconTooltip
-                                                icon={<SiAirplayvideo size={20} />}
-                                                tooltipText="Airplay Video"
-                                            />
-                                            <IconTooltip
-                                                icon={<GiCctvCamera size={20} />}
-                                                tooltipText="CCTV Camera"
-                                            />
-                                            <IconTooltip
-                                                icon={<GiCarWheel size={20} />}
-                                                tooltipText="Car Wheel"
-                                            />
-                                            <IconTooltip
-                                                icon={<LuCigarette size={20} />}
-                                                tooltipText="Cigarette"
-                                            />
-                                        </p>
-                                    </div>
-
-                                    {/* Actions Section */}
-                                    <div className="flex justify-center mt-3 px-4">
-                                        <p className="text-[16px] text-black">
-                                            Total Amount:
-                                            <span className="ml-1 text-[22px] text-sky-500 font-semibold">
-                                                Rs.{vehicle.ratePerDay || 1000}
-                                            </span>
-                                        </p>
-
-                                    </div>
-
-                                    {/* Return Vehicle Button */}
-                                    <div className="mt-2 mb-4 flex justify-center">
-
-                                        <button
-                                            className="bg-[#0096FF] hover:font-extrabold px-8 py-2 rounded-lg transition-all duration-300 text-xl text-white tracking-wide flex items-center justify-center hover:bg-[#4a32b3] hover:scale-105 hover:shadow-lg hover:shadow-[#0096FF]/80"
-                                            onClick={() => handleSave(vehicle._id)}
-                                        >
-                                            Return to Available
-                                        </button>
-                                    </div>
-
-                                </div>
-                            );
-                        })
-                    )} 
-                    
+                                );
+                            })
+                        ) : (
+                            // Fallback content when no vehicles are available
+                            <div className="w-full">
+                                <img
+                                    src="https://via.placeholder.com/300x200?text=No+Vehicles+Available"
+                                    alt="No Data Available"
+                                    className="w-[300px] h-[200px] object-contain mb-5"
+                                />
+                            </div>
+                        )
+                    )}
                 </section>
             </div>
 

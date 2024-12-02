@@ -130,7 +130,7 @@ const Login = () => {
 
             {/* Login Button */}
             <div className="mt-10 mb-4">
-              <Link to="/">
+              <Link to="/home">
               <button
                 type="button"
                 disabled={loading}

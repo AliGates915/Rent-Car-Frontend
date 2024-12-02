@@ -42,9 +42,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/">
-            <Route path="login" element={<Login />} />
+            <Route path="" element={<Login />} />
             <Route
-            path="/"
+            path="home"
               index
               element={
                 <ProtectedRoute>
