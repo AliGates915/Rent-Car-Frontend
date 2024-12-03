@@ -29,6 +29,8 @@ function RentVehicle() {
         carType: "",
         carMake: "",
         carModel: "",
+        color: "",
+        yearOfModel: "",
         transmissionType: "",
         engineCapacity: "",
         chassisNo: "",
@@ -221,6 +223,8 @@ function RentVehicle() {
 
         if (selectedVehicleData) {
             setSelectedVehicle({
+                yearOfModel: selectedVehicleData.yearOfModel,
+                color: selectedVehicleData.color,
                 carType: selectedVehicleData.carType,
                 carMake: selectedVehicleData.carMake,
                 carModel: selectedVehicleData.carModel,
@@ -268,8 +272,8 @@ function RentVehicle() {
 
         fetchSerialNo();
     }, [serialNo]);
-    
-    console.log("data", customerInfo);
+
+    console.log("data", selectedCustomerInfo);
 
     // Function to handle date change and calculate total days
     const handleDateChange = (from, to) => {
@@ -298,137 +302,138 @@ function RentVehicle() {
         setRatePerDay(selectedVehicle.ratePerDay); // Update rate per day if it changes
     }, [selectedVehicle]);
 
-    // Function to update total amount and balance
 
-    // Function to convert an image URL to Base64
 
     // Generate PDF
     const generatePDF = async (data) => {
         const doc = new jsPDF();
-
-        // Centered Title
-        doc.setFontSize(20);
+        const margin = 20; // Consistent margin
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const lineSpacing = 8; // Consistent line spacing
+        let yPosition = margin + 5;
+      
+        // Format Date Function
+        const formatDate = (dateString) => {
+          if (!dateString) return 'N/A';
+          const date = new Date(dateString);
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const year = date.getFullYear();
+          return `${day}/${month}/${year}`;
+        };
+      
+        // ====== PAGE 1: Title Section ====== //
+        doc.setFontSize(12);
+        doc.text(`Serial No.: ${data.serialNo || 'N/A'}`, 20, 28);
+      
+        doc.setFontSize(24);
         doc.setFont('helvetica', 'bold');
-        doc.text('Vehicle Rental Receipt', doc.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
-
+        doc.text('Vehicle Rental Receipt', pageWidth / 2, margin, { align: 'center' });
+      
         // Separator Line
         doc.setLineWidth(0.5);
-        doc.line(10, 25, 200, 25);
-
-        // Customer Info Section
+        doc.line(margin, 30, pageWidth - margin, 30);
+        yPosition = 40;
+      
+        // ====== CUSTOMER INFORMATION ====== //
         doc.setFontSize(16);
-        doc.text('Customer Information', 20, 40);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Customer Information', margin, yPosition);
+        yPosition += lineSpacing;
+      
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(12);
-        doc.text(`Name: ${data.selectedCustomerInfo.customerName || 'N/A'}`, 20, 50);
-        doc.text(`CINC: ${data.selectedCustomerInfo.cinc || 'N/A'}`, 20, 60);
-        doc.text(`Mobile: ${data.selectedCustomerInfo.mobileNo || 'N/A'}`, 20, 70);
-
-        // Display Customer Image
-        if (data.selectedCustomerInfo.profilePhotoUrl) {
-            const image = new Image();
-            image.onload = function () {
-                doc.addImage(image, 'JPEG', 140, 45, 40, 30);
-            };
-            image.src = data.selectedCustomerInfo.profilePhotoUrl;
+        doc.text(`Name: ${selectedCustomerInfo.customerName || 'N/A'}`, margin, yPosition);
+        doc.text(`CINC: ${selectedCustomerInfo.cinc || 'N/A'}`, margin, (yPosition += lineSpacing));
+        doc.text(`Mobile: ${selectedCustomerInfo.mobileNo || 'N/A'}`, margin, (yPosition += lineSpacing));
+        doc.text(`Address: ${selectedCustomerInfo.address || 'N/A'}`, margin, (yPosition += lineSpacing));
+      
+        // Customer Image (if available)
+        if (selectedCustomerInfo.profilePhotoUrl) {
+          doc.addImage(selectedCustomerInfo.profilePhotoUrl, 'JPEG', pageWidth - 70, margin + 10, 50, 50);
         } else {
-            doc.text('Customer Image not available.', 140, 70);
+          doc.text('Profile Photo not available.', margin, (yPosition += lineSpacing));
+        }
+      
+        yPosition += 14;
+      
+        // ====== VEHICLE INFORMATION ====== //
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(16);
+        doc.text('Vehicle Information', margin, yPosition);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(12);
+        yPosition += lineSpacing;
+      
+        doc.text(`Car Make: ${selectedVehicle.carMake || 'N/A'}`, margin, yPosition);
+        doc.text(`Car Model: ${selectedVehicle.carModel || 'N/A'}`, margin, (yPosition += lineSpacing));
+        doc.text(`Year of Model: ${selectedVehicle.yearOfModel || 'N/A'}`, margin, (yPosition += lineSpacing));
+        doc.text(`Car Color: ${selectedVehicle.color || 'N/A'}`, margin, (yPosition += lineSpacing));
+        doc.text(`Engine No: ${selectedVehicle.engineNo || 'N/A'}`, margin, (yPosition += lineSpacing));
+        doc.text(`Chassis No: ${selectedVehicle.chassisNo || 'N/A'}`, margin, (yPosition += lineSpacing));
+      
+        // Vehicle Image (if available)
+        if (selectedVehicle.photos) {
+          doc.addImage(selectedVehicle.photos, 'JPEG', pageWidth - 70, yPosition - 50, 60, 50);
+        } else {
+          doc.text('Vehicle Photo not available.', margin, (yPosition += 60));
+        }
+      
+        yPosition += 12;
+      
+        // ====== RENTAL INFORMATION ====== //
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(16);
+        doc.text('Rental Information', margin, yPosition);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(12);
+        yPosition += lineSpacing;
+      
+        doc.text(`Date From: ${formatDate(data.rentalInfo.dateFrom)}`, margin, yPosition);
+        doc.text(`Date To: ${formatDate(data.rentalInfo.dateTo)}`, margin, (yPosition += lineSpacing));
+        doc.text(`Total Days: ${data.rentalInfo.totalDays || 'N/A'}`, margin, (yPosition += lineSpacing));
+        doc.text(`From City: ${data.rentalInfo.cityFrom || 'N/A'}`, margin, (yPosition += lineSpacing));
+        doc.text(`To City: ${data.rentalInfo.cityTo || 'N/A'}`, margin, (yPosition += lineSpacing));
+        doc.text(`Meter Reading: ${data.rentalInfo.meterReading || 'N/A'}`, margin, (yPosition += lineSpacing));
+        doc.text(`Total Amount: ${data.rentalInfo.totalAmount || 'N/A'}`, margin, (yPosition += lineSpacing));
+        doc.text(`Advance Amount: ${data.rentalInfo.advanceAmount || 'N/A'}`, margin, (yPosition += lineSpacing));
+        doc.text(`Balance Amount: ${data.rentalInfo.balanceAmount || 'N/A'}`, margin, (yPosition += lineSpacing));
+         
+        yPosition += 12;    
+        // ====== DRIVING LICENSE ====== //
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(16);
+        doc.text('Driving License Certificate', margin, yPosition);
+        yPosition += lineSpacing;
+      
+        if (selectedCustomerInfo.DrivingLicense) {
+          doc.addImage(selectedCustomerInfo.DrivingLicense, 'JPEG', pageWidth - 150, yPosition + 5, 70, 45);
+        } else {
+          doc.text('Driving License not available.', margin, (yPosition += 30));
         }
 
-        let yPosition = 90;
-        // Vehicle Info Section
-        doc.setFontSize(16);
+        // ====== NEW PAGE ====== //
+        doc.addPage();
+      
+        yPosition = margin;
+      
+        // ====== FEATURES SECTION ====== //
         doc.setFont('helvetica', 'bold');
-        doc.text('Vehicle Information', 20, yPosition);
-        doc.setFontSize(12);
+        doc.setFontSize(16);
+        doc.text('Features', margin, yPosition);
+        yPosition += lineSpacing;
+      
         doc.setFont('helvetica', 'normal');
-        doc.text(`Car Type: ${data.selectedVehicle.carType || 'N/A'}`, 20, yPosition + 10);
-        doc.text(`Car Make: ${data.selectedVehicle.carMake || 'N/A'}`, 20, yPosition + 20);
-        doc.text(`Engine No: ${data.selectedVehicle.engineNo || 'N/A'}`, 20, yPosition + 30);
-
-        // Display Vehicle Image
-        if (data.selectedVehicle.photos) {
-            const vehicleImage = new Image();
-            vehicleImage.onload = function () {
-                doc.addImage(vehicleImage, 'JPEG', 140, yPosition + 40, 40, 30);
-            };
-            vehicleImage.src = data.selectedVehicle.photos;
-        } else {
-            doc.text('Vehicle Image not available.', 140, yPosition + 40);
-        }
-
-        // Rental Info Section
-        doc.setFontSize(16);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Rental Information', 20, yPosition + 90);
         doc.setFontSize(12);
-        doc.setFont('helvetica', 'normal');
-        const formatDate = (dateString) => {
-            if (!dateString) return 'N/A';
-            const date = new Date(dateString);
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-            return `${day}/${month}/${year}`;
-        };
-        doc.text(`Date From: ${formatDate(data.dateFrom)}`, 20, yPosition + 100);
-        doc.text(`Date To: ${formatDate(data.dateTo)}`, 20, yPosition + 110);
-        doc.text(`Total Amount: ${data.totalAmount || 'N/A'}`, 20, yPosition + 120);
-        doc.text(`Advance Amount: ${data.advanceAmount || 'N/A'}`, 20, yPosition + 130);
-        doc.text(`Balance Amount: ${data.balanceAmount || 'N/A'}`, 20, yPosition + 130);
-
-        // Features Section
-        doc.setFontSize(16);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Features', 20, yPosition + 160);
-        doc.setFontSize(12);
-        doc.setFont('helvetica', 'normal');
-        const addFeatureText = (featureName, featureValue, yPos) => {
-            if (featureValue) {
-                doc.text(`${featureName}: Yes`, 20, yPos);
-                return 10; // Increment position
-            }
-            return 0; // No increment
-        };
-        // Check and render each feature
-        yPosition += addFeatureText(doc, 'Air Conditioner', data.features.airConditioner, yPosition);
-        yPosition += addFeatureText(doc, 'Heater', data.features.heater, yPosition);
-        yPosition += addFeatureText(doc, 'Sun Roof', data.features.sunRoof, yPosition);
-        yPosition += addFeatureText(doc, 'CD/DVD', data.features.cdDVD, yPosition);
-        yPosition += addFeatureText(doc, 'Android', data.features.andriod, yPosition);
-        yPosition += addFeatureText(doc, 'Front Camera', data.features.frontCamera, yPosition);
-        yPosition += addFeatureText(doc, 'Rear Camera', data.features.rearCamera, yPosition);
-        yPosition += addFeatureText(doc, 'Cigarette Lighter', data.features.cigarette, yPosition);
-        yPosition += addFeatureText(doc, 'Steering', data.features.sterring, yPosition);
-        yPosition += addFeatureText(doc, 'Wheel Cup', data.features.wheelCup, yPosition);
-        yPosition += addFeatureText(doc, 'Spare Wheel', data.features.spareWheel, yPosition);
-        yPosition += addFeatureText(doc, 'Air Compressor', data.features.airCompressor, yPosition);
-        yPosition += addFeatureText(doc, 'Jack Handle', data.features.jackHandle, yPosition);
-        yPosition += addFeatureText(doc, 'Wheel Panna', data.features.wheelPanna, yPosition);
-        yPosition += addFeatureText(doc, 'Mud Flaps', data.features.mudFlaps, yPosition);
-        yPosition += addFeatureText(doc, 'Floor Mat', data.features.floorMat, yPosition);
-
-        // Driving License Section
-        doc.setFontSize(16);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Driving License Certificate', 20, yPosition + 20);
-        if (data.customerInfo.DrivingLicense) {
-            const licenseImage = new Image();
-            licenseImage.onload = function () {
-                doc.addImage(licenseImage, 'JPEG', 140, yPosition + 40, 40, 30);
-            };
-            licenseImage.src = data.customerInfo.DrivingLicense;
-        } else {
-            doc.setFont('helvetica', 'normal');
-            doc.text('Driving License not available.', 20, yPosition + 50);
-        }
-
-        // Save the PDF
+        Object.keys(data.features).forEach((feature) => {
+          const featureStatus = data.features[feature] ? 'Yes' : 'No';
+          doc.text(`${feature}: ${featureStatus}`, margin, (yPosition += lineSpacing));
+        });
+      
+        // ====== Save PDF ====== //
         doc.save(`Rental_Receipt_${data.serialNo}.pdf`);
-    };
-
-
-
+      };
+      
     // Total Amount Calculation depend on the Days x RatePerDay
 
     return (

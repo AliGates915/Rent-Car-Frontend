@@ -93,18 +93,17 @@ const Sidebar = () => {
           </Link>
 
           
-          <Link to="/package-list" style={{ textDecoration: "none" }}>
+          <Link to="/payment-voucher" style={{ textDecoration: "none" }}>
           <li>
             <ListAltIcon className="icon" />
-            <span>Vehicle Schedule
+            <span>Payment Voucher
             </span>
           </li>
           </Link>
-
-          <Link to="/package-list" style={{ textDecoration: "none" }}>
+          <Link to="/expense-voucher" style={{ textDecoration: "none" }}>
           <li>
             <ListAltIcon className="icon" />
-            <span>Customer Details
+            <span>Expense Voucher
             </span>
           </li>
           </Link>
@@ -137,13 +136,7 @@ const Sidebar = () => {
             </span>
           </li>
           </Link>
-          <Link to="/package-list" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Expense Voucher
-            </span>
-          </li>
-          </Link>
+         
           <Link to="/package-list" style={{ textDecoration: "none" }}>
           <li>
             <ListAltIcon className="icon" />

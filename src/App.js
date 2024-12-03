@@ -10,7 +10,6 @@ import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/AuthContext";
 import VehicleTypes from "./pages/Vehicle/Vehicle";
 import VehicleMaintenance from "./pages/Vehicle/VehicleMaintenance";
-import Head from "./pages/Vehicle/Head";
 import RentType from "./pages/Vehicle/RentType";
 import VehicleDetails from "./pages/Vehicle/VehicleDetails";
 import NewVehicle from "./pages/Vehicle/Vehicle Details/NewVehicle";
@@ -22,6 +21,8 @@ import RentReceipt from "./pages/Vehicle/Rent/RentReceipt";
 import RentVehicle from "./pages/Vehicle/Rent/RentVehicle";
 import ReturnVehicleForm from "./pages/Vehicle/Rent/ReturnVehicleForm";
 import SaveVehicle from "./pages/Vehicle/Rent/SaveVehilce";
+import Payment from "./pages/Vehicle/Voucher/Payement";
+import ExpenseVoucher from "./pages/Vehicle/Voucher/ExpenseVoucher";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -189,6 +190,24 @@ function App() {
             element={
               <Layout>
                 <ReturnVehicleForm />
+              </Layout>
+            }
+          />
+          <Route
+            path="/payment-voucher"
+            index
+            element={
+              <Layout>
+                <Payment />
+              </Layout>
+            }
+          />
+          <Route
+            path="/expense-voucher"
+            index
+            element={
+              <Layout>
+                <ExpenseVoucher />
               </Layout>
             }
           />

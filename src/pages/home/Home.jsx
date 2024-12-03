@@ -15,7 +15,7 @@ const Home = () => {
         <Navbar />
         <div className="widgets1">
           <Widget type="total vehicles" />
-          <Widget type="owners" />
+          <Widget type="rent" />
           <Widget type="customers" />
           {/* <Widget type="total" /> */}
         </div>

@@ -131,15 +131,20 @@ const Login = () => {
             {/* Login Button */}
             <div className="mt-10 mb-4">
               <Link to="/home">
-              <button
-                type="button"
-                // disabled={loading}
-                // onClick={handleClick}
-                className="w-full py-2.5 px-4 text-sm font-semibold tracking-wider rounded-full text-white bg-[#0071c2] hover:bg-[#3a90f3] focus:outline-none"
-              >
-                Login
-              </button>
+                <button
+                  type="button"
+                  // disabled={loading}
+                  // onClick={handleClick}
+                  className="w-full py-2.5 px-4 text-sm font-semibold tracking-wider rounded-full text-white bg-[#0071c2] hover:bg-[#3a90f3] focus:outline-none"
+                >
+                  Login
+                </button>
               </Link>
+            </div>
+            <div className="flex justify-center text-gray-900 font-bold">
+              <a href="http://www.afaqtechnologies.com.pk" target="blank">
+                Designed by AfaqTechnologies.
+              </a>
             </div>
           </form>
         </div>

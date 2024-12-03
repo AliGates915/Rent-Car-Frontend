@@ -23,8 +23,8 @@ const Widget = ({ type }) => {
           case "customers":
             response = await fetch(`${process.env.REACT_APP_API_URL}/customer-details`);
             break;
-          case "owners":
-            response = await fetch(`${process.env.REACT_APP_API_URL}/owner-details`);
+          case "rent":
+            response = await fetch(`${process.env.REACT_APP_API_URL}/return-vehicle`);
             break;
           default:
             return;
@@ -59,7 +59,7 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-      case "owners":
+      case "rent":
       data = {
         title: "ON RENT",
         link: "View all Rent Vehicles",

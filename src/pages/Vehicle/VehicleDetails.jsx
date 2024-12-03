@@ -193,7 +193,7 @@ function VehicleDetails() {
                                     </div>
 
                                     <div className="ml-6 flex justify-between w-80">
-                                        <p className="text-[#ef730f] text-[0.98rem] block">
+                                        <p className="text-[#5c6f9d] text-[0.98rem] block">
                                             Color: <span className="font-bold mr-1">{product.color}</span>
                                             Location: <span className="font-bold">{product.location || "Lahore"}</span>
                                         </p>
