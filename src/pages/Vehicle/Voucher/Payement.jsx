@@ -258,19 +258,7 @@ function Payment() {
                             </div>
                         </div>
 
-                        {/* Amount */}
-                        <div className="mb-4">
-                            <label className="text-gray-800 font-semibold mb-2 block">
-                                Amount
-                            </label>
-                            <div className="flex items-center justify-between w-[22rem] border rounded px-2 py-2">
-                                <input
-                                    type="number"
-                                    className="bg-transparent text-gray-800 text-sm outline-none w-full"
-                                    placeholder="Enter Amount"
-                                />
-                            </div>
-                        </div>
+                        
 
                         {/* Car Registration No */}
                         <div className="mb-4">
@@ -282,6 +270,19 @@ function Payment() {
                                     type="text"
                                     className="bg-transparent text-gray-800 text-sm outline-none w-full"
                                     placeholder="Enter Car Registration No"
+                                />
+                            </div>
+                        </div>
+                        {/* Amount */}
+                        <div className="mb-4">
+                            <label className="text-gray-800 font-semibold mb-2 block">
+                                Amount
+                            </label>
+                            <div className="flex items-center justify-between w-[22rem] border rounded px-2 py-2">
+                                <input
+                                    type="number"
+                                    className="bg-transparent text-gray-800 text-sm outline-none w-full"
+                                    placeholder="Enter Amount"
                                 />
                             </div>
                         </div>
