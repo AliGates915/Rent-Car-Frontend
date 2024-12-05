@@ -1,6 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect} from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import "./login.scss";
@@ -12,8 +12,13 @@ const Login = () => {
   });
   const { loading, error, dispatch } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
-
+  const [imageLoaded, setImageLoaded] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+    const img = new Image();
+    img.src = './slider.png'; // Adjust path if needed
+    img.onload = () => setImageLoaded(true);
+  }, []);
 
   const handleChange = (e) => {
     setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
@@ -58,9 +63,10 @@ const Login = () => {
       <div
         className="flex justify-center items-center font-[sans-serif] h-full min-h-screen p-4"
         style={{
-          backgroundImage: 'url(./slider.png)',
+          backgroundImage: imageLoaded ? 'url(./slider.png)' : 'none',
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
+          transition: 'background-image 0.5s ease-in-out',
         }}
       >
         <div className="max-w-md w-full mx-auto">
