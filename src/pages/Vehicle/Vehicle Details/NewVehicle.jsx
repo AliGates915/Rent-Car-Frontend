@@ -10,11 +10,13 @@ import {
 } from "react-icons/md";
 import { SiMake } from "react-icons/si";
 import { Link } from 'react-router-dom';
-
+// import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import { BsFillFuelPumpDieselFill } from "react-icons/bs";
 import { IoColorPaletteOutline, IoImageOutline, IoSpeedometerOutline } from "react-icons/io5";
 import { AiOutlinePlus } from "react-icons/ai";
 import { IoLogoModelS } from "react-icons/io";
+import { PiCarProfileBold } from "react-icons/pi";
+
 
 import { FaRegRegistered, FaCity, FaCalendarDays, FaRupeeSign } from "react-icons/fa6";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -32,7 +34,7 @@ function NewVehicle() {
     const [registeredCity, setRegisteredCity] = useState('');
 
     const [carType, setCarType] = useState([]);
-
+    // const [documentUrl, setDocumentUrl] = useState("");
     const [selectedCarType, setSelectedCarType] = useState("");
     const [carMake, setCarMake] = useState('');
     const [yearOfModel, setYearOfModel] = useState('');
@@ -66,8 +68,11 @@ function NewVehicle() {
     const [wheelPanna, setWheelPanna] = useState(false)
     const [mudFlaps, setMudFlaps] = useState(false)
     const [floorMat, setFloorMat] = useState(false)
+    const [documents, setDocument] = useState(false)
     const [isLoading, setIsLoading] = useState(false);
     const [Loading, setLoading] = useState(false);
+    const [priceVehicle, setPrice] = useState('')
+    const [fuel, setFuel] = useState('')
     const swiperRef = useRef(null);
     // Handle file input change
 
@@ -119,6 +124,10 @@ function NewVehicle() {
             wheelPanna,
             mudFlaps,
             floorMat,
+            documents,
+            fuel,
+            priceVehicle,
+            // drivingDocument: documentUrl,
             photos: pictures.map((picture) => picture.url), // Pass only the URLs
         };
 
@@ -213,7 +222,28 @@ function NewVehicle() {
     }, [carType.length, selectedCarType]);
 
 
+    // // Handle Single Document Upload
+    // const handleDocument = async (e) => {
+    //     const file = e.target.files[0]; // Get the first file
+    //     if (!file) return;
 
+    //     const data = new FormData();
+    //     data.append("file", file);
+    //     data.append("upload_preset", "upload");
+
+    //     try {
+    //         const uploadRes = await axios.post(
+    //             "https://api.cloudinary.com/v1_1/daexycwc7/image/upload",
+    //             data
+    //         );
+
+    //         const secureUrl = uploadRes.data.secure_url; // Get the uploaded document URL
+    //         setDocumentUrl(secureUrl); // Set the document URL state
+    //         alert("Document uploaded successfully!");
+    //     } catch (err) {
+    //         console.error("Error uploading document", err);
+    //     }
+    // };
 
     const handleCarTypeSelect = (e) => {
         setSelectedCarType(e.target.value);
@@ -222,6 +252,7 @@ function NewVehicle() {
 
 
 
+    // for Images uploaded
     const handleFileChange = (e) => {
         const selectedFiles = Array.from(e.target.files);
         if (selectedFiles.length + pictures.length > 10
@@ -803,6 +834,75 @@ function NewVehicle() {
                             </div>
                         </div>
 
+                        <div className="my-4 grid  grid-cols-4">
+                            {/* Price of vehicle */}
+                            <div>
+                                <label className="text-gray-800 font-semibold my-4">
+                                    <div className="flex justify-start gap-1">
+                                        <PiCarProfileBold PiCarProfileBold className="mt-[0.5px] font-bold items-center" />
+                                        Price of Vehicle
+                                    </div>
+                                </label>
+
+                                <div
+                                    className="flex items-center justify-between w-[14rem] border rounded 
+                                    px-2 py-2 cursor-pointer"
+                                >
+                                    <input
+                                        type="text"
+                                        className="bg-transparent text-gray-800 text-sm outline-none w-full"
+                                        value={priceVehicle}
+                                        onChange={(e) => setPrice(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            {/* Fuel Average */}
+                            <div>
+                                <label className="text-gray-800 font-semibold my-4">
+                                    <div className="flex justify-start gap-1">
+                                        <BsFillFuelPumpDieselFill className="mt-[0.5px] text-black items-center" />
+                                        Fuel Average
+                                    </div>
+                                </label>
+                                <div
+                                    className="flex items-center justify-between w-[14rem] border rounded 
+                                    px-2 py-2 cursor-pointer"
+                                >
+                                    <input
+                                        type="text"
+                                        className="bg-transparent text-gray-800 text-sm outline-none
+                                        w-full"
+                                        value={fuel}
+                                        onChange={(e) => setFuel(e.target.value)}
+
+                                    />
+                                </div>
+                            </div>
+                             {/* Driving Document Image
+                            <div className="mt-6 col-span-2">
+                                <label htmlFor="drivingLicense" className="flex items-center cursor-pointer text-gray-800 font-semibold">
+                                    Add Driving Document
+                                    <DriveFolderUploadOutlinedIcon />
+                                </label>
+                                <input
+                                    type="file"
+                                    id="drivingLicense"
+                                    accept="image/*"
+                                    style={{ display: "none" }}
+                                    onChange={handleDocument} // Call handleDocument directly
+                                />
+                                {documentUrl && (
+                                    <div className="mt-2 underline text-sm text-indigo-700">
+                                        <a href={documentUrl} target="_blank" rel="noopener noreferrer">
+                                            View Document
+                                        </a>
+                                    </div>
+                                )}
+                            </div> */}
+
+                        </div>
+
+
                         <div className="flex flex-wrap my-3 border-2 px-2 py-2 mr-10 gap-3">
                             {/* Checkbox 1 */}
                             <div className="flex items-center mr-12">
@@ -1001,7 +1101,20 @@ function NewVehicle() {
                                     />
                                 </label>
                             </div>
+                            {/* Checkbox 16 */}
+                            <div className="flex items-center">
+                                <label className="text-gray-800 font-semibold">
+                                    Vehicle Documents
+                                    <input
+                                        type="checkbox"
+                                        className="form-checkbox pt-3 ml-2 h-[18px] w-5 focus:ring"
+                                        checked={documents}
+                                        onChange={(e) => setDocument(e.target.checked)}
+                                    />
+                                </label>
+                            </div>
                         </div>
+                        
 
 
                         {/* Pictures Section */}
@@ -1022,8 +1135,6 @@ function NewVehicle() {
                                 onChange={handleFileChange}
                                 style={{ display: "none" }}
                             />
-
-
                         </div>
 
                         {/* Image Upload Button */}

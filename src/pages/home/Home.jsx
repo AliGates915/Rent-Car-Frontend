@@ -15,6 +15,7 @@ const Home = () => {
         <Navbar />
         <div className="widgets1">
           <Widget type="total vehicles" />
+          <Widget type="available" />
           <Widget type="rent" />
           <Widget type="customers" />
           {/* <Widget type="total" /> */}
@@ -24,7 +25,7 @@ const Home = () => {
           <Chart title="Last 6 Months (Revenue)" aspect={2 / 1} />
         </div>
         <div className="listContainer1">
-          <div className="listTitle1">Latest Transactions</div>
+          <div className="listTitle1">Latest Vehicle Status</div>
           <Table />
         </div>
       </div>

@@ -1,11 +1,12 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { FadeLoader } from 'react-spinners';
 import jsPDF from 'jspdf';
 
 function RentVehicle() {
+    const navigate = useNavigate();
     const [regDate, setRegDate] = useState('')
     const [serialNo, setSerialNo] = useState();
     const [customerInfo, setCustomerInfo] = useState([])
@@ -24,8 +25,11 @@ function RentVehicle() {
 
     });
     const [vehicleInfo, setVehiclesInfo] = useState([]);
+    const [rentInfo, setRentInfo] = useState([]);
     const [selectedRegistration, setSelectedRegistration] = useState("");
+    const [selectedRent, setSelectedRent] = useState("");
     const [selectedVehicle, setSelectedVehicle] = useState({
+        registrationNo:"",
         carType: "",
         carMake: "",
         carModel: "",
@@ -55,6 +59,8 @@ function RentVehicle() {
     const [wheelPanna, setWheelPanna] = useState(false)
     const [mudFlaps, setMudFlaps] = useState(false)
     const [floorMat, setFloorMat] = useState(false)
+    const [selfDriver, setSelfDriver] = useState(false)
+    const [withDriver, setWithDriver] = useState(false)
     const [dateFrom, setDateFrom] = useState("");
     const [cityFrom, setCityFrom] = useState("");
     const [dateTo, setDateTo] = useState("");
@@ -77,6 +83,7 @@ function RentVehicle() {
         const formData = {
             regDate,
             serialNo,
+            rentInfo: selectedRent,
             customerInfo: selectedCustomerInfo,
             vehicleInfo: selectedVehicle,
             features: {
@@ -95,6 +102,8 @@ function RentVehicle() {
                 jackHandle,
                 wheelPanna,
                 mudFlaps,
+                selfDriver,
+                withDriver,
                 floorMat,
             },
             rentalInfo: {
@@ -112,6 +121,7 @@ function RentVehicle() {
             },
         };
 
+        console.log("data send ",formData)
 
         try {
             const response = await axios.post(
@@ -122,6 +132,7 @@ function RentVehicle() {
             // Generate PDF after successful submission
             generatePDF(formData);
             console.log('Vehicle data submitted successfully:', response.data);
+            navigate('/rent-vehicle')
 
             // Optional: Simulated delay for UX purposes (optional)
             setTimeout(() => {
@@ -140,7 +151,7 @@ function RentVehicle() {
         }
     };
 
-    // console.log("Customer Info", selectedCustomerInfo)
+    console.log("Vehicle Info", selectedVehicle)
     // current date
     useEffect(() => {
         // Current date in YYYY-MM-DD format
@@ -212,6 +223,23 @@ function RentVehicle() {
         fetchDataForCarType();
     }, []);
 
+    // rent base data fetch
+    useEffect(() => {
+        const fetchDataForCarType = async () => {
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/rentType`);
+                console.log("Response ", response.data)
+                if (Array.isArray(response.data)) {
+                    setRentInfo(response.data); // Update the vehicleInfo state
+                }
+            } catch (error) {
+                console.error("Error fetching vehicle data:", error.message);
+            }
+        };
+
+        fetchDataForCarType();
+    }, []);
+
     //   handle registration selection
     const handleRegistrationSelect = (event) => {
         const selectedValue = event.target.value;
@@ -224,6 +252,7 @@ function RentVehicle() {
         if (selectedVehicleData) {
             setSelectedVehicle({
                 yearOfModel: selectedVehicleData.yearOfModel,
+                registrationNo: selectedVehicleData.registrationNo,
                 color: selectedVehicleData.color,
                 carType: selectedVehicleData.carType,
                 carMake: selectedVehicleData.carMake,
@@ -238,6 +267,12 @@ function RentVehicle() {
             console.log(ratePerDay);
 
         }
+    };
+
+    //   handle Rent selection
+    const handleRentSelect = (event) => {
+        const selectedValue = event.target.value;
+        setSelectedRent(selectedValue);
     };
 
     // serial no generate 
@@ -438,6 +473,7 @@ function RentVehicle() {
 
     return (
         <>
+        
             <nav className='flex justify-between my-4 mx-10'>
                 <div className='text-2xl font-extrabold text-[#0096FF] tracking-wide '>
                     RENT RECEIPT
@@ -454,6 +490,7 @@ function RentVehicle() {
 
             </nav>
             <hr className='bg-gray-400 mb-4' />
+
 
             {Loading ? (
                 <div className=" flex justify-center mt-48 min-h-screen">
@@ -653,9 +690,9 @@ function RentVehicle() {
                             Vehicle Information
                         </div>
 
-                        <div className="px-4">
+                        <div className="mb-4 px-4 grid  grid-cols-8 gap-3">
                             {/* Registration No. */}
-                            <div className="col-span-3">
+                            <div className="col-span-2">
                                 <label className="block text-gray-700 font-semibold mb-2">
                                     Registration No.
                                 </label>
@@ -684,6 +721,37 @@ function RentVehicle() {
                                     </select>
                                 </div>
                             </div>
+                            {/* Rent Type. */}
+                            <div className=" ml-4 col-span-2">
+                                <label className="block text-gray-700 font-semibold mb-2">
+                                        Rent Type
+                                </label>
+                                <div
+                                    className="flex items-center justify-between w-[12rem] border rounded 
+                                    px-2 py-2 cursor-pointer"
+                                >
+                                    <select
+                                        className="w-full bg-transparent border-none focus:outline-none cursor-pointer text-gray-700"
+                                        value={selectedRent}
+                                        required
+                                        onChange={handleRentSelect}
+                                    >
+                                        <option value="" disabled>
+                                            Rent Types
+                                        </option>
+                                        {rentInfo.length > 0 ? (
+                                            rentInfo.map((vehicle, index) => (
+                                                <option key={index} value={vehicle.rentTypes}>
+                                                    {vehicle.rentTypes}
+                                                </option>
+                                            ))
+                                        ) : (
+                                            <option disabled>No registration numbers available</option>
+                                        )}
+                                    </select>
+                                </div>
+                            </div>
+
                         </div>
 
                         <div className="mb-4 px-4 grid grid-cols-8 gap-3">
@@ -1050,6 +1118,30 @@ function RentVehicle() {
                                     />
                                 </label>
                             </div>
+                            {/* Checkbox 17 */}
+                            <div className="flex items-center">
+                                <label className="text-gray-800 font-semibold">
+                                    Self Driven
+                                    <input
+                                        type="checkbox"
+                                        className="form-checkbox pt-3 ml-[36px] h-[18px] w-5 focus:ring"
+                                        checked={selfDriver}
+                                        onChange={(e) => setSelfDriver(e.target.checked)}
+                                    />
+                                </label>
+                            </div>
+                            {/* Checkbox 18 */}
+                            <div className="flex items-center ml-24">
+                                <label className="text-gray-800 font-semibold">
+                                    With Driver
+                                    <input
+                                        type="checkbox"
+                                        className="form-checkbox pt-3 ml-[22px] h-[18px] w-5 focus:ring"
+                                        checked={withDriver}
+                                        onChange={(e) => setWithDriver(e.target.checked)}
+                                    />
+                                </label>
+                            </div>
                         </div>
 
 
@@ -1333,6 +1425,7 @@ function RentVehicle() {
                     </div>
                 </form>
             )}
+       
         </>
     );
 }

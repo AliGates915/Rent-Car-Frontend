@@ -2,7 +2,7 @@
 import "./widget.scss";
 import { Link } from 'react-router-dom';
 import { FiUsers } from 'react-icons/fi';
-import { MdBusinessCenter } from 'react-icons/md';
+import { MdBusinessCenter,MdEventAvailable  } from 'react-icons/md';
 
 import { FaCar } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
@@ -24,7 +24,12 @@ const Widget = ({ type }) => {
             response = await fetch(`${process.env.REACT_APP_API_URL}/customer-details`);
             break;
           case "rent":
-            response = await fetch(`${process.env.REACT_APP_API_URL}/return-vehicle`);
+            response = await fetch(`${process.env.REACT_APP_API_URL}/vehicle-details/return-vehicle`);
+            // console.log(response.data);
+            break;
+          case "available":
+            response = await fetch(`${process.env.REACT_APP_API_URL}/vehicle-details`);
+            // console.log(response.data);
             break;
           default:
             return;
@@ -34,6 +39,8 @@ const Widget = ({ type }) => {
         }
         const result = await response.json();
         setDataCount(result.length);
+        
+        
       } catch (error) {
         console.error("Error fetching data:", error.message);
       }
@@ -45,7 +52,7 @@ const Widget = ({ type }) => {
     case "total vehicles":
       data = {
         title: "TOTAL VEHICLES",
-        link: "See all Vehicles",
+        link: "All Vehicles",
         route: "/vehicle-details",
         icon: (
           <FaCar
@@ -62,10 +69,27 @@ const Widget = ({ type }) => {
       case "rent":
       data = {
         title: "ON RENT",
-        link: "View all Rent Vehicles",
+        link: "All Rent Vehicles",
         route: "/rent-vehicle",
         icon: (
           <MdBusinessCenter
+          size={40}
+            className="icon"
+            style={{
+              backgroundColor: "rgba(0, 128, 0, 0.2)",
+              color: "#4463ab",
+            }}
+          />
+        ),
+      };
+      break;
+      case "available":
+      data = {
+        title: "ON AVAILABLE",
+        link: "All Available Vehicles",
+        route: "/vehicle-details",
+        icon: (
+          <MdEventAvailable
           size={40}
             className="icon"
             style={{
@@ -79,7 +103,7 @@ const Widget = ({ type }) => {
     case "customers":
       data = {
         title: "CUSTOMERS",
-        link: "View all customers",
+        link: "All customers",
         route: "/customer-details",
         icon: (
           <FiUsers

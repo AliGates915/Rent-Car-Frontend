@@ -13,6 +13,7 @@ function NewCustomer() {
     const [file, setFile] = useState(null);
     const [regDate, setRegDate] = useState('')
     const [ownerCode, setOwnerCode] = useState('');
+   
     const [customerName, setCustomerName] = useState('');
     const [fatherName, setFatherName] = useState('');
     const [address, setAddress] = useState('');

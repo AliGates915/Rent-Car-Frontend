@@ -62,7 +62,7 @@ function VehicleDetails() {
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/vehicle-details/book-vehicle/${id}`);
             console.log('Vehicle booked:', response.data);
-            navigate('/rent-vehicle')
+            navigate('/rent-receipt')
             // alert('Vehicle booked successfully!');
 
             // Refetch vehicles or update the list of vehicles in your component state
@@ -172,7 +172,7 @@ function VehicleDetails() {
                                                 : "https://via.placeholder.com/300x200?text=No+Image+Available"
                                         }
                                         alt={`Slide ${currentIndices[product._id] || 0}`}
-                                        className="h-80 rounded-t-xl"
+                                        className="h-80 w-80 rounded-t-xl object-cover"
                                     />
                                 ) : (
                                     <p className="text-center">No images available</p>

@@ -14,9 +14,10 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const [imageLoaded, setImageLoaded] = useState(false);
   const navigate = useNavigate();
+  
   useEffect(() => {
     const img = new Image();
-    img.src = './slider.png'; // Adjust path if needed
+    img.src = './car3.png'; // Adjust path if needed
     img.onload = () => setImageLoaded(true);
   }, []);
 
