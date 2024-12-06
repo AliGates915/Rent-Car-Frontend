@@ -8,41 +8,34 @@ import {
 
 
 function Payment() {
-    const [rentTypes, setRentTypes] = useState("");
+    const [paymentTypes, setPaymentTypes] = useState("");
     const [fetchCustomer, setFetchCustomer] = useState([]);
     const [openHead, setOpenHead] = useState(false)
     const [isLoading, setIsLoading] = useState(true);
     const [date, setDate] = useState('');
+    const [amount, setAmount] = useState('');
+    const [voucherNo, setVoucher] = useState('');
+    const [carRegNo, setCarRegNo] = useState('');
+
 
     const [selectedCustomer, setSelectedCustomer] = useState("");
-    const [fetchRentTypes, setFetchRentTypes] = useState([
-        {
-            _id: "1",
-            voucherNo: "0001",
-            date: "2024-12-01",
-            customer: "John Doe",
-            amount: "5000",
-            carRegNo: "ABC-123",
-        },
-        {
-            _id: "2",
-            voucherNo: "0002",
-            date: "2024-12-02",
-            customer: "Jane Smith",
-            amount: "7500",
-            carRegNo: "XYZ-456",
-        },
-        {
-            _id: "3",
-            voucherNo: "0003",
-            date: "2024-12-03",
-            customer: "Michael Johnson",
-            amount: "6200",
-            carRegNo: "LMN-789",
-        },
-    ]);
+  
+  // Customer Data fetch
+  useEffect(() => {
+    const fetchDataForCustomer = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/customer-details`);
+            console.log("Response ", response.data)
+            if (Array.isArray(response.data)) {
+                setFetchCustomer(response.data); // Update the vehicleInfo state
+            }
+        } catch (error) {
+            console.error("Error fetching vehicle data:", error.message);
+        }
+    };
 
-
+    fetchDataForCustomer();
+}, []);
     // current date 
     useEffect(() => {
         // Current date in YYYY-MM-DD format
@@ -50,62 +43,6 @@ function Payment() {
         setDate(currentDate);
     }, []);
 
-    // useEffect(() => {
-    //     setIsLoading(true);
-    //     const fetchVehicleTypes = async () => {
-    //         try {
-    //             const response = await axios.get(`${process.env.REACT_APP_API_URL}/rentType`);
-
-    //             console.log("Response Data:", response.data); // Log the response data
-
-    //             if (Array.isArray(response.data)) {
-    //                 console.log("Data is an array.");
-    //                 setFetchRentTypes(response.data);
-    //             } else {
-    //                 console.error("Data is not an array. Resetting to empty array.");
-    //                 setFetchRentTypes([]); // Set as empty array if response isn't an array
-    //             }
-    //         } catch (error) {
-    //             console.error("Error fetching vehicle types:", error.message);
-    //             setFetchRentTypes([]); // Fallback to prevent error
-    //         } finally {
-    //             setTimeout(() => setIsLoading(false), 2000); // Stop loading after 2 seconds
-    //         }
-    //     };
-
-    //     fetchVehicleTypes();
-
-
-    // }, [rentTypes]);
-
-    // customer data
-    useEffect(() => {
-        setIsLoading(true);
-        const fetchVehicleTypes = async () => {
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/customer-details`);
-
-                console.log("Response Data:", response.data); // Log the response data
-
-                if (Array.isArray(response.data)) {
-                    console.log("Data is an array.");
-                    setFetchCustomer(response.data);
-                } else {
-                    console.error("Data is not an array. Resetting to empty array.");
-                    setFetchCustomer([]); // Set as empty array if response isn't an array
-                }
-            } catch (error) {
-                console.error("Error fetching vehicle types:", error.message);
-                setFetchCustomer([]); // Fallback to prevent error
-            } finally {
-                setTimeout(() => setIsLoading(false), 2000); // Stop loading after 2 seconds
-            }
-        };
-
-        fetchVehicleTypes();
-
-
-    }, [rentTypes]);
 
     const handleCustomerSelect = (event) => {
         const selectedValue = event.target.value;
@@ -113,24 +50,35 @@ function Payment() {
 
     };
     const handleSave = async () => {
-        if (!rentTypes) {
-            alert("Enter Rent types");
-            return;
-        }
+        setIsLoading(true)
 
         const dataToSend = {
-            rentTypes,
+            voucherNo,
+            date,
+            customerName: selectedCustomer,
+            carRegNo,
+            amount,
         };
 
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/rentType`, dataToSend);
-            setRentTypes([...rentTypes, response.data]);
-            setRentTypes('')
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/paymentVoucher`,
+                 dataToSend, 
+                 { headers: { 'Content-Type': 'application/json' } }
+             );
+            console.log(response.data);
+            
             // alert("Data is successfully saved.");
         } catch (error) {
             console.error("Error data:", error);
             alert(error);
+        }finally{
+            setTimeout(() => {
+                setIsLoading(false);
+                // alert('Data saved successfully!');
+                resetForm()
+            }, 2000);
         }
+        
     };
 
     const handleEdit = async (id) => {
@@ -145,7 +93,7 @@ function Payment() {
 
             if (response.status === 200) {
                 // Update the specific item in the list
-                setFetchRentTypes((prevList) =>
+                setPaymentTypes((prevList) =>
                     prevList.map((vehicle) =>
                         vehicle._id === id
                             ? { ...vehicle, vehicleTypes: updatedVehicle }
@@ -158,7 +106,59 @@ function Payment() {
             console.error("Error updating vehicle type:", error);
         }
     };
+    // Rest form
+    const resetForm = () => {
+        setVoucher('')
+        setAmount('')
+        setCarRegNo('')
+        setDate('')
+        setSelectedCustomer('')
+    }
+      // date format
+      const formatDate = (dateString) => {
+        if (!dateString) return "N/A"; // Handle missing date
+        const date = new Date(dateString);
+        return date.toLocaleDateString("en-GB"); // 'en-GB' for DD/MM/YYYY format
+    };
 
+    // voucher No.
+    useEffect(() => {
+        const fetchSerialNo = async () => {
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/paymentVoucher`);
+                console.log("Response:", response.data);
+    
+                if (Array.isArray(response.data)) {
+                    setPaymentTypes(response.data);
+                }
+    
+                if (!response.data || response.data.length === 0) {
+                    setVoucher(1); // Start from 1 if no data exists
+                } else {
+                    // Find the latest voucherNo from the backend data
+                    const lastSerial = response.data.reduce((max, item) => {
+                        if (item.voucherNo != null) {
+                            const serialNumber = Number(item.voucherNo);
+                            return serialNumber > max ? serialNumber : max;
+                        }
+                        return max;
+                    }, 0);
+    
+                    setVoucher(lastSerial + 1); // Set the next voucherNo
+                    console.log("Next Voucher No (Frontend):", lastSerial + 1);
+                }
+            } catch (error) {
+                console.error("Error fetching serial number:", error);
+                setVoucher(1); // Default to 1 in case of error
+            } finally {
+                setIsLoading(false); // Stop loading indicator
+            }
+        };
+    
+        fetchSerialNo();
+    }, [paymentTypes]); // Run on component mount only
+    
+    
 
     // Handle Delete
     const handleDelete = async (id) => {
@@ -167,7 +167,7 @@ function Payment() {
 
         try {
             await axios.delete(`${process.env.REACT_APP_API_URL}/rentType/${id}`);
-            setFetchRentTypes((prevList) =>
+            setPaymentTypes((prevList) =>
                 prevList.filter((vehicle) => vehicle._id !== id)
             );
         } catch (error) {
@@ -201,15 +201,16 @@ function Payment() {
                     </button>
 
                     <div className="mb-4 flex justify-between">
+                         {/* Voucher No. */}
                         <div className="">
+                           
                             <label className="text-gray-800 font-semibold mb-2 block">
                                 Voucher No
                             </label>
                             <input
                                 type="text"
                                 name="voucherNo"
-                                // value={formData.voucherNo}
-                                // onChange={handleChange}
+                                value={voucherNo}
                                 className="w-full border rounded px-3 py-2 bg-transparent text-gray-800 text-sm outline-none"
                                 placeholder="Enter Voucher No"
                             />
@@ -222,7 +223,7 @@ function Payment() {
                                 type="date"
                                 name="date"
                                 value={date}
-                                // onChange={handleChange}
+                                onChange={(e) => setDate(e.target.value)}
                                 className="w-full border rounded px-3 py-2 bg-transparent text-gray-800 text-sm outline-none"
                             />
                         </div>
@@ -258,7 +259,7 @@ function Payment() {
                             </div>
                         </div>
 
-                        
+
 
                         {/* Car Registration No */}
                         <div className="mb-4">
@@ -268,6 +269,8 @@ function Payment() {
                             <div className="flex items-center justify-between w-[22rem] border rounded px-2 py-2">
                                 <input
                                     type="text"
+                                    value={carRegNo}
+                                    onChange={(e) => setCarRegNo(e.target.value)}
                                     className="bg-transparent text-gray-800 text-sm outline-none w-full"
                                     placeholder="Enter Car Registration No"
                                 />
@@ -280,7 +283,10 @@ function Payment() {
                             </label>
                             <div className="flex items-center justify-between w-[22rem] border rounded px-2 py-2">
                                 <input
-                                    type="number"
+                                    type="text"
+                                    value={amount}
+                                    required
+                                    onChange={(e) => setAmount(e.target.value)}
                                     className="bg-transparent text-gray-800 text-sm outline-none w-full"
                                     placeholder="Enter Amount"
                                 />
@@ -310,7 +316,7 @@ function Payment() {
                             color="#0fdaee" size={15} margin={5} />
                     </div>
                 ) : (
-                    <div className=" max-w-full mx-10">
+                    <div className=" max-w-full mx-10 mb-8">
                         <table className="min-w-full shadow-xl border-collapse border border-gray-200">
                             <thead className="text-sm bg-[#0096FF] text-gray-50">
                                 <tr>
@@ -324,13 +330,13 @@ function Payment() {
                                 </tr>
                             </thead>
                             <tbody className="text-sm">
-                                {Array.isArray(fetchRentTypes) && fetchRentTypes.length > 0 ? (
-                                    fetchRentTypes.map((vehicle, index) => (
+                                {Array.isArray(paymentTypes) && paymentTypes.length > 0 ? (
+                                    paymentTypes.map((vehicle, index) => (
                                         <tr key={vehicle._id}>
                                             <td className="border px-4 py-2">{index + 1}</td>
                                             <td className="border px-4 py-2">{vehicle.voucherNo}</td>
-                                            <td className="border px-4 py-2">{vehicle.date}</td>
-                                            <td className="border px-4 py-2">{vehicle.customer}</td>
+                                            <td className="border px-4 py-2">{formatDate(vehicle.date)}</td>
+                                            <td className="border px-4 py-2">{vehicle.customerName}</td>
                                             <td className="border px-4 py-2">{vehicle.amount}</td>
                                             <td className="border px-4 py-2">{vehicle.carRegNo}</td>
                                             <td className="border px-4 py-3 flex justify-center space-x-4">
@@ -349,7 +355,8 @@ function Payment() {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="5" className="border px-4 font-semibold py-2 text-center">
+                                        <td colSpan="5" className="border px-4 font-semibold py-2 
+                                         text-center">
                                             No data found.
                                         </td>
                                     </tr>

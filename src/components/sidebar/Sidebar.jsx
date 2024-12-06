@@ -108,36 +108,7 @@ const Sidebar = () => {
           </li>
           </Link>
          
-          <Link to="/package-list" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Vehicle Advance Booking</span>
-          </li>
-          </Link>
-          <Link to="/package-list" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Vehicle Handing Over
-            </span>
-          </li>
-          </Link>
-          
-          <Link to="/package-list" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Vehicle Close
-            </span>
-          </li>
-          </Link>
-          <Link to="/package-list" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Cash Receipt Voucher
-            </span>
-          </li>
-          </Link>
-         
-          <Link to="/package-list" style={{ textDecoration: "none" }}>
+          <Link to="/dayBook" style={{ textDecoration: "none" }}>
           <li>
             <ListAltIcon className="icon" />
             <span>DayBook

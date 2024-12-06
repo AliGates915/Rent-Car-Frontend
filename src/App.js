@@ -23,6 +23,7 @@ import ReturnVehicleForm from "./pages/Vehicle/Rent/ReturnVehicleForm";
 import SaveVehicle from "./pages/Vehicle/Rent/SaveVehilce";
 import Payment from "./pages/Vehicle/Voucher/Payement";
 import ExpenseVoucher from "./pages/Vehicle/Voucher/ExpenseVoucher";
+import DayBook from "./pages/Vehicle/Voucher/DayBook";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -208,6 +209,15 @@ function App() {
             element={
               <Layout>
                 <ExpenseVoucher />
+              </Layout>
+            }
+          />
+          <Route
+            path="/dayBook"
+            index
+            element={
+              <Layout>
+                <DayBook />
               </Layout>
             }
           />

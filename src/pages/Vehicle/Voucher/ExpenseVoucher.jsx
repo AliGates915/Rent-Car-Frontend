@@ -8,44 +8,18 @@ import {
 
 
 function ExpenseVoucher() {
-    const [rentTypes, setRentTypes] = useState("");
-    const [openHead, setOpenHead] = useState(false)
-    const [isLoading, setIsLoading] = useState(true);
-    const [date, setDate] = useState('');
+    const [head, setHead] = useState('')
+    const [expenseTypes, setExpenseTypes] = useState("");
 
-    const [formData, setFormData] = useState({
-        voucherNo: "",
-        date: "",
-        head: "",
-        amount: "",
-        description: "",
-      });
-    const [fetchRentTypes, setFetchRentTypes] = useState([
-        {
-            _id: "1",
-            voucherNo: "0001",
-            date: "2024-12-01",
-            customer: "John Doe",
-            amount: "5000",
-            carRegNo: "ABC-123",
-        },
-        {
-            _id: "2",
-            voucherNo: "0002",
-            date: "2024-12-02",
-            customer: "Jane Smith",
-            amount: "7500",
-            carRegNo: "XYZ-456",
-        },
-        {
-            _id: "3",
-            voucherNo: "0003",
-            date: "2024-12-03",
-            customer: "Michael Johnson",
-            amount: "6200",
-            carRegNo: "LMN-789",
-        },
-    ]);
+    const [openHead, setOpenHead] = useState(false)
+    const [date, setDate] = useState('');
+    const [description, setDescription] = useState('');
+    const [amount, setAmount] = useState(0);
+    const [voucherNo, setVoucher] = useState('');
+    const [carRegNo, setCarRegNo] = useState('');
+    const [isLoading, setIsLoading] = useState(true);;
+
+    
 
     setTimeout(() => setIsLoading(false), 2000);
 
@@ -80,23 +54,32 @@ function ExpenseVoucher() {
     // customer data
    
     const handleSave = async () => {
-        if (!rentTypes) {
-            alert("Enter Rent types");
-            return;
-        }
-
         const dataToSend = {
-            rentTypes,
+            voucherNo,
+            date,
+            head,
+            carRegNo,
+            amount,
+            description,
         };
 
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/rentType`, dataToSend);
-            setRentTypes([...rentTypes, response.data]);
-            setRentTypes('')
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/expenseVoucher`,
+                 dataToSend, 
+                 { headers: { 'Content-Type': 'application/json' } }
+             );
+            console.log(response.data);
+            
             // alert("Data is successfully saved.");
         } catch (error) {
             console.error("Error data:", error);
             alert(error);
+        }finally{
+            setTimeout(() => {
+                setIsLoading(false);
+                // alert('Data saved successfully!');
+                resetForm()
+            }, 2000);
         }
     };
 
@@ -112,7 +95,7 @@ function ExpenseVoucher() {
 
             if (response.status === 200) {
                 // Update the specific item in the list
-                setFetchRentTypes((prevList) =>
+                setExpenseTypes((prevList) =>
                     prevList.map((vehicle) =>
                         vehicle._id === id
                             ? { ...vehicle, vehicleTypes: updatedVehicle }
@@ -126,6 +109,53 @@ function ExpenseVoucher() {
         }
     };
 
+     // voucher No.
+     useEffect(() => {
+        const fetchSerialNo = async () => {
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/expenseVoucher`);
+                console.log("Response:", response.data);
+    
+                if (Array.isArray(response.data)) {
+                    setExpenseTypes(response.data);
+                }
+    
+                if (!response.data || response.data.length === 0) {
+                    setVoucher(1); // Start from 1 if no data exists
+                } else {
+                    // Find the latest voucherNo from the backend data
+                    const lastSerial = response.data.reduce((max, item) => {
+                        if (item.voucherNo != null) {
+                            const serialNumber = Number(item.voucherNo);
+                            return serialNumber > max ? serialNumber : max;
+                        }
+                        return max;
+                    }, 0);
+    
+                    setVoucher(lastSerial + 1); // Set the next voucherNo
+                    console.log("Next Voucher No (Frontend):", lastSerial + 1);
+                }
+            } catch (error) {
+                console.error("Error fetching serial number:", error);
+                setVoucher(1); // Default to 1 in case of error
+            } finally {
+                setIsLoading(false); // Stop loading indicator
+            }
+        };
+    
+        fetchSerialNo();
+    }, [expenseTypes]); // Run on component mount only
+    
+
+     // Rest form
+     const resetForm = () => {
+        setVoucher('')
+        setAmount('')
+        setCarRegNo('')
+        setDate('')
+        setHead('')
+        setDescription('')
+    }
 
     // Handle Delete
     const handleDelete = async (id) => {
@@ -134,7 +164,7 @@ function ExpenseVoucher() {
 
         try {
             await axios.delete(`${process.env.REACT_APP_API_URL}/rentType/${id}`);
-            setFetchRentTypes((prevList) =>
+            setExpenseTypes((prevList) =>
                 prevList.filter((vehicle) => vehicle._id !== id)
             );
         } catch (error) {
@@ -142,6 +172,18 @@ function ExpenseVoucher() {
         }
     };
 
+    // current date 
+    useEffect(() => {
+        // Current date in YYYY-MM-DD format
+        const currentDate = new Date().toISOString().split('T')[0];
+        setDate(currentDate);
+    }, []);
+  // date format
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A"; // Handle missing date
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-GB"); // 'en-GB' for DD/MM/YYYY format
+};
     return (
         <>
             <nav className='flex justify-between my-4 mx-10'>
@@ -174,8 +216,7 @@ function ExpenseVoucher() {
                         <input
                             type="text"
                             name="voucherNo"
-                            // value={formData.voucherNo}
-                            // onChange={handleChange}
+                            value={voucherNo}
                             className="w-full border rounded px-3 py-2 bg-transparent text-gray-800 text-sm outline-none"
                             placeholder="Enter Voucher No"
                         />
@@ -188,7 +229,7 @@ function ExpenseVoucher() {
                             type="date"
                             name="date"
                             value={date}
-                            // onChange={handleChange}
+                            onChange={(e) => setDate(e.target.value)}
                             className="w-full border rounded px-3 py-2 bg-transparent text-gray-800 text-sm outline-none"
                         />
                     </div>
@@ -201,8 +242,9 @@ function ExpenseVoucher() {
                         <input
                             type="text"
                             name="head"
-                            // value={formData.head}
-                            // onChange={handleChange}
+                            value={head}
+                            required
+                            onChange={(e) => setHead(e.target.value)}
                             className="w-full border rounded px-3 py-2 bg-transparent text-gray-800 text-sm outline-none"
                             placeholder="Enter Head"
                         />
@@ -214,8 +256,9 @@ function ExpenseVoucher() {
                         <input
                             type="number"
                             name="amount"
-                            // value={formData.amount}
-                            // onChange={handleChange}
+                            required
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
                             className="w-full border rounded px-3 py-2 bg-transparent text-gray-800 text-sm outline-none"
                             placeholder="Enter Amount"
                         />
@@ -228,8 +271,8 @@ function ExpenseVoucher() {
                         </label>
                         <textarea
                             name="description"
-                            // value={formData.description}
-                            // onChange={handleChange}
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
                             className="w-full border rounded px-3 py-2 bg-transparent text-gray-800 text-sm outline-none"
                             placeholder="Enter Description"
                             rows="4"
@@ -255,7 +298,7 @@ function ExpenseVoucher() {
                         color="#0fdaee" size={15} margin={5} />
                 </div>
             ) : (
-                <div className=" max-w-full mx-10">
+                <div className=" max-w-full mx-10 mb-8">
                     <table className="min-w-full shadow-xl border-collapse border border-gray-200">
                         <thead className="text-sm bg-[#0096FF] text-gray-50">
                             <tr>
@@ -269,15 +312,15 @@ function ExpenseVoucher() {
                             </tr>
                         </thead>
                         <tbody className="text-sm">
-                            {Array.isArray(fetchRentTypes) && fetchRentTypes.length > 0 ? (
-                                fetchRentTypes.map((vehicle, index) => (
+                            {Array.isArray(expenseTypes) && expenseTypes.length > 0 ? (
+                                expenseTypes.map((vehicle, index) => (
                                     <tr key={vehicle._id}>
                                         <td className="border px-4 py-2">{index + 1}</td>
                                         <td className="border px-4 py-2">{vehicle.voucherNo}</td>
-                                        <td className="border px-4 py-2">{vehicle.date}</td>
-                                        <td className="border px-4 py-2">{vehicle.customer}</td>
+                                        <td className="border px-4 py-2">{formatDate(vehicle.date)}</td>
+                                        <td className="border px-4 py-2">{vehicle.head}</td>
                                         <td className="border px-4 py-2">{vehicle.amount}</td>
-                                        <td className="border px-4 py-2">{vehicle.carRegNo}</td>
+                                        <td className="border px-4 py-2">{vehicle.description}</td>
                                         <td className="border px-4 py-3 flex justify-center space-x-4">
                                             <FaEdit
                                                 className="text-blue-600 cursor-pointer"

@@ -255,7 +255,6 @@ function VehicleDetails() {
                                             Book
                                         </button>
                                     </div>
-
                                 </div>
                             </div>
                         ))
