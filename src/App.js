@@ -24,6 +24,7 @@ import SaveVehicle from "./pages/Vehicle/Rent/SaveVehilce";
 import Payment from "./pages/Vehicle/Voucher/Payement";
 import ExpenseVoucher from "./pages/Vehicle/Voucher/ExpenseVoucher";
 import DayBook from "./pages/Vehicle/Voucher/DayBook";
+import PDf from "./pages/Vehicle/Voucher/PDf";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -221,6 +222,15 @@ function App() {
               </Layout>
             }
           />
+          {/* <Route
+            path="/pdf"
+            index
+            element={
+              <Layout>
+                <PDf />
+              </Layout>
+            }
+          /> */}
         </Routes>
       </BrowserRouter>
     </div>

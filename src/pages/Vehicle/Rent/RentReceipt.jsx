@@ -5,7 +5,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { FadeLoader } from 'react-spinners';
 import jsPDF from 'jspdf';
 
-function RentVehicle() {
+function RentVehicle({id}) {
     const navigate = useNavigate();
     const [regDate, setRegDate] = useState('')
     const [serialNo, setSerialNo] = useState();
@@ -129,6 +129,8 @@ function RentVehicle() {
                 formData,
                 { headers: { 'Content-Type': 'application/json' } }
             );
+            await axios.post(`${process.env.REACT_APP_API_URL}/vehicle-details/book-vehicle/${id}`);
+            
             // Generate PDF after successful submission
             generatePDF(formData);
             console.log('Vehicle data submitted successfully:', response.data);

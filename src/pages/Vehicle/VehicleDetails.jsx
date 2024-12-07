@@ -60,10 +60,8 @@ function VehicleDetails() {
 
     const handleBook = async (id) => {
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/vehicle-details/book-vehicle/${id}`);
-            console.log('Vehicle booked:', response.data);
-            navigate('/rent-receipt')
-            // alert('Vehicle booked successfully!');
+            
+            navigate(`/rent-receipt/${id}`)
 
             // Refetch vehicles or update the list of vehicles in your component state
             const updatedVehicles = await axios.get(`${process.env.REACT_APP_API_URL}/vehicle-details`);
@@ -180,22 +178,23 @@ function VehicleDetails() {
 
                                 {/* Product Info */}
                                 <div className="px-4 text-center font-sans py-3 w-[20rem]">
-                                    <span className="flex justify-center text-[#979ead] uppercase text-sm">
+                                    <span className="flex justify-center text-[#979ead] 
+                                    uppercase text-sm">
                                         Register No: <span className="uppercase font-bold"> {product.registrationNo}</span>
                                     </span>
 
-                                    <div className="ml-2 flex justify-between w-[22rem]">
-                                        <p className="text-[#5c6f9d] truncate text-[16px] block">
-                                            Make: <span className="font-bold mr-2">{product.carMake}</span>
-                                            Model: <span className="font-bold mr-2">{product.carModel}</span>
-                                            Year: <span className="font-bold">{product.yearOfModel}</span>
+                                    <div className=" w-[22rem]">
+                                        <p className=" text-[#5c6f9d] truncate text-[16px]">
+                                            <span className="font-bold mr-2">{product.carMake}</span>
+                                            <span className="font-bold mr-2">{product.carModel}</span>
+                                            <span className="font-bold">{product.yearOfModel}</span>
                                         </p>
                                     </div>
 
-                                    <div className="ml-6 flex justify-between w-80">
+                                    <div className="w-80">
                                         <p className="text-[#5c6f9d] text-[0.98rem] block">
-                                            Color: <span className="font-bold mr-1">{product.color}</span>
-                                            Location: <span className="font-bold">{product.location || "Lahore"}</span>
+                                            <span className="font-bold mr-1">{product.color}</span>
+                                            <span className="font-bold">{product.location || "Lahore"}</span>
                                         </p>
                                     </div>
 
