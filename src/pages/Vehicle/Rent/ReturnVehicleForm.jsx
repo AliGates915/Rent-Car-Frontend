@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { RotateLoader } from "react-spinners";
 import SaveVehicle from "./SaveVehilce";
-import {Link} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 
 const ReturnVehicleForm = ({ vehicleId, onClose }) => {
   const [formData, setFormData] = useState({
@@ -14,6 +14,7 @@ const ReturnVehicleForm = ({ vehicleId, onClose }) => {
 const [isLoading, setIsLoading] = useState(false); // Loader
 const [isVisible, setIsVisible] = useState(false);
 const [isSaved, setIsSaved] = useState(false); // Track if form is saved
+const id = useParams();
 
 useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100); // Smooth modal opening
@@ -24,7 +25,7 @@ const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 };
 
-const handleSubmit = async (e) => {
+const handleSubmit = async (e, id) => {
     e.preventDefault();
 
     // Ensure balanceAmount is properly parsed or validated
@@ -46,7 +47,7 @@ const handleSubmit = async (e) => {
 
     try {
         const response = await axios.post(
-            `${process.env.REACT_APP_API_URL}/vehicle-details/save-form`,
+            `${process.env.REACT_APP_API_URL}/vehicle-details/save-form/${id}`,
             submitData
         );
         console.log('Response:', response.data);

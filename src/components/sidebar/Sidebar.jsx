@@ -71,13 +71,13 @@ const Sidebar = () => {
           </li>
           </Link>
 
-          <Link to="/rent-receipt" style={{ textDecoration: "none" }}>
+          {/* <Link to="/rent-receipt" style={{ textDecoration: "none" }}>
           <li>
             <ListAltIcon className="icon" />
             <span>Rent Receipt
             </span>
           </li>
-          </Link>
+          </Link> */}
           
           <Link to="/rent-vehicle" style={{ textDecoration: "none" }}>
           <li>
@@ -85,12 +85,12 @@ const Sidebar = () => {
             <span>Return Vehicles</span>
           </li>
           </Link>
-          <Link to="/save-vehicle" style={{ textDecoration: "none" }}>
+          {/* <Link to="/save-vehicle" style={{ textDecoration: "none" }}>
           <li>
             <ListAltIcon className="icon" />
             <span>Save Vehicles</span>
           </li>
-          </Link>
+          </Link> */}
 
           
           <Link to="/payment-voucher" style={{ textDecoration: "none" }}>

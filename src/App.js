@@ -103,7 +103,7 @@ function App() {
               </Layout>
             }
           />
-          <Route
+          {/* <Route
             path="/save-vehicle"
             index
             element={
@@ -111,16 +111,7 @@ function App() {
                 <SaveVehicle />
               </Layout>
             }
-          />
-          <Route
-            path="/save-vehicle"
-            index
-            element={
-              <Layout>
-                <SaveVehicle />
-              </Layout>
-            }
-          />
+          /> */}
           <Route
             path="/new-owner"
             index
@@ -131,7 +122,7 @@ function App() {
             }
           />
           <Route
-            path="/save-form"
+            path="/save-form/:id"
             index
             element={
               <Layout>
@@ -168,7 +159,7 @@ function App() {
             }
           />
           <Route
-            path="/rent-receipt"
+            path="/rent-receipt/:id"
             index
             element={
               <Layout>

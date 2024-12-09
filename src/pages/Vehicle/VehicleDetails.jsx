@@ -14,7 +14,6 @@ import {
     FadeLoader
 } from 'react-spinners';
 
-
 import axios from "axios";
 
 function VehicleDetails() {
@@ -57,7 +56,6 @@ function VehicleDetails() {
         fetchVehicle();
     }, []);
 
-
     const handleBook = async (id) => {
         try {
             
@@ -72,8 +70,6 @@ function VehicleDetails() {
             alert('Error booking vehicle, please try again!');
         }
     };
-
-
 
     // Automatic Image Slide every 3 seconds
     useEffect(() => {
@@ -107,7 +103,6 @@ function VehicleDetails() {
 
         return () => clearInterval(interval); // Cleanup on unmount
     }, [vehicles]);
-
 
     // Delete item
     const handleDelete = async (id) => {

@@ -1,6 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { TbAirConditioning } from "react-icons/tb";
 import { SiAirplayvideo } from "react-icons/si";
 import { GiCctvCamera } from "react-icons/gi";
@@ -19,7 +19,7 @@ import axios from "axios";
 function RentVehicle() {
     const [vehicles, setVehicles] = useState([]);
     const [images, setImages] = useState([]);
-    const [currentIndices, setCurrentIndices] = useState({});
+    const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(true);
     // Fetch vehicle data once when the component mounts
@@ -40,13 +40,7 @@ function RentVehicle() {
                 }
 
                 // Initialize current index for each vehicle
-                const initialIndices = {};
-                response.data.forEach((vehicle) => {
-                    if (vehicle.photos && vehicle.photos.length > 0) {
-                        initialIndices[vehicle.id] = 0; // Ensure each vehicle has a unique id and valid photos array
-                    }
-                });
-                setCurrentIndices(initialIndices);
+                
             } catch (error) {
                 console.error("Error fetching vehicles:", error);
             } finally {
@@ -106,15 +100,6 @@ function RentVehicle() {
                 if (Array.isArray(response.data)) {
                     console.log("Vehicle Data", response.data);
                     setImages(response.data);
-
-                    // Initialize current index for each vehicle if photos array exists
-                    const initialIndices = {};
-                    response.data.forEach((photo) => {
-                        if (photo.photos && photo.photos.length > 0) {
-                            initialIndices[photo._id] = 0; // Using _id for uniqueness
-                        }
-                    });
-                    setCurrentIndices(initialIndices);
                 } else {
                     console.error("Data is not an array.");
                     setImages([]);
@@ -135,8 +120,9 @@ function RentVehicle() {
     const handleReturn = async (id) => {
         try {
             const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/vehicle-details/save-return-vehicle/${id}`);
-            alert("Vehicle Returned Successfully")
+                `${process.env.REACT_APP_API_URL}/vehicle-details/save-vehicle/${id}`);
+                navigate(`/save-form/${id}`)
+            // alert("Vehicle Returned Successfully")
             console.log('Vehicle returned:', response.data);
             setVehicles((prevVehicles) => prevVehicles.filter((vehicle) => vehicle._id !== id));
 
@@ -152,26 +138,6 @@ function RentVehicle() {
         return date.toLocaleDateString("en-GB"); // 'en-GB' for DD/MM/YYYY format
     };
 
-    // Automatic Image Slide every 3 seconds
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentIndices((prevIndices) => {
-                const newIndices = { ...prevIndices };
-
-                vehicles.forEach((vehicle) => {
-                    if (vehicle.photos && vehicle.photos.length > 0) {
-                        const currentIndex = prevIndices[vehicle.id] || 0;
-                        const nextIndex = (currentIndex + 1) % vehicle.photos.length; // Loop within available images
-                        newIndices[vehicle.id] = nextIndex;
-                    }
-                });
-
-                return newIndices;
-            });
-        }, 3000); // Change image every 3 seconds
-
-        return () => clearInterval(interval); // Clear interval on component unmount
-    }, [vehicles]);
 
     // Delete item
 
@@ -228,20 +194,20 @@ function RentVehicle() {
                                         {vehicles[index]?.vehicleInfo?.registrationNo || "N/A"}</span>
                                 </span>
 
-                                <div className="ml-2 flex justify-between w-[22rem]">
+                                <div className="ml-4 w-[22rem]">
                                     <p className="text-[#5c6f9d] truncate text-[16px] block">
-                                        Make: <span className="font-bold mr-2">
+                                        <span className="font-bold mr-2">
                                             {vehicles[index]?.vehicleInfo?.carMake || "N/A"}</span>
-                                        Model: <span className="font-bold mr-2">
+                                        <span className="font-bold mr-2">
                                             {vehicles[index]?.vehicleInfo?.carModel || "N/A"}</span>
-                                        Year: <span className="font-bold">
+                                        <span className="font-bold">
                                             {vehicle.yearOfModel}</span>
                                     </p>
                                 </div>
 
                                 <div className="flex justify-center w-80">
-                                    <p className="text-[#ab32e4] font-medium text-[1rem] block">
-                                        CustomerName: <span className="font-bold mr-1">
+                                    <p className="text-[#ab32e4] font-medium text-[1.5rem] block">
+                                        <span className="font-bold mr-1">
                                             {vehicles[index]?.customerInfo?.customerName || "N/A"}</span>
                                     </p>
                                 </div>
@@ -281,7 +247,7 @@ function RentVehicle() {
                                             hover:scale-105 hover:shadow-lg hover:shadow-[#0096FF]/80"
                                         onClick={() => handleReturn(vehicle._id)}
                                     >
-                                        Book
+                                        Return Vehicle
                                     </button>
                                 </div>
                             </div>

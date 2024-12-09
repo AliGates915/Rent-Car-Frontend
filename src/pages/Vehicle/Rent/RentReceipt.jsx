@@ -1,12 +1,26 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import { FadeLoader } from 'react-spinners';
 import jsPDF from 'jspdf';
 
-function RentVehicle({id}) {
+function RentVehicle() {
+    const { id } = useParams(); // Extract the ID from the URL
     const navigate = useNavigate();
+    const [vehicleData, setVehicleData] = useState({
+        registrationNo:"",
+        carType: "",
+        carMake: "",
+        carModel: "",
+        color: "",
+        yearOfModel: "",
+        transmissionType: "",
+        engineCapacity: "",
+        chassisNo: "",
+        engineNo: "",ratePerDay: "",
+        photos: [0],
+    });
     const [regDate, setRegDate] = useState('')
     const [serialNo, setSerialNo] = useState();
     const [customerInfo, setCustomerInfo] = useState([])
@@ -24,25 +38,8 @@ function RentVehicle({id}) {
         referenceMobile: "",
 
     });
-    const [vehicleInfo, setVehiclesInfo] = useState([]);
     const [rentInfo, setRentInfo] = useState([]);
-    const [selectedRegistration, setSelectedRegistration] = useState("");
     const [selectedRent, setSelectedRent] = useState("");
-    const [selectedVehicle, setSelectedVehicle] = useState({
-        registrationNo:"",
-        carType: "",
-        carMake: "",
-        carModel: "",
-        color: "",
-        yearOfModel: "",
-        transmissionType: "",
-        engineCapacity: "",
-        chassisNo: "",
-        engineNo: "",
-        ratePerDay: "",
-        photos: "",
-
-    });
     const [airConditioner, setAirConditioner] = useState(false)
     const [heater, setHeater] = useState(false)
     const [sunRoof, setSunRoof] = useState(false)
@@ -73,9 +70,10 @@ function RentVehicle({id}) {
     const [advanceAmount, setAdvanceAmount] = useState("");
     const [balanceAmount, setBalanceAmount] = useState("");
 
-    const [ratePerDay, setRatePerDay] = useState(selectedVehicle?.ratePerDay || 1000);
+    const [ratePerDay, setRatePerDay] = useState(vehicleData?.ratePerDay || 1000);
     const [Loading, setLoading] = useState(false);
 
+    
     // Handle All the data
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -85,7 +83,7 @@ function RentVehicle({id}) {
             serialNo,
             rentInfo: selectedRent,
             customerInfo: selectedCustomerInfo,
-            vehicleInfo: selectedVehicle,
+            vehicleInfo: vehicleData,
             features: {
                 airConditioner,
                 heater,
@@ -124,12 +122,11 @@ function RentVehicle({id}) {
         console.log("data send ",formData)
 
         try {
-            const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/rent-receipt`,
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/rent-receipt`,
                 formData,
                 { headers: { 'Content-Type': 'application/json' } }
             );
-            await axios.post(`${process.env.REACT_APP_API_URL}/vehicle-details/book-vehicle/${id}`);
+            // await axios.post(`${process.env.REACT_APP_API_URL}/vehicle-details/book-vehicle/${id}`);
             
             // Generate PDF after successful submission
             generatePDF(formData);
@@ -153,7 +150,7 @@ function RentVehicle({id}) {
         }
     };
 
-    console.log("Vehicle Info", selectedVehicle)
+    // console.log("Vehicle Info", selectedVehicle)
     // current date
     useEffect(() => {
         // Current date in YYYY-MM-DD format
@@ -178,9 +175,22 @@ function RentVehicle({id}) {
                 console.error("Error fetching vehicle data:", error.message);
             }
         };
+        const fetchVehicleData = async () => {
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/vehicle-details/book-vehicle/${id}`);
+                console.log("Id Data", response.data);
+                
+                setVehicleData(response.data); // Set the vehicle data in state
+                
+            } catch (error) {
+                console.error('Error fetching vehicle data:', error.message);
+                alert('Failed to fetch vehicle details!');
+            }
+        };
 
+        fetchVehicleData();
         fetchDataForCustomer();
-    }, []);
+    }, [id]);
 
     //   handle customer selection
     const handleCustomerSelect = (event) => {
@@ -209,21 +219,21 @@ function RentVehicle({id}) {
     };
 
     // registration base data fetch
-    useEffect(() => {
-        const fetchDataForCarType = async () => {
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/vehicle-details`);
-                console.log("Response ", response.data)
-                if (Array.isArray(response.data)) {
-                    setVehiclesInfo(response.data); // Update the vehicleInfo state
-                }
-            } catch (error) {
-                console.error("Error fetching vehicle data:", error.message);
-            }
-        };
+    // useEffect(() => {
+    //     const fetchDataForCarType = async () => {
+    //         try {
+    //             const response = await axios.get(`${process.env.REACT_APP_API_URL}/vehicle-details`);
+    //             console.log("Response ", response.data)
+    //             if (Array.isArray(response.data)) {
+    //                 setVehiclesInfo(response.data); // Update the vehicleInfo state
+    //             }
+    //         } catch (error) {
+    //             console.error("Error fetching vehicle data:", error.message);
+    //         }
+    //     };
 
-        fetchDataForCarType();
-    }, []);
+    //     fetchDataForCarType();
+    // }, []);
 
     // rent base data fetch
     useEffect(() => {
@@ -242,34 +252,6 @@ function RentVehicle({id}) {
         fetchDataForCarType();
     }, []);
 
-    //   handle registration selection
-    const handleRegistrationSelect = (event) => {
-        const selectedValue = event.target.value;
-        setSelectedRegistration(selectedValue);
-
-        const selectedVehicleData = vehicleInfo.find(
-            (vehicle) => vehicle.registrationNo === selectedValue
-        );
-
-        if (selectedVehicleData) {
-            setSelectedVehicle({
-                yearOfModel: selectedVehicleData.yearOfModel,
-                registrationNo: selectedVehicleData.registrationNo,
-                color: selectedVehicleData.color,
-                carType: selectedVehicleData.carType,
-                carMake: selectedVehicleData.carMake,
-                carModel: selectedVehicleData.carModel,
-                transmissionType: selectedVehicleData.transmissionType,
-                engineCapacity: selectedVehicleData.engineCapacity,
-                chassisNo: selectedVehicleData.chassisNo,
-                engineNo: selectedVehicleData.engineNo,
-                ratePerDay: selectedVehicleData.ratePerDay,
-                photos: selectedVehicleData.photos[0],
-            });
-            console.log(ratePerDay);
-
-        }
-    };
 
     //   handle Rent selection
     const handleRentSelect = (event) => {
@@ -336,9 +318,8 @@ function RentVehicle({id}) {
     }, [totalDays, ratePerDay, advanceAmount]);
 
     useEffect(() => {
-        setRatePerDay(selectedVehicle.ratePerDay); // Update rate per day if it changes
-    }, [selectedVehicle]);
-
+        setRatePerDay(vehicleData.ratePerDay); // Update rate per day if it changes
+    }, [vehicleData]);
 
 
     // Generate PDF
@@ -402,16 +383,16 @@ function RentVehicle({id}) {
         doc.setFontSize(12);
         yPosition += lineSpacing;
       
-        doc.text(`Car Make: ${selectedVehicle.carMake || 'N/A'}`, margin, yPosition);
-        doc.text(`Car Model: ${selectedVehicle.carModel || 'N/A'}`, margin, (yPosition += lineSpacing));
-        doc.text(`Year of Model: ${selectedVehicle.yearOfModel || 'N/A'}`, margin, (yPosition += lineSpacing));
-        doc.text(`Car Color: ${selectedVehicle.color || 'N/A'}`, margin, (yPosition += lineSpacing));
-        doc.text(`Engine No: ${selectedVehicle.engineNo || 'N/A'}`, margin, (yPosition += lineSpacing));
-        doc.text(`Chassis No: ${selectedVehicle.chassisNo || 'N/A'}`, margin, (yPosition += lineSpacing));
+        doc.text(`Car Make: ${vehicleData.carMake || 'N/A'}`, margin, yPosition);
+        doc.text(`Car Model: ${vehicleData.carModel || 'N/A'}`, margin, (yPosition += lineSpacing));
+        doc.text(`Year of Model: ${vehicleData.yearOfModel || 'N/A'}`, margin, (yPosition += lineSpacing));
+        doc.text(`Car Color: ${vehicleData.color || 'N/A'}`, margin, (yPosition += lineSpacing));
+        doc.text(`Engine No: ${vehicleData.engineNo || 'N/A'}`, margin, (yPosition += lineSpacing));
+        doc.text(`Chassis No: ${vehicleData.chassisNo || 'N/A'}`, margin, (yPosition += lineSpacing));
       
         // Vehicle Image (if available)
-        if (selectedVehicle.photos) {
-          doc.addImage(selectedVehicle.photos, 'JPEG', pageWidth - 70, yPosition - 50, 60, 50);
+        if (vehicleData.photos) {
+          doc.addImage(vehicleData.photos, 'JPEG', pageWidth - 70, yPosition - 50, 60, 50);
         } else {
           doc.text('Vehicle Photo not available.', margin, (yPosition += 60));
         }
@@ -702,25 +683,11 @@ function RentVehicle({id}) {
                                     className="flex items-center justify-between w-[13rem] border rounded 
                                     px-2 py-2 cursor-pointer"
                                 >
-                                    <select
-                                        className="w-full bg-transparent border-none focus:outline-none cursor-pointer text-gray-700"
-                                        value={selectedRegistration}
-                                        required
-                                        onChange={handleRegistrationSelect}
-                                    >
-                                        <option value="" disabled>
-                                            Registration No.
-                                        </option>
-                                        {vehicleInfo.length > 0 ? (
-                                            vehicleInfo.map((vehicle, index) => (
-                                                <option key={index} value={vehicle.registrationNo}>
-                                                    {vehicle.registrationNo}
-                                                </option>
-                                            ))
-                                        ) : (
-                                            <option disabled>No registration numbers available</option>
-                                        )}
-                                    </select>
+                                    <input type="text"
+                                    readOnly 
+                                    className="w-full bg-transparent border-none focus:outline-none cursor-pointer text-gray-700"
+                                    value={vehicleData.registrationNo}
+                                    />
                                 </div>
                             </div>
                             {/* Rent Type. */}
@@ -771,12 +738,11 @@ function RentVehicle({id}) {
                                 >
                                     <input
                                         type="text"
-
                                         readOnly
                                         className="bg-transparent text-gray-800 
                                         text-sm outline-none
                                         w-full"
-                                        value={selectedVehicle.carType}
+                                        value={vehicleData.carType}
 
                                     />
                                 </div>
@@ -798,7 +764,7 @@ function RentVehicle({id}) {
                                         readOnly
                                         className="bg-transparent text-gray-800 text-sm outline-none
                                         w-full"
-                                        value={selectedVehicle.carMake}
+                                        value={vehicleData.carMake}
                                     />
                                 </div>
                             </div>
@@ -820,7 +786,7 @@ function RentVehicle({id}) {
                                         readOnly
                                         className="bg-transparent text-gray-800 text-sm outline-none
                                         w-full"
-                                        value={selectedVehicle.carModel}
+                                        value={vehicleData.carModel}
                                     />
                                 </div>
                             </div>
@@ -848,7 +814,7 @@ function RentVehicle({id}) {
                                             readOnly
                                             className="bg-transparent text-gray-800 text-sm outline-none
                                         w-full"
-                                            value={selectedVehicle.transmissionType}
+                                            value={vehicleData.transmissionType}
                                         />
 
                                     </div>
@@ -872,7 +838,7 @@ function RentVehicle({id}) {
                                         readOnly
                                         className="bg-transparent text-gray-800 text-sm outline-none
                                         w-full"
-                                        value={selectedVehicle.engineCapacity}
+                                        value={vehicleData.engineCapacity}
                                     />
                                 </div>
                             </div>
@@ -894,7 +860,7 @@ function RentVehicle({id}) {
                                         readOnly
                                         className="bg-transparent text-gray-800 text-sm outline-none
                                         w-full"
-                                        value={selectedVehicle.chassisNo}
+                                        value={vehicleData.chassisNo}
                                     />
                                 </div>
                             </div>
@@ -915,7 +881,7 @@ function RentVehicle({id}) {
                                         readOnly
                                         className="bg-transparent text-gray-800 text-sm outline-none
                                         w-full"
-                                        value={selectedVehicle.engineNo}
+                                        value={vehicleData.engineNo}
                                     />
                                 </div>
                             </div>
