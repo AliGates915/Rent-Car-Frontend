@@ -18,7 +18,7 @@ import axios from "axios";
 
 function RentVehicle() {
     const [vehicles, setVehicles] = useState([]);
-    const [images, setImages] = useState([]);
+    const [details, setDetails] = useState([]);
     const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(true);
@@ -26,30 +26,36 @@ function RentVehicle() {
 
     // vehicle details
     useEffect(() => {
-        const fetchVehicle = async () => {
-            setIsLoading(true);
+        setIsLoading(true);
+        const fetchSaveVehicles = async () => {
             try {
-                const response = await axios.get(`
-                    ${process.env.REACT_APP_API_URL}/rent-receipt`);
+                const response = await axios.get(
+                    `${process.env.REACT_APP_API_URL}/vehicle-details/booking`
+                );
+
+                console.log("Fetched Vehicles", response.data);
+
                 if (Array.isArray(response.data)) {
-                    console.log("Data is an array.", response.data);
-                    setVehicles(response.data);
+                    // Separate available and booked vehicles
+                    const bookedVehicles = response.data.filter(
+                        (vehicle) => vehicle.isSaved || vehicle.isBooked
+                    );
+
+                    setVehicles(bookedVehicles);
                 } else {
                     console.error("Data is not an array. Resetting to empty array.");
-                    setVehicles([]); // Set as empty array if response isn't an array
+                    setVehicles([]); // Reset to empty array if response isn't an array
                 }
-
-                // Initialize current index for each vehicle
-                
             } catch (error) {
-                console.error("Error fetching vehicles:", error);
+                console.error("Error fetching rented vehicles:", error);
             } finally {
                 setTimeout(() => setIsLoading(false), 2000); // Stop loading after 2 seconds
             }
         };
 
-        fetchVehicle();
+        fetchSaveVehicles();
     }, []);
+    
 
     // totalDays details
     useEffect(() => {
@@ -71,61 +77,13 @@ function RentVehicle() {
 
         //     fetchAmount();
     }, []);
-    // useEffect(() => {
-    //     const fetchVehicle = async () => {
-    //         setIsLoading(true);
-    //         try {
-    //             const response = await axios.get(`${process.env.REACT_APP_API_URL}/customer-details`);
-    //             console.log("Customer Data:", response.data);
-    //             if (Array.isArray(response.data)) {
-    //                 setCustomerInfo(response.data);
-    //             } else {
-    //                 setCustomerInfo([]);
-    //             }
-    //         } catch (error) {
-    //             console.error("Error fetching customer details:", error);
-    //         } finally {
-    //             setTimeout(() => setIsLoading(false), 2000);
-    //         }
-    //     };
-    //     fetchVehicle();
-    // }, []);
-
-    // display images
-    useEffect(() => {
-        const fetchVehicle = async () => {
-            setIsLoading(true);
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/vehicle-details/return-vehicle`);
-                if (Array.isArray(response.data)) {
-                    console.log("Vehicle Data", response.data);
-                    setImages(response.data);
-                } else {
-                    console.error("Data is not an array.");
-                    setImages([]);
-                }
-            } catch (error) {
-                console.error("Error fetching vehicles:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchVehicle();
-    }, []);
 
 
     // Handle rent button click
 
     const handleReturn = async (id) => {
         try {
-            const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/vehicle-details/save-vehicle/${id}`);
                 navigate(`/save-form/${id}`)
-            // alert("Vehicle Returned Successfully")
-            console.log('Vehicle returned:', response.data);
-            setVehicles((prevVehicles) => prevVehicles.filter((vehicle) => vehicle._id !== id));
-
         } catch (error) {
             console.error('Error returning vehicle:', error.response?.data || error.message);
         }
@@ -137,9 +95,6 @@ function RentVehicle() {
         const date = new Date(dateString);
         return date.toLocaleDateString("en-GB"); // 'en-GB' for DD/MM/YYYY format
     };
-
-
-    // Delete item
 
 
     return (
@@ -166,8 +121,8 @@ function RentVehicle() {
                     <div className="flex justify-center mt-48 min-h-screen">
                         <FadeLoader color="#0fdaee" size={15} margin={5} />
                     </div>
-                ) : Array.isArray(images) && Array.isArray(vehicles) && images.length > 0 && vehicles.length > 0 ? (
-                    images.map((vehicle, index) => (
+                ) : Array.isArray(vehicles) && vehicles.length > 0 && vehicles.length > 0 ? (
+                    vehicles.map((vehicle, index) => (
                         <div
                             key={index}
                             className="w-[320px] bg-white shadow-xl rounded-xl duration-500 hover:scale-105 hover:shadow-xl"
@@ -191,15 +146,15 @@ function RentVehicle() {
                             <div className="px-4 text-center font-sans py-3 w-[20rem]">
                                 <span className="flex justify-center text-[#979ead] uppercase text-sm">
                                     Register No: <span className="uppercase font-bold">
-                                        {vehicles[index]?.vehicleInfo?.registrationNo || "N/A"}</span>
+                                        {vehicles[index]?.registrationNo || "N/A"}</span>
                                 </span>
 
                                 <div className="ml-4 w-[22rem]">
                                     <p className="text-[#5c6f9d] truncate text-[16px] block">
                                         <span className="font-bold mr-2">
-                                            {vehicles[index]?.vehicleInfo?.carMake || "N/A"}</span>
+                                            {vehicles[index]?.carMake || "N/A"}</span>
                                         <span className="font-bold mr-2">
-                                            {vehicles[index]?.vehicleInfo?.carModel || "N/A"}</span>
+                                            {vehicles[index]?.carModel || "N/A"}</span>
                                         <span className="font-bold">
                                             {vehicle.yearOfModel}</span>
                                     </p>
@@ -208,19 +163,19 @@ function RentVehicle() {
                                 <div className="flex justify-center w-80">
                                     <p className="text-[#ab32e4] font-medium text-[1.5rem] block">
                                         <span className="font-bold mr-1">
-                                            {vehicles[index]?.customerInfo?.customerName || "N/A"}</span>
+                                            {vehicles[index]?.customerName || "N/A"}</span>
                                     </p>
                                 </div>
                                 <div className="flex justify-around w-80">
                                     <p className="text-[#30e145] text-[0.98rem] block">
                                     From: <span className="font-bold mr-2">
-                                            {formatDate(vehicles[index]?.rentalInfo?.dateFrom)}</span>
+                                            {formatDate(vehicles[index]?.dateFrom)}</span>
                                     To: <span className=" font-bold">
-                                            {formatDate(vehicles[index]?.rentalInfo?.dateTo)}</span>
+                                            {formatDate(vehicles[index]?.dateTo)}</span>
                                     </p>
                                 </div>
 
-                                <div className="mt-2 ml-10 w-80">
+                                {/* <div className="mt-2 ml-10 w-80">
                                     <p className="text-[#c138d9] flex justify-start gap-8">
                                         <IconTooltip icon={<TbAirConditioning size={23} />} tooltipText="Air Conditioning" />
                                         <IconTooltip icon={<SiAirplayvideo size={20} />} tooltipText="Airplay Video" />
@@ -228,14 +183,14 @@ function RentVehicle() {
                                         <IconTooltip icon={<GiCarWheel size={20} />} tooltipText="Car Wheel" />
                                         <IconTooltip icon={<LuCigarette size={20} />} tooltipText="Cigarette" />
                                     </p>
-                                </div>
+                                </div> */}
 
                                 <div className="flex justify-center mt-3">
                                     {/* Text Section */}
                                     <p className="text-[16px] font-bold text-teal-500">
                                         Total Amount:
                                         <span className="ml-2 text-[20px]  font-semibold">
-                                            Rs.{vehicles[index]?.rentalInfo?.totalAmount || "N/A"}
+                                            Rs.{vehicles[index]?.totalAmount || "N/A"}
                                         </span>
                                     </p>
                                 </div>

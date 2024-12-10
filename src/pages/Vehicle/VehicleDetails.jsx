@@ -64,45 +64,12 @@ function VehicleDetails() {
             // Refetch vehicles or update the list of vehicles in your component state
             const updatedVehicles = await axios.get(`${process.env.REACT_APP_API_URL}/vehicle-details`);
             setVehicles(updatedVehicles.data); // Update the state with the new vehicle list
-
         } catch (error) {
             console.error('Error booking vehicle:', error.response?.data || error.message);
             alert('Error booking vehicle, please try again!');
         }
     };
 
-    // Automatic Image Slide every 3 seconds
-    useEffect(() => {
-        if (!vehicles || vehicles.length === 0) return;
-
-        // Initialize the indices if necessary
-        const initialIndices = {};
-        vehicles.forEach((vehicle) => {
-            if (vehicle.photos && vehicle.photos.length > 0) {
-                initialIndices[vehicle._id] = 0; // Initialize with first image
-            }
-        });
-        setCurrentIndices(initialIndices);
-
-        const interval = setInterval(() => {
-            setCurrentIndices((prevIndices) => {
-                const newIndices = { ...prevIndices };
-
-                vehicles.forEach((vehicle) => {
-                    if (vehicle.photos && vehicle.photos.length > 0) {
-                        const currentIndex = prevIndices[vehicle._id] || 0;
-                        const nextIndex = (currentIndex + 1) % vehicle.photos.length;
-                        newIndices[vehicle._id] = nextIndex;
-                    }
-                });
-
-                console.log("Updated Indices:", newIndices); // Log updated indices
-                return newIndices;
-            });
-        }, 3000);
-
-        return () => clearInterval(interval); // Cleanup on unmount
-    }, [vehicles]);
 
     // Delete item
     const handleDelete = async (id) => {
@@ -173,12 +140,13 @@ function VehicleDetails() {
 
                                 {/* Product Info */}
                                 <div className="px-4 text-center font-sans py-3 w-[20rem]">
+                                    <div className="block mr-12">
                                     <span className="flex justify-center text-[#979ead] 
                                     uppercase text-sm">
-                                        Register No: <span className="uppercase font-bold"> {product.registrationNo}</span>
+                                        <span className="uppercase font-bold"> {product.registrationNo}</span>
                                     </span>
 
-                                    <div className=" w-[22rem]">
+                                    <div className="w-[22rem]">
                                         <p className=" text-[#5c6f9d] truncate text-[16px]">
                                             <span className="font-bold mr-2">{product.carMake}</span>
                                             <span className="font-bold mr-2">{product.carModel}</span>
@@ -192,7 +160,7 @@ function VehicleDetails() {
                                             <span className="font-bold">{product.location || "Lahore"}</span>
                                         </p>
                                     </div>
-
+                                    </div>
                                     {/* <div className="ml-4 flex justify-between w-80">
                                         <p className="text-[#76d930] text-[0.79rem] block">
                                             VehicleCompany: <span className="font-bold mr-1">{product.carMake}</span>
@@ -200,7 +168,7 @@ function VehicleDetails() {
                                         </p>
                                     </div> */}
 
-                                    <div className="mt-2 ml-10 w-80">
+                                    {/* <div className="mt-2 ml-10 w-80">
                                         <p className="text-[#c138d9] flex justify-start gap-8">
                                             <IconTooltip icon={<TbAirConditioning size={23} />} tooltipText="Air Conditioning" />
                                             <IconTooltip icon={<SiAirplayvideo size={20} />} tooltipText="Airplay Video" />
@@ -208,7 +176,7 @@ function VehicleDetails() {
                                             <IconTooltip icon={<GiCarWheel size={20} />} tooltipText="Car Wheel" />
                                             <IconTooltip icon={<LuCigarette size={20} />} tooltipText="Cigarette" />
                                         </p>
-                                    </div>
+                                    </div> */}
 
                                     <div className="flex justify-between mt-3">
                                         {/* Text Section */}

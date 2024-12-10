@@ -122,16 +122,16 @@ function RentVehicle() {
         console.log("data send ",formData)
 
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/rent-receipt`,
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/rent-receipt/${id}`,
                 formData,
                 { headers: { 'Content-Type': 'application/json' } }
             );
-            // await axios.post(`${process.env.REACT_APP_API_URL}/vehicle-details/book-vehicle/${id}`);
+            await axios.post(`${process.env.REACT_APP_API_URL}/vehicle-details/book-vehicle/${id}`);
             
             // Generate PDF after successful submission
             generatePDF(formData);
             console.log('Vehicle data submitted successfully:', response.data);
-            navigate('/rent-vehicle')
+            navigate(`/rent-vehicle`)
 
             // Optional: Simulated delay for UX purposes (optional)
             setTimeout(() => {
@@ -167,7 +167,7 @@ function RentVehicle() {
         const fetchDataForCustomer = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/customer-details`);
-                console.log("Response ", response.data)
+                console.log("Response Customer", response.data)
                 if (Array.isArray(response.data)) {
                     setCustomerInfo(response.data); // Update the vehicleInfo state
                 }
@@ -309,9 +309,11 @@ function RentVehicle() {
 
 
     // Effect to recalculate total amount when dates or rate change
+    // console.log("Rate", ratePerDay);
+    
     useEffect(() => {
         const total = totalDays * ratePerDay;
-        console.log("Amount", totalDays);
+        console.log("Amount", total);
 
         setTotalAmount(total);
         setBalanceAmount(total - advanceAmount); // Recalculate balance
@@ -367,10 +369,14 @@ function RentVehicle() {
         doc.text(`Address: ${selectedCustomerInfo.address || 'N/A'}`, margin, (yPosition += lineSpacing));
       
         // Customer Image (if available)
-        if (selectedCustomerInfo.profilePhotoUrl) {
-          doc.addImage(selectedCustomerInfo.profilePhotoUrl, 'JPEG', pageWidth - 70, margin + 10, 50, 50);
+        if (data.customerInfo?.profilePhotoUrl) {
+            try {
+                doc.addImage(data.customerInfo.profilePhotoUrl, 'JPEG', pageWidth - 70, margin + 10, 50, 50);
+            } catch (error) {
+                console.error('Error adding profile photo:', error);
+            }
         } else {
-          doc.text('Profile Photo not available.', margin, (yPosition += lineSpacing));
+            doc.text('Profile Photo not available.', margin, (yPosition += lineSpacing));
         }
       
         yPosition += 14;
@@ -391,10 +397,14 @@ function RentVehicle() {
         doc.text(`Chassis No: ${vehicleData.chassisNo || 'N/A'}`, margin, (yPosition += lineSpacing));
       
         // Vehicle Image (if available)
-        if (vehicleData.photos) {
-          doc.addImage(vehicleData.photos, 'JPEG', pageWidth - 70, yPosition - 50, 60, 50);
+        if (data.vehicleInfo?.photos) {
+            try {
+                doc.addImage(data.vehicleInfo.photos[0], 'JPEG', pageWidth - 70, yPosition, 50, 50);
+            } catch (error) {
+                console.error('Error adding vehicle photo:', error);
+            }
         } else {
-          doc.text('Vehicle Photo not available.', margin, (yPosition += 60));
+            doc.text('Vehicle Photo not available.', margin, (yPosition += 60));
         }
       
         yPosition += 12;
@@ -681,11 +691,12 @@ function RentVehicle() {
                                 </label>
                                 <div
                                     className="flex items-center justify-between w-[13rem] border rounded 
-                                    px-2 py-2 cursor-pointer"
+                                    px-2 py-2"
                                 >
                                     <input type="text"
                                     readOnly 
-                                    className="w-full bg-transparent border-none focus:outline-none cursor-pointer text-gray-700"
+                                    className="w-full bg-transparent border-none 
+                                    focus:outline-none text-gray-700"
                                     value={vehicleData.registrationNo}
                                     />
                                 </div>

@@ -24,57 +24,6 @@ function SaveVehicle() {
     const [isLoading, setIsLoading] = useState(true);
     // Fetch vehicle data once when the component mounts
 
-    // vehicle details
-    // useEffect(() => {
-    //     const fetchVehicle = async () => {
-    //         setIsLoading(true);
-    //         try {
-    //             const response = await axios.get(`${process.env.REACT_APP_API_URL}/vehicle-details`);
-    //             setVehicles(response.data);
-
-    //             // Initialize current index for each vehicle
-    //             const initialIndices = {};
-    //             response.data.forEach((vehicle) => {
-    //                 if (vehicle.photos && vehicle.photos.length > 0) {
-    //                     initialIndices[vehicle.id] = 0; // Ensure each vehicle has a unique id and valid photos array
-    //                 }
-    //             });
-    //             setCurrentIndices(initialIndices);
-    //         } catch (error) {
-    //             console.error("Error fetching vehicles:", error);
-    //         } finally {
-    //             setTimeout(() => setIsLoading(false), 2000); // Stop loading after 2 seconds
-    //         }
-    //     };
-
-    //     fetchVehicle();
-    // }, []);
-
-    // Customer details
-    // useEffect(() => {
-    //     const fetchVehicle = async () => {
-    //         setIsLoading(true);
-    //         try {
-    //             const response = await axios.get(`${process.env.REACT_APP_API_URL}/customer-details`);
-    //             console.log("Data", response.data);
-    //             if (Array.isArray(response.data)) {
-    //                 setCustomerInfo(response.data);
-    //             } else {
-    //                 console.error("Data is not an array. Resetting to empty array.");
-    //                 setCustomerInfo([]); // Set as empty array if response isn't an array
-    //             }
-    //             // Initialize current index for each vehicle
-
-
-    //         } catch (error) {
-    //             console.error("Error fetching vehicles:", error);
-    //         } finally {
-    //             setTimeout(() => setIsLoading(false), 2000); // Stop loading after 2 seconds
-    //         }
-    //     };
-
-    //     fetchVehicle();
-    // }, []);
 
     // Rent Vehicle Page (Displaying Booked Vehicles)
     useEffect(() => {

@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { RotateLoader } from "react-spinners";
 import SaveVehicle from "./SaveVehilce";
-import {Link, useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 
-const ReturnVehicleForm = ({ vehicleId, onClose }) => {
+const ReturnVehicleForm = ({ onClose }) => {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split("T")[0], // Today's date
     time: new Date().toTimeString().slice(0, 5), // Correct format HH:mm
@@ -14,7 +15,9 @@ const ReturnVehicleForm = ({ vehicleId, onClose }) => {
 const [isLoading, setIsLoading] = useState(false); // Loader
 const [isVisible, setIsVisible] = useState(false);
 const [isSaved, setIsSaved] = useState(false); // Track if form is saved
-const id = useParams();
+
+const { id } = useParams();
+console.log("Extracted ID from useParams:", id);
 
 useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100); // Smooth modal opening
@@ -25,7 +28,7 @@ const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 };
 
-const handleSubmit = async (e, id) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Ensure balanceAmount is properly parsed or validated
@@ -40,17 +43,22 @@ const handleSubmit = async (e, id) => {
         time: formData.time,
         balanceAmount: parsedBalanceAmount, // Send as a number if required
         condition: formData.condition,
-        rentReceiptId: '674c0914523f3daae0187f79', // Ensure you're passing other fields too
+        rentReceiptId: id, // Ensure you're passing other fields too
     };
 
-    setIsLoading(true); // Show loader while request is in progress
+    setIsLoading(true); 
+    console.log("Submit data", submitData);
+    
+    // Show loader while request is in progress
 
     try {
-        const response = await axios.post(
-            `${process.env.REACT_APP_API_URL}/vehicle-details/save-form/${id}`,
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/vehicle-details/save-form/${id}`,
             submitData
         );
+        // await axios.post(
+        //   `${process.env.REACT_APP_API_URL}/vehicle-details/save-vehicle/${id}`);
         console.log('Response:', response.data);
+        navigate('/vehicle-details')
         setIsSaved(true); // Mark form as saved
         setIsLoading(false); // Hide loader
     } catch (error) {
@@ -146,14 +154,14 @@ const handleSubmit = async (e, id) => {
                 Cancel
               </button>
               
-              <Link to='/save-vehicle'> 
+             
               <button
                 type="submit"
                 className="bg-[#0096FF] hover:font-bold text-white px-4 py-2 rounded hover:bg-[#4a32b3] transition-all"
               >
                 Save
               </button>
-              </Link>
+              
             </div>
           </form>
         </div>

@@ -178,15 +178,6 @@ function App() {
             }
           />
           <Route
-            path="/save-vehicle"
-            index
-            element={
-              <Layout>
-                <ReturnVehicleForm />
-              </Layout>
-            }
-          />
-          <Route
             path="/payment-voucher"
             index
             element={
