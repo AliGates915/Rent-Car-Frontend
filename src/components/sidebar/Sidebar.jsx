@@ -85,14 +85,7 @@ const Sidebar = () => {
             <span>Return Vehicles</span>
           </li>
           </Link>
-          {/* <Link to="/save-vehicle" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Save Vehicles</span>
-          </li>
-          </Link> */}
-
-          
+        
           <Link to="/payment-voucher" style={{ textDecoration: "none" }}>
           <li>
             <ListAltIcon className="icon" />
@@ -112,6 +105,14 @@ const Sidebar = () => {
           <li>
             <ListAltIcon className="icon" />
             <span>DayBook
+            </span>
+          </li>
+          </Link>
+
+          <Link to="/reports" style={{ textDecoration: "none" }}>
+          <li>
+            <ListAltIcon className="icon" />
+            <span>Reports
             </span>
           </li>
           </Link>

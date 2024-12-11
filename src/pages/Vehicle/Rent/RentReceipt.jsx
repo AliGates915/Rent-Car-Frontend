@@ -7,6 +7,8 @@ import jsPDF from 'jspdf';
 
 function RentVehicle() {
     const { id } = useParams(); // Extract the ID from the URL
+    console.log("ID", id);
+    
     const navigate = useNavigate();
     const [vehicleData, setVehicleData] = useState({
         registrationNo:"",
@@ -502,8 +504,10 @@ function RentVehicle() {
                                     Serial No.</label>
                                 <input
                                     type="number"
-                                    readOnly
-                                    className="w-[12rem] bg-white border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-300"
+                                    
+                                    className="w-[12rem] bg-white border border-gray-300 
+                                    rounded-md px-3 py-2 text-sm focus:outline-none
+                                     focus:ring "
                                     value={serialNo}
                                 />
                             </div>
@@ -556,7 +560,7 @@ function RentVehicle() {
                                 mb-2">CINC No.</label>
                                 <input
                                     type="text"
-                                    readOnly
+                                
                                     value={selectedCustomerInfo.cinc || "N/A"}
                                     className="w-[11rem] bg-white border border-gray-300 
                                     rounded-md px-3 py-2 text-sm focus:outline-none "
@@ -603,7 +607,7 @@ function RentVehicle() {
                             <label className="block text-gray-700 font-semibold mb-2">City</label>
                             <input
                                 type="text"
-                                readOnly
+                    
                                 className="w-[12rem] bg-white border border-gray-300 rounded-md
                                  px-3 py-2 text-sm focus:outline-none "
                                 value={selectedCustomerInfo.city || "N/A"}
@@ -616,7 +620,7 @@ function RentVehicle() {
                                 <label className="block text-gray-700 font-semibold mb-2">Mobile No.</label>
                                 <input
                                     type="text"
-                                    readOnly
+                        
                                     className="w-[12rem] bg-white border border-gray-300 
                                     rounded-md px-3 py-2 text-sm focus:outline-none "
 
@@ -629,7 +633,7 @@ function RentVehicle() {
                                 <label className="block text-gray-700 font-semibold mb-2">Residence Phone</label>
                                 <input
                                     type="text"
-                                    readOnly
+                            
                                     className="w-[11rem] bg-white border border-gray-300
                                      rounded-md px-3 py-2 text-sm focus:outline-none "
                                     value={selectedCustomerInfo.phone || "N/A"}
@@ -655,7 +659,7 @@ function RentVehicle() {
                                 >
                                     <input
                                         type="text"
-                                        readOnly
+                                    
                                         className="w-[39rem] bg-white border border-gray-300 
                                         rounded-md px-3 py-2 text-sm focus:outline-none "
                                         value={selectedCustomerInfo.referenceName}
@@ -669,7 +673,7 @@ function RentVehicle() {
                                     <label className="block text-gray-700 font-semibold mb-2">Mobile No.</label>
                                     <input
                                         type="text"
-                                        readOnly
+                    
                                         className="w-[12rem] bg-white border border-gray-300 
                                         rounded-md px-3 py-2 text-sm focus:outline-none"
                                         value={selectedCustomerInfo.referenceMobile || "N/A"}
@@ -694,7 +698,6 @@ function RentVehicle() {
                                     px-2 py-2"
                                 >
                                     <input type="text"
-                                    readOnly 
                                     className="w-full bg-transparent border-none 
                                     focus:outline-none text-gray-700"
                                     value={vehicleData.registrationNo}
@@ -749,7 +752,7 @@ function RentVehicle() {
                                 >
                                     <input
                                         type="text"
-                                        readOnly
+                                        
                                         className="bg-transparent text-gray-800 
                                         text-sm outline-none
                                         w-full"
@@ -772,7 +775,7 @@ function RentVehicle() {
                                 >
                                     <input
                                         type="text"
-                                        readOnly
+                                        
                                         className="bg-transparent text-gray-800 text-sm outline-none
                                         w-full"
                                         value={vehicleData.carMake}
@@ -794,7 +797,7 @@ function RentVehicle() {
                                 >
                                     <input
                                         type="text"
-                                        readOnly
+                                        
                                         className="bg-transparent text-gray-800 text-sm outline-none
                                         w-full"
                                         value={vehicleData.carModel}
@@ -822,7 +825,7 @@ function RentVehicle() {
                                     >
                                         <input
                                             type="text"
-                                            readOnly
+                                            
                                             className="bg-transparent text-gray-800 text-sm outline-none
                                         w-full"
                                             value={vehicleData.transmissionType}
@@ -846,7 +849,7 @@ function RentVehicle() {
                                 >
                                     <input
                                         type="text"
-                                        readOnly
+                                        
                                         className="bg-transparent text-gray-800 text-sm outline-none
                                         w-full"
                                         value={vehicleData.engineCapacity}
@@ -868,7 +871,7 @@ function RentVehicle() {
                                 >
                                     <input
                                         type="text"
-                                        readOnly
+                                    
                                         className="bg-transparent text-gray-800 text-sm outline-none
                                         w-full"
                                         value={vehicleData.chassisNo}
@@ -889,7 +892,7 @@ function RentVehicle() {
                                 >
                                     <input
                                         type="text"
-                                        readOnly
+                                        
                                         className="bg-transparent text-gray-800 text-sm outline-none
                                         w-full"
                                         value={vehicleData.engineNo}
@@ -1097,25 +1100,14 @@ function RentVehicle() {
                                     />
                                 </label>
                             </div>
-                            {/* Checkbox 17 */}
-                            <div className="flex items-center">
-                                <label className="text-gray-800 font-semibold">
-                                    Self Driven
-                                    <input
-                                        type="checkbox"
-                                        className="form-checkbox pt-3 ml-[36px] h-[18px] w-5 focus:ring"
-                                        checked={selfDriver}
-                                        onChange={(e) => setSelfDriver(e.target.checked)}
-                                    />
-                                </label>
-                            </div>
+                           
                             {/* Checkbox 18 */}
-                            <div className="flex items-center ml-24">
+                            <div className="flex items-center">
                                 <label className="text-gray-800 font-semibold">
                                     With Driver
                                     <input
                                         type="checkbox"
-                                        className="form-checkbox pt-3 ml-[22px] h-[18px] w-5 focus:ring"
+                                        className="form-checkbox pt-3 ml-[26px] h-[18px] w-5 focus:ring"
                                         checked={withDriver}
                                         onChange={(e) => setWithDriver(e.target.checked)}
                                     />
@@ -1334,13 +1326,13 @@ function RentVehicle() {
 
                                 <div
                                     className="flex items-center justify-between w-[13rem] border rounded 
-                                    px-2 py-2 cursor-pointer"
+                                    px-2 py-2"
                                 >
                                     <input type="number"
                                         className="bg-transparent text-gray-800 text-sm outline-none
                                 w-full"
                                         value={totalAmount}
-                                        readOnly
+                                        
                                     />
                                 </div>
                             </div>

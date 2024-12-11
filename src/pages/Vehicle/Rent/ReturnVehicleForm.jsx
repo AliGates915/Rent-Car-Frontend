@@ -6,11 +6,11 @@ import {useNavigate, useParams} from 'react-router-dom';
 
 const ReturnVehicleForm = ({ onClose }) => {
   const navigate = useNavigate()
+  const [balance, setBalance] = useState('');
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split("T")[0], // Today's date
     time: new Date().toTimeString().slice(0, 5), // Correct format HH:mm
-    condition: "",
-    balanceAmount: "",  // Ensure it's properly validated as a number if required
+    condition: "",  
 });
 const [isLoading, setIsLoading] = useState(false); // Loader
 const [isVisible, setIsVisible] = useState(false);
@@ -27,12 +27,32 @@ useEffect(() => {
 const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 };
+ // customer Info
+ useEffect(() => {
+  const fetchSaveVehicles = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/rent-receipt/${id}`
+      );
+      setBalance(response.data.rentalInfo.balanceAmount);
+      console.log("balance Data", response.data);
+      
+    } catch (error) {
+      console.error("Error fetching rented vehicles:", error);
+    } finally {
+      setTimeout(() => setIsLoading(false), 2000); // Stop loading after 2 seconds
+    }
+  };
+
+  fetchSaveVehicles();
+}, [id]);
+console.log("Submit data", balance);
 
 const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Ensure balanceAmount is properly parsed or validated
-    const parsedBalanceAmount = parseFloat(formData.balanceAmount);
+    const parsedBalanceAmount = parseFloat(balance);
     if (isNaN(parsedBalanceAmount)) {
         alert("Balance amount must be a valid number.");
         return; // Prevent submission if the balanceAmount is invalid
@@ -43,28 +63,27 @@ const handleSubmit = async (e) => {
         time: formData.time,
         balanceAmount: parsedBalanceAmount, // Send as a number if required
         condition: formData.condition,
-        rentReceiptId: id, // Ensure you're passing other fields too
+         id,
     };
 
     setIsLoading(true); 
-    console.log("Submit data", submitData);
-    
-    // Show loader while request is in progress
-
+  
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/vehicle-details/save-form/${id}`,
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL}/vehicle-details/save-form/${id}`,
             submitData
         );
         // await axios.post(
         //   `${process.env.REACT_APP_API_URL}/vehicle-details/save-vehicle/${id}`);
+        setIsSaved(true);
         console.log('Response:', response.data);
         navigate('/vehicle-details')
-        setIsSaved(true); // Mark form as saved
+         // Mark form as saved
         setIsLoading(false); // Hide loader
     } catch (error) {
         console.error("Error returning vehicle:", error);
         setIsLoading(false); // Hide loader
-        alert("Error submitting the form: " + error.message); // Show error message
+        // alert("Error submitting the form: " + error.message); // Show error message
     }
 };
 
@@ -133,10 +152,10 @@ const handleSubmit = async (e) => {
               Balance Amount:
               <input
                 type="number"
+                disabled
                 name="balanceAmount"
-                value={formData.balanceAmount}
+                value={balance}
                 onChange={handleChange}
-                placeholder="Enter balance amount"
                 className="w-full p-2 border rounded"
               />
             </label>

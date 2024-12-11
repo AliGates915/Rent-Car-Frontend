@@ -25,6 +25,9 @@ import Payment from "./pages/Vehicle/Voucher/Payement";
 import ExpenseVoucher from "./pages/Vehicle/Voucher/ExpenseVoucher";
 import DayBook from "./pages/Vehicle/Voucher/DayBook";
 import PDf from "./pages/Vehicle/Voucher/PDf";
+import Reports from "./pages/Vehicle/Reports/Reports";
+import VehicleList from "./pages/Vehicle/Reports/All Vehicles/table/VehicleList";
+import RentList from "./pages/Vehicle/Reports/Rent Vehicle/RentList";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -201,6 +204,33 @@ function App() {
             element={
               <Layout>
                 <DayBook />
+              </Layout>
+            }
+          />
+          <Route
+            path="/reports"
+            index
+            element={
+              <Layout>
+                <Reports />
+              </Layout>
+            }
+          />
+          <Route
+            path="/vehicle-list"
+            index
+            element={
+              <Layout>
+                <VehicleList />
+              </Layout>
+            }
+          />
+          <Route
+            path="/rent-list"
+            index
+            element={
+              <Layout>
+                <RentList />
               </Layout>
             }
           />

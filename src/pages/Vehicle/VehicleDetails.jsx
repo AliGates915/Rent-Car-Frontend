@@ -143,7 +143,7 @@ function VehicleDetails() {
                                     <div className="block mr-12">
                                     <span className="flex justify-center text-[#979ead] 
                                     uppercase text-sm">
-                                        <span className="uppercase font-bold"> {product.registrationNo}</span>
+                                        <span className="uppercase"> {product.registrationNo}</span>
                                     </span>
 
                                     <div className="w-[22rem]">

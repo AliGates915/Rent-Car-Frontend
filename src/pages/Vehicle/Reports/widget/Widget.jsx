@@ -1,4 +1,3 @@
-
 /* eslint-disable react/react-in-jsx-scope */
 import "./widget.scss";
 import { Link } from 'react-router-dom';
@@ -21,14 +20,18 @@ const Widget = ({ type }) => {
           case "total vehicles":
             response = await fetch(`${process.env.REACT_APP_API_URL}/vehicle-details/display`);
             break;
-          case "customers":
-            response = await fetch(`${process.env.REACT_APP_API_URL}/customer-details`);
+          case "owner details":
+            response = await fetch(`${process.env.REACT_APP_API_URL}/owner-details`);
             break;
           case "rent":
             response = await fetch(`${process.env.REACT_APP_API_URL}/vehicle-details/return-vehicle`);
             // console.log(response.data);
             break;
-          case "available":
+          case "cash receipt":
+            response = await fetch(`${process.env.REACT_APP_API_URL}/vehicle-details`);
+            // console.log(response.data);
+            break;
+          case "cash payments":
             response = await fetch(`${process.env.REACT_APP_API_URL}/vehicle-details`);
             // console.log(response.data);
             break;
@@ -54,7 +57,7 @@ const Widget = ({ type }) => {
       data = {
         title: "TOTAL VEHICLES",
         link: "All Vehicles",
-        route: "/vehicle-details",
+        route: "/vehicle-list",
         icon: (
           <FaCar
               size={40} 
@@ -71,7 +74,7 @@ const Widget = ({ type }) => {
       data = {
         title: "ON RENT",
         link: "All Rent Vehicles",
-        route: "/rent-vehicle",
+        route: "/rent-list",
         icon: (
           <MdBusinessCenter
           size={40}
@@ -84,11 +87,11 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-      case "available":
+      case "owner details":
       data = {
-        title: "ON AVAILABLE",
-        link: "All Available Vehicles",
-        route: "/vehicle-details",
+        title: "OWNER DETAILS",
+        link: "All OWNER DETAILS",
+        route: "/owner-list",
         icon: (
           <MdEventAvailable
           size={40}
@@ -101,10 +104,28 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-    case "customers":
+    case "cash receipt":
       data = {
-        title: "CUSTOMERS",
-        link: "All customers",
+        title: "CASH RECEIPT",
+        link: "Cash Receipt History",
+        route: "/customer-details",
+        icon: (
+          <FiUsers
+            size={40}
+            className="icon"
+            style={{
+              
+              backgroundColor: "rgba(218, 165, 32, 0.2)",
+              color: "goldenrod",
+            }}
+          />
+        ),
+      };
+      break;
+    case "cash payments":
+      data = {
+        title: "CASH PAYMENT",
+        link: "Cash Payment History",
         route: "/customer-details",
         icon: (
           <FiUsers
@@ -140,4 +161,3 @@ const Widget = ({ type }) => {
 };
 
 export default Widget;
-
