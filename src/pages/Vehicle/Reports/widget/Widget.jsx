@@ -1,8 +1,10 @@
 /* eslint-disable react/react-in-jsx-scope */
 import "./widget.scss";
 import { Link } from 'react-router-dom';
-import { FiUsers } from 'react-icons/fi';
-import { MdBusinessCenter,MdEventAvailable  } from 'react-icons/md';
+import {  MdCarRental,MdOutlinePayment    } from 'react-icons/md';
+import { FcBusinessman } from "react-icons/fc";
+import { TbCashRegister } from "react-icons/tb";
+
 
 import { FaCar } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
@@ -63,8 +65,8 @@ const Widget = ({ type }) => {
               size={40} 
             className="icon"
             style={{
-              color: "crimson",
-              backgroundColor: "rgba(255, 0, 0, 0.2)",
+              color: "white",
+              backgroundColor: "rgb(151,158,173)",
             }}
           />
         ),
@@ -76,7 +78,7 @@ const Widget = ({ type }) => {
         link: "All Rent Vehicles",
         route: "/rent-list",
         icon: (
-          <MdBusinessCenter
+          <MdCarRental
           size={40}
             className="icon"
             style={{
@@ -90,10 +92,10 @@ const Widget = ({ type }) => {
       case "owner details":
       data = {
         title: "OWNER DETAILS",
-        link: "All OWNER DETAILS",
+        link: "All Owner Details",
         route: "/owner-list",
         icon: (
-          <MdEventAvailable
+          <FcBusinessman
           size={40}
             className="icon"
             style={{
@@ -108,9 +110,9 @@ const Widget = ({ type }) => {
       data = {
         title: "CASH RECEIPT",
         link: "Cash Receipt History",
-        route: "/customer-details",
+        route: "/cash-list",
         icon: (
-          <FiUsers
+          <TbCashRegister
             size={40}
             className="icon"
             style={{
@@ -126,15 +128,14 @@ const Widget = ({ type }) => {
       data = {
         title: "CASH PAYMENT",
         link: "Cash Payment History",
-        route: "/customer-details",
+        route: "/cash-list",
         icon: (
-          <FiUsers
+          <MdOutlinePayment
             size={40}
             className="icon"
             style={{
-              
-              backgroundColor: "rgba(218, 165, 32, 0.2)",
-              color: "goldenrod",
+              color: "white",
+              backgroundColor: "rgb(66,225,66)",
             }}
           />
         ),
@@ -152,7 +153,7 @@ const Widget = ({ type }) => {
         <span className="counter">{dataCount}</span>
         <Link to={data?.route}
         >
-          <span className="no-underline text-[#dc143c] hover:font-bold">{data?.link}</span>
+          <span className="no-underline text-[#979ead] hover:font-bold transition-all">{data?.link}</span>
         </Link>
       </div>
       <div className="right">{data?.icon}</div>

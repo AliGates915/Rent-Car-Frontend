@@ -47,7 +47,8 @@ const Widget = ({ type }) => {
       }
     };
     fetchData();
-  }, [type]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type.length]);
 
   switch (type) {
     case "total vehicles":

@@ -188,7 +188,7 @@ function ExpenseVoucher() {
         <>
             <nav className='flex justify-between my-4 mx-10'>
                 <div className='text-2xl font-extrabold text-[#0096FF] tracking-wide '>
-                    Expense Voucher
+                    Payment Voucher
                 </div>
 
                 <button className='bg-[#0096FF] font-extrabold px-3 py-1 rounded-full transition-all duration-300 

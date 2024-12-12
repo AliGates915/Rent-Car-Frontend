@@ -28,6 +28,8 @@ import PDf from "./pages/Vehicle/Voucher/PDf";
 import Reports from "./pages/Vehicle/Reports/Reports";
 import VehicleList from "./pages/Vehicle/Reports/All Vehicles/table/VehicleList";
 import RentList from "./pages/Vehicle/Reports/Rent Vehicle/RentList";
+import CashList from "./pages/Vehicle/Reports/CashReceipt/CashList";
+import OwnerList from "./pages/Vehicle/Reports/OwnerList/OwnerList";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -231,6 +233,24 @@ function App() {
             element={
               <Layout>
                 <RentList />
+              </Layout>
+            }
+          />
+          <Route
+            path="/cash-list"
+            index
+            element={
+              <Layout>
+                <CashList />
+              </Layout>
+            }
+          />
+          <Route
+            path="/owner-list"
+            index
+            element={
+              <Layout>
+                <OwnerList />
               </Layout>
             }
           />

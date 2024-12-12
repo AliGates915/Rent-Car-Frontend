@@ -139,15 +139,15 @@ function VehicleDetails() {
                                 )}
 
                                 {/* Product Info */}
-                                <div className="px-4 text-center font-sans py-3 w-[20rem]">
-                                    <div className="block mr-12">
+                                <div className="px-4  font-sans py-3 w-[20rem]">
+                                    <div className="block mr-12 text-center">
                                     <span className="flex justify-center text-[#979ead] 
                                     uppercase text-sm">
-                                        <span className="uppercase"> {product.registrationNo}</span>
+                                        <span className="uppercase font-bold"> {product.registrationNo}</span>
                                     </span>
 
-                                    <div className="w-[22rem]">
-                                        <p className=" text-[#5c6f9d] truncate text-[16px]">
+                                    <div className="w-[22rem] ">
+                                        <p className=" text-[#5c6f9d] mr-16 truncate text-[16px]">
                                             <span className="font-bold mr-2">{product.carMake}</span>
                                             <span className="font-bold mr-2">{product.carModel}</span>
                                             <span className="font-bold">{product.yearOfModel}</span>

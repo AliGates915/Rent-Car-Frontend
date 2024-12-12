@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable react/react-in-jsx-scope */
+import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { FaTachometerAlt, FaRegCalendarAlt } from "react-icons/fa";
 import { GiPathDistance, GiGearStickPattern } from "react-icons/gi";
@@ -28,6 +29,7 @@ import 'swiper/css/pagination';
 import axios from "axios";
 
 function NewVehicle() {
+    const navigate = useNavigate()
     const [pictures, setPictures] = useState([]);
     const [files, setFiles] = useState("");
     const [registrationNo, setRegistrationNo] = useState('');
@@ -139,6 +141,7 @@ function NewVehicle() {
                 { headers: { 'Content-Type': 'application/json' } }
             );
             resetForm()
+            navigate('/vehicle-details')
             // Simulate a 3-second delay (e.g., API call)
             setTimeout(() => {
                 // After 3 seconds, stop the loader

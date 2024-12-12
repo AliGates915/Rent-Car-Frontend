@@ -13,14 +13,14 @@ const Home = () => {
       <Sidebar />
       <div className="homeContainer1">
         <Navbar />
-        <div className="widgets1">
+        <div className="widgets">
           <Widget type="total vehicles" />
           <Widget type="available" />
           <Widget type="rent" />
           <Widget type="customers" />
           {/* <Widget type="total" /> */}
         </div>
-        <div className="charts">
+        <div className="widgets">
           <Featured />
           <Chart title="Last 6 Months (Revenue)" aspect={2 / 1} />
         </div>

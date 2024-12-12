@@ -34,7 +34,7 @@ const handleChange = (e) => {
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}/rent-receipt/${id}`
       );
-      setBalance(response.data.rentalInfo.balanceAmount);
+      setBalance(response.data);
       console.log("balance Data", response.data);
       
     } catch (error) {
@@ -52,16 +52,12 @@ const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Ensure balanceAmount is properly parsed or validated
-    const parsedBalanceAmount = parseFloat(balance);
-    if (isNaN(parsedBalanceAmount)) {
-        alert("Balance amount must be a valid number.");
-        return; // Prevent submission if the balanceAmount is invalid
-    }
+    
 
     const submitData = {
         date: formData.date,
         time: formData.time,
-        balanceAmount: parsedBalanceAmount, // Send as a number if required
+        balanceAmount: balance.rentalInfo.balanceAmount, // Send as a number if required
         condition: formData.condition,
          id,
     };
@@ -112,7 +108,9 @@ const handleSubmit = async (e) => {
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow-lg p-6 w-[400px]">
-          <h2 className="text-2xl font-bold mb-4 text-center">Return Vehicle</h2>
+          <h2 className="text-2xl gap-2 font-bold mb-4 text-center">Return Vehicle 
+            : <span className="text-amber-500">{balance?.vehicleInfo?.registrationNo}</span>
+          </h2>
           <form onSubmit={handleSubmit}>
             <label className="block mb-2">
               Date:
@@ -154,7 +152,7 @@ const handleSubmit = async (e) => {
                 type="number"
                 disabled
                 name="balanceAmount"
-                value={balance}
+                value={balance.rentalInfo.balanceAmount}
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
               />

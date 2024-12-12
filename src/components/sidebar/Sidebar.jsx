@@ -89,14 +89,14 @@ const Sidebar = () => {
           <Link to="/payment-voucher" style={{ textDecoration: "none" }}>
           <li>
             <ListAltIcon className="icon" />
-            <span>Payment Voucher
+            <span>Receipt Voucher
             </span>
           </li>
           </Link>
           <Link to="/expense-voucher" style={{ textDecoration: "none" }}>
           <li>
             <ListAltIcon className="icon" />
-            <span>Expense Voucher
+            <span>Payment Voucher
             </span>
           </li>
           </Link>
