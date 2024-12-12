@@ -389,9 +389,9 @@ function RentVehicle() {
         doc.text('Vehicle Information', margin, yPosition);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(12);
-        yPosition += lineSpacing - 5;
+        yPosition += lineSpacing ;
 
-        doc.text(`Registration No: ${vehicleData.registrationNo || 'N/A'}`, margin, yPosition);
+        // doc.text(`Registration No: ${vehicleData.registrationNo || 'N/A'}`, margin, yPosition);
         doc.text(`Car Make: ${vehicleData.carMake || 'N/A'}`, margin, yPosition);
         doc.text(`Car Model: ${vehicleData.carModel || 'N/A'}`, margin, (yPosition += lineSpacing));
         doc.text(`Year of Model: ${vehicleData.yearOfModel || 'N/A'}`, margin, (yPosition += lineSpacing));
