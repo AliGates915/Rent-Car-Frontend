@@ -152,7 +152,7 @@ const handleSubmit = async (e) => {
                 type="number"
                 disabled
                 name="balanceAmount"
-                value={balance.rentalInfo.balanceAmount}
+                value={balance?.rentalInfo?.balanceAmount || 0}
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
               />
