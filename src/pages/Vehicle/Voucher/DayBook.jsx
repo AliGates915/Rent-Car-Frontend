@@ -143,7 +143,7 @@ function DayBook() {
           <div className="flex justify-between gap-4">
             {/* Payment Table */}
             <div className="w-1/2">
-              <h2 className="text-lg font-bold mb-2 text-[#0096FF]">Payment Voucher</h2>
+              <h2 className="text-lg font-bold mb-2 text-[#0096FF]">Receipt Voucher</h2>
               <table className="min-w-full shadow-xl border-collapse border border-gray-200">
                 <thead className="text-sm bg-[#0096FF] text-gray-50">
                   <tr>
@@ -186,7 +186,7 @@ function DayBook() {
 
             {/* Expense Table */}
             <div className="w-1/2">
-              <h2 className="text-lg font-bold mb-2 text-[#FF4500]">Expense Voucher</h2>
+              <h2 className="text-lg font-bold mb-2 text-[#FF4500]">Payment Voucher</h2>
               <table className="min-w-full shadow-xl border-collapse border border-gray-200">
                 <thead className="text-sm bg-[#FF4500] text-gray-50">
                   <tr>

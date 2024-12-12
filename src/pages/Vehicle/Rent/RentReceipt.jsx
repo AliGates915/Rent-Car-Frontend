@@ -8,10 +8,10 @@ import jsPDF from 'jspdf';
 function RentVehicle() {
     const { id } = useParams(); // Extract the ID from the URL
     console.log("ID", id);
-    
+
     const navigate = useNavigate();
     const [vehicleData, setVehicleData] = useState({
-        registrationNo:"",
+        registrationNo: "",
         carType: "",
         carMake: "",
         carModel: "",
@@ -20,7 +20,7 @@ function RentVehicle() {
         transmissionType: "",
         engineCapacity: "",
         chassisNo: "",
-        engineNo: "",ratePerDay: "",
+        engineNo: "", ratePerDay: "",
         photos: [0],
     });
     const [regDate, setRegDate] = useState('')
@@ -75,7 +75,7 @@ function RentVehicle() {
     const [ratePerDay, setRatePerDay] = useState(vehicleData?.ratePerDay || 1000);
     const [Loading, setLoading] = useState(false);
 
-    
+
     // Handle All the data
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -121,7 +121,7 @@ function RentVehicle() {
             },
         };
 
-        console.log("data send ",formData)
+        console.log("data send ", formData)
 
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/rent-receipt/${id}`,
@@ -129,7 +129,7 @@ function RentVehicle() {
                 { headers: { 'Content-Type': 'application/json' } }
             );
             await axios.post(`${process.env.REACT_APP_API_URL}/vehicle-details/book-vehicle/${id}`);
-            
+
             // Generate PDF after successful submission
             generatePDF(formData);
             console.log('Vehicle data submitted successfully:', response.data);
@@ -181,9 +181,9 @@ function RentVehicle() {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/vehicle-details/book-vehicle/${id}`);
                 console.log("Id Data", response.data);
-                
+
                 setVehicleData(response.data); // Set the vehicle data in state
-                
+
             } catch (error) {
                 console.error('Error fetching vehicle data:', error.message);
                 alert('Failed to fetch vehicle details!');
@@ -312,7 +312,7 @@ function RentVehicle() {
 
     // Effect to recalculate total amount when dates or rate change
     // console.log("Rate", ratePerDay);
-    
+
     useEffect(() => {
         const total = totalDays * ratePerDay;
         console.log("Amount", total);
@@ -333,43 +333,43 @@ function RentVehicle() {
         const pageWidth = doc.internal.pageSize.getWidth();
         const lineSpacing = 8; // Consistent line spacing
         let yPosition = margin + 5;
-      
+
         // Format Date Function
         const formatDate = (dateString) => {
-          if (!dateString) return 'N/A';
-          const date = new Date(dateString);
-          const day = String(date.getDate()).padStart(2, '0');
-          const month = String(date.getMonth() + 1).padStart(2, '0');
-          const year = date.getFullYear();
-          return `${day}/${month}/${year}`;
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
         };
-      
+
         // ====== PAGE 1: Title Section ====== //
         doc.setFontSize(12);
         doc.text(`Serial No.: ${data.serialNo || 'N/A'}`, 20, 28);
-      
+
         doc.setFontSize(24);
         doc.setFont('helvetica', 'bold');
         doc.text('Vehicle Rental Receipt', pageWidth / 2, margin, { align: 'center' });
-      
+
         // Separator Line
         doc.setLineWidth(0.5);
         doc.line(margin, 30, pageWidth - margin, 30);
         yPosition = 40;
-      
+
         // ====== CUSTOMER INFORMATION ====== //
         doc.setFontSize(16);
         doc.setFont('helvetica', 'bold');
         doc.text('Customer Information', margin, yPosition);
         yPosition += lineSpacing;
-      
+
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(12);
         doc.text(`Name: ${selectedCustomerInfo.customerName || 'N/A'}`, margin, yPosition);
         doc.text(`CINC: ${selectedCustomerInfo.cinc || 'N/A'}`, margin, (yPosition += lineSpacing));
         doc.text(`Mobile: ${selectedCustomerInfo.mobileNo || 'N/A'}`, margin, (yPosition += lineSpacing));
         doc.text(`Address: ${selectedCustomerInfo.address || 'N/A'}`, margin, (yPosition += lineSpacing));
-      
+
         // Customer Image (if available)
         if (data.customerInfo?.profilePhotoUrl) {
             try {
@@ -380,17 +380,17 @@ function RentVehicle() {
         } else {
             doc.text('Profile Photo not available.', margin, (yPosition += lineSpacing));
         }
-      
+
         yPosition += 14;
-      
+
         // ====== VEHICLE INFORMATION ====== //
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(16);
         doc.text('Vehicle Information', margin, yPosition);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(12);
-        yPosition += lineSpacing;
-      
+        yPosition += lineSpacing - 5;
+
         doc.text(`Registration No: ${vehicleData.registrationNo || 'N/A'}`, margin, yPosition);
         doc.text(`Car Make: ${vehicleData.carMake || 'N/A'}`, margin, yPosition);
         doc.text(`Car Model: ${vehicleData.carModel || 'N/A'}`, margin, (yPosition += lineSpacing));
@@ -398,7 +398,7 @@ function RentVehicle() {
         doc.text(`Car Color: ${vehicleData.color || 'N/A'}`, margin, (yPosition += lineSpacing));
         doc.text(`Engine No: ${vehicleData.engineNo || 'N/A'}`, margin, (yPosition += lineSpacing));
         doc.text(`Chassis No: ${vehicleData.chassisNo || 'N/A'}`, margin, (yPosition += lineSpacing));
-      
+
         // Vehicle Image (if available)
         if (data.vehicleInfo?.photos) {
             try {
@@ -409,9 +409,9 @@ function RentVehicle() {
         } else {
             doc.text('Vehicle Photo not available.', margin, (yPosition += 60));
         }
-      
+
         yPosition += 12;
-      
+
         // ====== RENTAL INFORMATION ====== //
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(16);
@@ -419,7 +419,7 @@ function RentVehicle() {
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(12);
         yPosition += lineSpacing;
-      
+
         doc.text(`Date From: ${formatDate(data.rentalInfo.dateFrom)}`, margin, yPosition);
         doc.text(`Date To: ${formatDate(data.rentalInfo.dateTo)}`, margin, (yPosition += lineSpacing));
         doc.text(`Total Days: ${data.rentalInfo.totalDays || 'N/A'}`, margin, (yPosition += lineSpacing));
@@ -429,47 +429,57 @@ function RentVehicle() {
         doc.text(`Total Amount: ${data.rentalInfo.totalAmount || 'N/A'}`, margin, (yPosition += lineSpacing));
         doc.text(`Advance Amount: ${data.rentalInfo.advanceAmount || 'N/A'}`, margin, (yPosition += lineSpacing));
         doc.text(`Balance Amount: ${data.rentalInfo.balanceAmount || 'N/A'}`, margin, (yPosition += lineSpacing));
-         
-        yPosition += 12;    
+
+        yPosition += 12;
         // ====== DRIVING LICENSE ====== //
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(16);
         doc.text('Driving License Certificate', margin, yPosition);
         yPosition += lineSpacing;
-      
+
         if (selectedCustomerInfo.DrivingLicense) {
-          doc.addImage(selectedCustomerInfo.DrivingLicense, 'JPEG', pageWidth - 150, yPosition + 5, 70, 45);
+            doc.addImage(selectedCustomerInfo.DrivingLicense, 'JPEG', pageWidth - 150, yPosition + 5, 70, 45);
         } else {
-          doc.text('Driving License not available.', margin, (yPosition += 30));
+            doc.text('Driving License not available.', margin, (yPosition += 30));
         }
 
-        // ====== NEW PAGE ====== //
-        doc.addPage();
-      
-        yPosition = margin;
-      
-        // ====== FEATURES SECTION ====== //
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(16);
-        doc.text('Features', margin, yPosition);
-        yPosition += lineSpacing;
-      
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(12);
-        Object.keys(data.features).forEach((feature) => {
-          const featureStatus = data.features[feature] ? 'Yes' : 'No';
-          doc.text(`${feature}: ${featureStatus}`, margin, (yPosition += lineSpacing));
-        });
-      
+        // // ====== NEW PAGE ====== //
+        // doc.addPage();
+
+        // yPosition = margin;
+
+        // // ====== FEATURES SECTION ====== //
+        // doc.setFont('helvetica', 'bold');
+        // doc.setFontSize(16);
+        // doc.text('Features', margin, yPosition);
+        // yPosition += lineSpacing;
+
+        // doc.setFont('helvetica', 'normal');
+
+        // doc.setFontSize(12);
+        // let prevStatus = null; 
+        // Object.keys(data.features).forEach((feature) => {
+        //     const currentStatus = data.features[feature] ? 'Yes' : 'No';
+
+        //     // Print only if the current status is 'No' and the previous status was 'Yes'
+        //     if (prevStatus === 'Yes' && currentStatus === 'No') {
+        //         doc.text(`${feature}: ${currentStatus}`, margin, (yPosition += lineSpacing));
+        //     }
+
+        //     // Update the previous status
+        //     prevStatus = currentStatus;
+        // });
+
+
         // ====== Save PDF ====== //
         doc.save(`Rental_Receipt_${data.serialNo}.pdf`);
-      };
-      
+    };
+
     // Total Amount Calculation depend on the Days x RatePerDay
 
     return (
         <>
-        
+
             <nav className='flex justify-between my-4 mx-10'>
                 <div className='text-2xl font-extrabold text-[#0096FF] tracking-wide '>
                     RENT RECEIPT
@@ -505,7 +515,7 @@ function RentVehicle() {
                                     Serial No.</label>
                                 <input
                                     type="number"
-                                    
+                                    disabled
                                     className="w-[12rem] bg-white border border-gray-300 
                                     rounded-md px-3 py-2 text-sm focus:outline-none
                                      focus:ring "
@@ -561,7 +571,7 @@ function RentVehicle() {
                                 mb-2">CINC No.</label>
                                 <input
                                     type="text"
-                                
+
                                     value={selectedCustomerInfo.cinc || "N/A"}
                                     className="w-[11rem] bg-white border border-gray-300 
                                     rounded-md px-3 py-2 text-sm focus:outline-none "
@@ -608,7 +618,7 @@ function RentVehicle() {
                             <label className="block text-gray-700 font-semibold mb-2">City</label>
                             <input
                                 type="text"
-                    
+
                                 className="w-[12rem] bg-white border border-gray-300 rounded-md
                                  px-3 py-2 text-sm focus:outline-none "
                                 value={selectedCustomerInfo.city || "N/A"}
@@ -621,7 +631,7 @@ function RentVehicle() {
                                 <label className="block text-gray-700 font-semibold mb-2">Mobile No.</label>
                                 <input
                                     type="text"
-                        
+
                                     className="w-[12rem] bg-white border border-gray-300 
                                     rounded-md px-3 py-2 text-sm focus:outline-none "
 
@@ -634,7 +644,7 @@ function RentVehicle() {
                                 <label className="block text-gray-700 font-semibold mb-2">Residence Phone</label>
                                 <input
                                     type="text"
-                            
+
                                     className="w-[11rem] bg-white border border-gray-300
                                      rounded-md px-3 py-2 text-sm focus:outline-none "
                                     value={selectedCustomerInfo.phone || "N/A"}
@@ -660,7 +670,7 @@ function RentVehicle() {
                                 >
                                     <input
                                         type="text"
-                                    
+
                                         className="w-[39rem] bg-white border border-gray-300 
                                         rounded-md px-3 py-2 text-sm focus:outline-none "
                                         value={selectedCustomerInfo.referenceName}
@@ -674,7 +684,7 @@ function RentVehicle() {
                                     <label className="block text-gray-700 font-semibold mb-2">Mobile No.</label>
                                     <input
                                         type="text"
-                    
+
                                         className="w-[12rem] bg-white border border-gray-300 
                                         rounded-md px-3 py-2 text-sm focus:outline-none"
                                         value={selectedCustomerInfo.referenceMobile || "N/A"}
@@ -699,16 +709,16 @@ function RentVehicle() {
                                     px-2 py-2"
                                 >
                                     <input type="text"
-                                    className="w-full bg-transparent border-none 
+                                        className="w-full bg-transparent border-none 
                                     focus:outline-none text-gray-700"
-                                    value={vehicleData.registrationNo}
+                                        value={vehicleData.registrationNo}
                                     />
                                 </div>
                             </div>
                             {/* Rent Type. */}
                             <div className=" ml-4 col-span-2">
                                 <label className="block text-gray-700 font-semibold mb-2">
-                                        Rent Type
+                                    Rent Type
                                 </label>
                                 <div
                                     className="flex items-center justify-between w-[12rem] border rounded 
@@ -753,7 +763,7 @@ function RentVehicle() {
                                 >
                                     <input
                                         type="text"
-                                        
+
                                         className="bg-transparent text-gray-800 
                                         text-sm outline-none
                                         w-full"
@@ -776,7 +786,7 @@ function RentVehicle() {
                                 >
                                     <input
                                         type="text"
-                                        
+
                                         className="bg-transparent text-gray-800 text-sm outline-none
                                         w-full"
                                         value={vehicleData.carMake}
@@ -798,7 +808,7 @@ function RentVehicle() {
                                 >
                                     <input
                                         type="text"
-                                        
+
                                         className="bg-transparent text-gray-800 text-sm outline-none
                                         w-full"
                                         value={vehicleData.carModel}
@@ -826,7 +836,7 @@ function RentVehicle() {
                                     >
                                         <input
                                             type="text"
-                                            
+
                                             className="bg-transparent text-gray-800 text-sm outline-none
                                         w-full"
                                             value={vehicleData.transmissionType}
@@ -850,7 +860,7 @@ function RentVehicle() {
                                 >
                                     <input
                                         type="text"
-                                        
+
                                         className="bg-transparent text-gray-800 text-sm outline-none
                                         w-full"
                                         value={vehicleData.engineCapacity}
@@ -872,7 +882,7 @@ function RentVehicle() {
                                 >
                                     <input
                                         type="text"
-                                    
+
                                         className="bg-transparent text-gray-800 text-sm outline-none
                                         w-full"
                                         value={vehicleData.chassisNo}
@@ -893,7 +903,7 @@ function RentVehicle() {
                                 >
                                     <input
                                         type="text"
-                                        
+
                                         className="bg-transparent text-gray-800 text-sm outline-none
                                         w-full"
                                         value={vehicleData.engineNo}
@@ -1101,7 +1111,7 @@ function RentVehicle() {
                                     />
                                 </label>
                             </div>
-                           
+
                             {/* Checkbox 18 */}
                             <div className="flex items-center">
                                 <label className="text-gray-800 font-semibold">
@@ -1333,7 +1343,7 @@ function RentVehicle() {
                                         className="bg-transparent text-gray-800 text-sm outline-none
                                 w-full"
                                         value={totalAmount}
-                                        
+
                                     />
                                 </div>
                             </div>
@@ -1397,7 +1407,7 @@ function RentVehicle() {
                     </div>
                 </form>
             )}
-       
+
         </>
     );
 }
