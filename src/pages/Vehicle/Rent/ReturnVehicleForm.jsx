@@ -138,6 +138,7 @@ const handleSubmit = async (e) => {
               Condition:
               <input
                 type="text"
+                required
                 name="condition"
                 value={formData.condition}
                 onChange={handleChange}
