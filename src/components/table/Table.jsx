@@ -24,7 +24,7 @@ const List = () => {
       setIsLoading(true);
         try {
             const response = await axios.get(
-              `${process.env.REACT_APP_API_URL}/vehicle-details/display`);
+              `${process.env.REACT_APP_API_URL}/vehicle-details`);
             if (Array.isArray(response.data)) {
                 console.log("Data is an array.", response.data);
                 setVehicles(response.data);

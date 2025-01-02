@@ -201,7 +201,7 @@ function NewCustomer() {
                     CUSTOMER INFO
                 </div>
 
-                <Link to='/owner-details'>
+                <Link to='/customer-details'>
                     <button className='bg-[#0096FF] font-extrabold px-2 py-1 rounded-full transition-all duration-300 
                 text-xl text-white tracking-wide flex items-center justify-center hover:bg-[#4a32b3] 
                hover:scale-105 hover:shadow-lg hover:shadow-[#0096FF]/80'

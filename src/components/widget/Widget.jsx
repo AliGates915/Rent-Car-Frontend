@@ -19,7 +19,7 @@ const Widget = ({ type }) => {
       try {
         switch (type) {
           case "total vehicles":
-            response = await fetch(`${process.env.REACT_APP_API_URL}/vehicle-details/display`);
+            response = await fetch(`${process.env.REACT_APP_API_URL}/vehicle-details`);
             break;
           case "customers":
             response = await fetch(`${process.env.REACT_APP_API_URL}/customer-details`);
