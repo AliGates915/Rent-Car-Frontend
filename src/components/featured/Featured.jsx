@@ -5,8 +5,15 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpOutlinedIcon from "@mui/icons-material/KeyboardArrowUpOutlined";
+import { useContext } from "react";
+import { CurrencyContext } from "../../context/CurrencyContext";
+
 
 const Featured = () => {
+  const { convertPrice, currency, currencySymbols } = useContext(CurrencyContext);
+
+  const priceInPKR = 420; // Example price in PKR
+  const convertedPrice = convertPrice(priceInPKR);
   return (
     <div className="featured">
       <div className="top">
@@ -18,7 +25,9 @@ const Featured = () => {
           <CircularProgressbar value={70} text={"70%"} strokeWidth={5} />
         </div>
         <p className="title">Total sales made today</p>
-        <p className="amount">420</p>
+        <p className="amount">
+        Price: {currencySymbols[currency]} {convertedPrice} 
+        </p>
         <p className="desc">
           Previous transactions processing. Last payments may not be included.
         </p>

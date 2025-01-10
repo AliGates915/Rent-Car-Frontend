@@ -8,6 +8,8 @@ import { ScaleLoader, FadeLoader } from 'react-spinners';
 import {
     MdOutlineConfirmationNumber, MdLocationOn
     , MdPropaneTank, MdAirlineSeatReclineNormal,
+    MdDiscount,
+    MdOutlineDiscount 
 } from "react-icons/md";
 import { SiMake } from "react-icons/si";
 import { Link } from 'react-router-dom';
@@ -811,33 +813,11 @@ function NewVehicle() {
                                     />
                                 </div>
                             </div>
-                            {/* Rate per Day */}
-                            <div>
-                                <label className="text-gray-800 font-semibold my-4">
-                                    <div className="flex justify-start gap-1">
-                                        <FaRupeeSign className="mt-[0.5px]  items-center" />
-                                        Rate per Day
-                                    </div>
-                                </label>
-
-                                <div
-                                    className="flex items-center justify-between w-[14rem] border rounded 
-                                    px-2 py-2 cursor-pointer"
-                                >
-                                    <input
-                                        type="Number"
-                                        required
-                                        className="bg-transparent text-gray-800 text-sm outline-none
-                                        w-full"
-                                        value={ratePerDay}
-                                        onChange={(e) => setRatePerDay(e.target.value)}
-
-                                    />
-                                </div>
-                            </div>
+                            
                         </div>
 
                         <div className="my-4 grid  grid-cols-4">
+                            
                             {/* Price of vehicle */}
                             <div>
                                 <label className="text-gray-800 font-semibold my-4">
@@ -881,30 +861,107 @@ function NewVehicle() {
                                     />
                                 </div>
                             </div>
-                             {/* Driving Document Image
-                            <div className="mt-6 col-span-2">
-                                <label htmlFor="drivingLicense" className="flex items-center cursor-pointer text-gray-800 font-semibold">
-                                    Add Driving Document
-                                    <DriveFolderUploadOutlinedIcon />
-                                </label>
-                                <input
-                                    type="file"
-                                    id="drivingLicense"
-                                    accept="image/*"
-                                    style={{ display: "none" }}
-                                    onChange={handleDocument} // Call handleDocument directly
-                                />
-                                {documentUrl && (
-                                    <div className="mt-2 underline text-sm text-indigo-700">
-                                        <a href={documentUrl} target="_blank" rel="noopener noreferrer">
-                                            View Document
-                                        </a>
-                                    </div>
-                                )}
-                            </div> */}
-
+                             
                         </div>
+                          {/*  Weekly Discount & Monthly Discount */}
+                        <div className="my-4 grid  grid-cols-4">
+                            {/* Rate with Driver */}
+                            <div>
+                                <label className="text-gray-800 font-semibold my-4">
+                                    <div className="flex justify-start gap-1">
+                                        <FaRupeeSign className="mt-[0.5px]  items-center" />
+                                        Rate with Driver
+                                    </div>
+                                </label>
 
+                                <div
+                                    className="flex items-center justify-between w-[14rem] border rounded 
+                                    px-2 py-2 cursor-pointer"
+                                >
+                                    <input
+                                        type="Number"
+                                        required
+                                        className="bg-transparent text-gray-800 text-sm outline-none
+                                        w-full"
+                                        value={ratePerDay}
+                                        onChange={(e) => setRatePerDay(e.target.value)}
+
+                                    />
+                                </div>
+                            </div>
+                            
+                            {/* Rate without Driver */}
+                            <div>
+                                <label className="text-gray-800 font-semibold my-4">
+                                    <div className="flex justify-start gap-1">
+                                        <FaRupeeSign className="mt-[0.5px]  items-center" />
+                                        Rate without Driver
+                                    </div>
+                                </label>
+
+                                <div
+                                    className="flex items-center justify-between w-[14rem] border rounded 
+                                    px-2 py-2 cursor-pointer"
+                                >
+                                    <input
+                                        type="Number"
+                                        required
+                                        className="bg-transparent text-gray-800 text-sm outline-none
+                                        w-full"
+                                        value={ratePerDay}
+                                        onChange={(e) => setRatePerDay(e.target.value)}
+
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Weekly Discount */}
+                            <div>
+                                <label className="text-gray-800 font-semibold my-4">
+                                    <div className="flex justify-start gap-1">
+                                        <MdOutlineDiscount  className="mt-[0.5px]  items-center" />
+                                        Weekly Discount
+                                    </div>
+                                </label>
+
+                                <div
+                                    className="flex items-center justify-between w-[14rem] border rounded 
+                                    px-2 py-2 cursor-pointer"
+                                >
+                                    <input
+                                        type="Number"
+                                        required
+                                        className="bg-transparent text-gray-800 text-sm outline-none
+                                        w-full"
+                                        value={ratePerDay}
+                                        onChange={(e) => setRatePerDay(e.target.value)}
+
+                                    />
+                                </div>
+                            </div>
+                            {/* Monthly Discount */}
+                            <div>
+                                <label className="text-gray-800 font-semibold my-4">
+                                    <div className="flex justify-start gap-1">
+                                        <MdDiscount PiCarProfileBold className="mt-[0.5px] font-bold items-center" />
+                                        Monthly Discount
+                                    </div>
+                                </label>
+
+                                <div
+                                    className="flex items-center justify-between w-[14rem] border rounded 
+                                    px-2 py-2 cursor-pointer"
+                                >
+                                    <input
+                                        type="Number"
+                                        className="bg-transparent text-gray-800 text-sm outline-none w-full"
+                                        value={priceVehicle}
+                                        onChange={(e) => setPrice(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            
+                        </div>
 
                         <div className="flex flex-wrap my-3 border-2 px-2 py-2 mr-10 gap-3">
                             {/* Checkbox 1 */}

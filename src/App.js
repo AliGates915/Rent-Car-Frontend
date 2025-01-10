@@ -30,6 +30,8 @@ import VehicleList from "./pages/Vehicle/Reports/All Vehicles/table/VehicleList"
 import RentList from "./pages/Vehicle/Reports/Rent Vehicle/RentList";
 import CashList from "./pages/Vehicle/Reports/CashReceipt/CashList";
 import OwnerList from "./pages/Vehicle/Reports/OwnerList/OwnerList";
+import PetrolRates from "./pages/Vehicle/Petrol Rates/PetrolRates";
+import AddPromotion from "./pages/Vehicle/Promotion/Promotion";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -254,6 +256,27 @@ function App() {
               </Layout>
             }
           />
+          
+          <Route
+            path="/petrol-rate"
+            index
+            element={
+              <Layout>
+                <PetrolRates />
+              </Layout>
+            }
+          />
+          
+          <Route
+            path="/promotion"
+            index
+            element={
+              <Layout>
+                <AddPromotion />
+              </Layout>
+            }
+          />
+
           {/* <Route
             path="/pdf"
             index

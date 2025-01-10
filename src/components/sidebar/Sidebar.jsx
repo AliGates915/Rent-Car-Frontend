@@ -5,6 +5,9 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import { Link } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
+import { BsFillFuelPumpDieselFill } from "react-icons/bs";
+import { MdDiscount } from "react-icons/md";
+
 
 const Sidebar = () => {
   const { dispatch } = useContext(DarkModeContext);
@@ -71,13 +74,6 @@ const Sidebar = () => {
           </li>
           </Link>
 
-          {/* <Link to="/rent-receipt" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Rent Receipt
-            </span>
-          </li>
-          </Link> */}
           
           <Link to="/rent-vehicle" style={{ textDecoration: "none" }}>
           <li>
@@ -85,7 +81,15 @@ const Sidebar = () => {
             <span>Return Vehicles</span>
           </li>
           </Link>
-        
+          
+          <Link to="/promotion" style={{ textDecoration: "none" }}>
+          <li>
+            <MdDiscount className="icon" />
+            <span>Promotion
+            </span>
+          </li>
+          </Link>
+          
           <Link to="/payment-voucher" style={{ textDecoration: "none" }}>
           <li>
             <ListAltIcon className="icon" />
@@ -105,6 +109,14 @@ const Sidebar = () => {
           <li>
             <ListAltIcon className="icon" />
             <span>DayBook
+            </span>
+          </li>
+          </Link>
+
+          <Link to="/petrol-rate" style={{ textDecoration: "none" }}>
+          <li>
+            <BsFillFuelPumpDieselFill  className="icon" />
+            <span>Petrol Rates
             </span>
           </li>
           </Link>

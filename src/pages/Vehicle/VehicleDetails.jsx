@@ -3,12 +3,15 @@ import { useState, useEffect } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { FaEdit } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
-import { TbAirConditioning } from "react-icons/tb";
-import { SiAirplayvideo } from "react-icons/si";
-import { GiCctvCamera } from "react-icons/gi";
-import { GiCarWheel } from "react-icons/gi";
-import { LuCigarette } from "react-icons/lu";
-import IconTooltip from './IconTooltip';
+import { useContext } from "react";
+import { CurrencyContext } from "../../context/CurrencyContext";
+
+// import { TbAirConditioning } from "react-icons/tb";
+// import { SiAirplayvideo } from "react-icons/si";
+// import { GiCctvCamera } from "react-icons/gi";
+// import { GiCarWheel } from "react-icons/gi";
+// import { LuCigarette } from "react-icons/lu";
+// import IconTooltip from './IconTooltip';
 
 import {
     FadeLoader
@@ -20,6 +23,8 @@ function VehicleDetails() {
     const [vehicles, setVehicles] = useState([]);
     const [currentIndices, setCurrentIndices] = useState({});
     const [isLoading, setIsLoading] = useState(true);
+    const { convertPrice, currency, currencySymbols } = useContext(CurrencyContext);
+
 
     const navigate = useNavigate();
     // Fetch vehicle data once when the component mounts
@@ -58,7 +63,7 @@ function VehicleDetails() {
 
     const handleBook = async (id) => {
         try {
-            
+
             navigate(`/rent-receipt/${id}`)
 
             // Refetch vehicles or update the list of vehicles in your component state
@@ -141,25 +146,25 @@ function VehicleDetails() {
                                 {/* Product Info */}
                                 <div className="px-4  font-sans py-3 w-[20rem]">
                                     <div className="block mr-12 text-center">
-                                    <span className="flex justify-center text-[#979ead] 
+                                        <span className="flex justify-center text-[#979ead] 
                                     uppercase text-sm">
-                                        <span className="uppercase font-bold"> {product.registrationNo}</span>
-                                    </span>
+                                            <span className="uppercase font-bold"> {product.registrationNo}</span>
+                                        </span>
 
-                                    <div className="w-[22rem] ">
-                                        <p className=" text-[#5c6f9d] mr-16 truncate text-[16px]">
-                                            <span className="font-bold mr-2">{product.carMake}</span>
-                                            <span className="font-bold mr-2">{product.carModel}</span>
-                                            <span className="font-bold">{product.yearOfModel}</span>
-                                        </p>
-                                    </div>
+                                        <div className="w-[22rem] ">
+                                            <p className=" text-[#5c6f9d] mr-16 truncate text-[16px]">
+                                                <span className="font-bold mr-2">{product.carMake}</span>
+                                                <span className="font-bold mr-2">{product.carModel}</span>
+                                                <span className="font-bold">{product.yearOfModel}</span>
+                                            </p>
+                                        </div>
 
-                                    <div className="w-80">
-                                        <p className="text-[#5c6f9d] text-[0.98rem] block">
-                                            <span className="font-bold mr-1">{product.color}</span>
-                                            <span className="font-bold">{product.location || "Lahore"}</span>
-                                        </p>
-                                    </div>
+                                        <div className="w-80">
+                                            <p className="text-[#5c6f9d] text-[0.98rem] block">
+                                                <span className="font-bold mr-1">{product.color}</span>
+                                                <span className="font-bold">{product.location || "Lahore"}</span>
+                                            </p>
+                                        </div>
                                     </div>
                                     {/* <div className="ml-4 flex justify-between w-80">
                                         <p className="text-[#76d930] text-[0.79rem] block">
@@ -180,10 +185,13 @@ function VehicleDetails() {
 
                                     <div className="flex justify-between mt-3">
                                         {/* Text Section */}
-                                        <p className="text-[14px] text-black">
+                                        <p className="text-[14px]  text-black">
                                             Per Day Charge:
-                                            <span className="ml-2 text-[20px] text-sky-500 font-semibold">
-                                                Rs.{product.ratePerDay || 1000}
+                                            <span className="ml-4 items-center text-[20px] text-sky-500 font-semibold">
+                                                {product.ratePerDay
+                                                    ? `${currencySymbols[currency]}${convertPrice(product.ratePerDay)}`
+                                                    : "N/A"}
+
                                             </span>
                                         </p>
 

@@ -1,0 +1,38 @@
+.fuel-rates-container {
+  width: 300px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+
+.dropdown,
+.input-field,
+.save-button {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.save-button {
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+  border: none;
+}
+
+.save-button:hover {
+  background: #0056b3;
+}
+
+.rates-list {
+  list-style: none;
+  padding: 0;
+}
+
+.rates-list li {
+  padding: 5px 0;
+}
