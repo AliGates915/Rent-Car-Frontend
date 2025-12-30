@@ -32,6 +32,7 @@ import CashList from "./pages/Vehicle/Reports/CashReceipt/CashList";
 import OwnerList from "./pages/Vehicle/Reports/OwnerList/OwnerList";
 import PetrolRates from "./pages/Vehicle/Petrol Rates/PetrolRates";
 import AddPromotion from "./pages/Vehicle/Promotion/Promotion";
+import CarRentalLanding from "./pages/home/CarRentalLanding";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -55,10 +56,14 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route
             path="/home"
+            element={<CarRentalLanding />}
+          />
+          <Route
+            path="/dashboard"
             element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
+              // <ProtectedRoute>
+              <Home />
+              // </ProtectedRoute>
             }
           />
 
@@ -256,7 +261,7 @@ function App() {
               </Layout>
             }
           />
-          
+
           <Route
             path="/petrol-rate"
             index
@@ -266,7 +271,7 @@ function App() {
               </Layout>
             }
           />
-          
+
           <Route
             path="/promotion"
             index
