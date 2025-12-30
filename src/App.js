@@ -42,7 +42,7 @@ function App() {
 
     // If no user or no authentication cookie, redirect to login
     if (!user && user) {
-      return <Navigate to="/home" />;
+      return <Navigate to="/" />;
     }
 
     return children;
@@ -53,10 +53,10 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* <Route path="/"> */}
-          <Route path="/" element={<Login />} />
-          <Route
-            path="/home"
-            element={<CarRentalLanding />}
+          <Route path="/login" element={<Login />} />
+            <Route
+            path="/"
+            element={ <CarRentalLanding /> }
           />
           <Route
             path="/dashboard"

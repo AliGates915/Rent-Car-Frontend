@@ -150,7 +150,7 @@ const CarRentalLanding = () => {
                             <a href="#features" className="text-gray-700 hover:text-blue-600 font-medium transition">Features</a>
                             <a href="#how-it-works" className="text-gray-700 hover:text-blue-600 font-medium transition">How It Works</a>
                             <a href="#cars" className="text-gray-700 hover:text-blue-600 font-medium transition">Available Cars</a>
-                            <Link to='/'>
+                            <Link to='/login'>
                                 <button className="text-gray-700 hover:text-blue-600 font-medium">Login</button>
                             </Link>
                         </div>
@@ -243,7 +243,7 @@ const CarRentalLanding = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.7 }}
                             >
-                                <Link to="/">
+                                <Link to="/login">
                                     <motion.button
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
