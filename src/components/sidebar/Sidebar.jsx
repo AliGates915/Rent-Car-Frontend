@@ -23,117 +23,117 @@ const Sidebar = () => {
         <ul>
           <p className="title">MAIN</p>
           <Link to="/home" style={{ textDecoration: "none" }}>
-          <li>
-            <DashboardIcon className="icon" />
-            <span>Dashboard</span>
-          </li>
+            <li>
+              <DashboardIcon className="icon" />
+              <span>Dashboard</span>
+            </li>
           </Link>
           <p className="title">LISTS</p>
-          
+
           <Link to="/vechile-type" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Vehicle Type</span>
-          </li>
+            <li>
+              <ListAltIcon className="icon" />
+              <span>Vehicle Type</span>
+            </li>
           </Link>
 
           <Link to="/vehicle-maintenance" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Vehicle Maintenace</span>
-          </li>
+            <li>
+              <ListAltIcon className="icon" />
+              <span>Vehicle Maintenace</span>
+            </li>
           </Link>
 
           <Link to="/rent-type" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Rent Type</span>
-          </li>
+            <li>
+              <ListAltIcon className="icon" />
+              <span>Rent Type</span>
+            </li>
           </Link>
-          
+
           <Link to="/vehicle-details" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Vehicle Details
-            </span>
-          </li>
-          </Link> 
+            <li>
+              <ListAltIcon className="icon" />
+              <span>Vehicle Details
+              </span>
+            </li>
+          </Link>
 
           <Link to="/owner-details" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Owner Details
-            </span>
-          </li>
+            <li>
+              <ListAltIcon className="icon" />
+              <span>Owner Details
+              </span>
+            </li>
           </Link>
           <Link to="/customer-details" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Customer Details
-            </span>
-          </li>
+            <li>
+              <ListAltIcon className="icon" />
+              <span>Customer Details
+              </span>
+            </li>
           </Link>
 
-          
+
           <Link to="/rent-vehicle" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Return Vehicles</span>
-          </li>
+            <li>
+              <ListAltIcon className="icon" />
+              <span>Return Vehicles</span>
+            </li>
           </Link>
-          
+
           <Link to="/promotion" style={{ textDecoration: "none" }}>
-          <li>
-            <MdDiscount className="icon" />
-            <span>Promotion
-            </span>
-          </li>
+            <li>
+              <MdDiscount className="icon" />
+              <span>Promotion
+              </span>
+            </li>
           </Link>
-          
+
           <Link to="/payment-voucher" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Receipt Voucher
-            </span>
-          </li>
+            <li>
+              <ListAltIcon className="icon" />
+              <span>Receipt Voucher
+              </span>
+            </li>
           </Link>
           <Link to="/expense-voucher" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Payment Voucher
-            </span>
-          </li>
+            <li>
+              <ListAltIcon className="icon" />
+              <span>Payment Voucher
+              </span>
+            </li>
           </Link>
-         
+
           <Link to="/dayBook" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>DayBook
-            </span>
-          </li>
+            <li>
+              <ListAltIcon className="icon" />
+              <span>DayBook
+              </span>
+            </li>
           </Link>
 
           <Link to="/petrol-rate" style={{ textDecoration: "none" }}>
-          <li>
-            <BsFillFuelPumpDieselFill  className="icon" />
-            <span>Petrol Rates
-            </span>
-          </li>
+            <li>
+              <BsFillFuelPumpDieselFill className="icon" />
+              <span>Petrol Rates
+              </span>
+            </li>
           </Link>
 
           <Link to="/reports" style={{ textDecoration: "none" }}>
-          <li>
-            <ListAltIcon className="icon" />
-            <span>Reports
-            </span>
-          </li>
+            <li>
+              <ListAltIcon className="icon" />
+              <span>Reports
+              </span>
+            </li>
           </Link>
-          
-          <Link to='/login'style={{ textDecoration: "none" }}>
-          <li>
-            {/* <ExitToAppIcon className="icon" /> */}
-            <span>Logout</span>
-          </li>
+
+          <Link to='/' style={{ textDecoration: "none" }}>
+            <li>
+              {/* <ExitToAppIcon className="icon" /> */}
+              <span>Logout</span>
+            </li>
           </Link>
         </ul>
       </div>

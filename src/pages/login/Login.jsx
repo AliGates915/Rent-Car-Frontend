@@ -1,6 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import axios from "axios";
-import { useContext, useState, useEffect} from "react";
+import { useContext, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import "./login.scss";
@@ -14,7 +14,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const [imageLoaded, setImageLoaded] = useState(false);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const img = new Image();
     img.src = './car3.png'; // Adjust path if needed
@@ -137,7 +137,7 @@ const Login = () => {
 
             {/* Login Button */}
             <div className="mt-10 mb-4">
-              <Link to="/home">
+              <Link to="/dashboard">
                 <button
                   type="button"
                   // disabled={loading}

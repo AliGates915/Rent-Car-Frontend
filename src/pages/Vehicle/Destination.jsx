@@ -67,7 +67,7 @@ function Designation() {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         alert("You are not authorized. Redirecting to login.");
-        window.location.href = "/login";
+        window.location.href = "/";
       } else {
         console.error("Error updating destination:", error);
       }
@@ -86,7 +86,7 @@ function Designation() {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         alert("You are not authorized. Redirecting to login.");
-        window.location.href = "/login";
+        window.location.href = "/";
       } else {
         console.error("Error deleting destination:", error);
       }
