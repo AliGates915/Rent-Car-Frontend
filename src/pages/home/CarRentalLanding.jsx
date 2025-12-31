@@ -187,21 +187,41 @@ const CarRentalLanding = () => {
             </header>
 
             {/* Hero Section */}
-            <section className="relative bg-gradient-to-b from-gray-900 to-gray-800 text-white overflow-hidden">
-                {/* Background Elements */}
-                <div className="absolute inset-0 opacity-5">
-                    <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl"></div>
-                    <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl"></div>
+            <section className="relative h-screen text-white overflow-hidden">
+
+                {/* ================= VIDEO BACKGROUND ================= */}
+                <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="none"
+                    className="absolute inset-0 w-full h-full object-cover z-0"
+                >
+                    <source src="/video1.mp4" type="video/mp4" />
+                </video>
+
+                {/* ================= DARK GRADIENT OVERLAY ================= */}
+                {/* <div className="absolute inset-0 bg-gradient-to-b from-gray-900/80 to-gray-800/90 z-10" /> */}
+
+                {/* ================= GLOW BLOBS ================= */}
+                <div className="absolute inset-0 opacity-5 z-10">
+                    <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply blur-3xl"></div>
+                    <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-indigo-500 rounded-full mix-blend-multiply blur-3xl"></div>
                 </div>
 
-                <div className="container relative mx-auto px-4 py-20 md:py-32">
+                {/* ================= CONTENT ================= */}
+                <div className="container relative z-20 mx-auto px-4 py-20 md:py-32">
                     <div className="grid lg:grid-cols-2 gap-16 items-center">
+
+                        {/* ================= LEFT CONTENT ================= */}
                         <motion.div
                             initial={{ opacity: 0, x: -30 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.6 }}
                         >
-                            {/* Subheading */}
+
+                            {/* Badge */}
                             <motion.div
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
@@ -212,7 +232,7 @@ const CarRentalLanding = () => {
                                 <span className="text-sm font-medium">Premium Car Rental Service</span>
                             </motion.div>
 
-                            {/* Main Headline */}
+                            {/* Heading */}
                             <motion.h1
                                 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
                                 initial={{ opacity: 0, y: 20 }}
@@ -220,7 +240,7 @@ const CarRentalLanding = () => {
                                 transition={{ delay: 0.3 }}
                             >
                                 <span className="text-white">Elevate Your</span>
-                                <span className="block mt-2 text-blue bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text">
+                                <span className="block mt-2 bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
                                     Travel Experience
                                 </span>
                             </motion.h1>
@@ -236,7 +256,7 @@ const CarRentalLanding = () => {
                                 with exclusive benefits, premium service, and competitive rates.
                             </motion.p>
 
-                            {/* Action Buttons */}
+                            {/* Buttons */}
                             <motion.div
                                 className="flex flex-wrap gap-4 mb-16"
                                 initial={{ opacity: 0, y: 20 }}
@@ -247,7 +267,7 @@ const CarRentalLanding = () => {
                                     <motion.button
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
-                                        className="bg-white text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
+                                        className="bg-white text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl"
                                     >
                                         Start Your Journey
                                     </motion.button>
@@ -256,7 +276,7 @@ const CarRentalLanding = () => {
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="border-2 border-white/30 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white/10 transition-all backdrop-blur-sm"
+                                    className="border-2 border-white/30 text-white px-8 py-4 rounded-lg font-semibold text-lg backdrop-blur-sm hover:bg-white/10"
                                 >
                                     <span className="flex items-center gap-2">
                                         Watch Demo
@@ -265,7 +285,7 @@ const CarRentalLanding = () => {
                                 </motion.button>
                             </motion.div>
 
-                            {/* Stats Grid */}
+                            {/* Stats */}
                             <motion.div
                                 className="grid grid-cols-2 md:grid-cols-4 gap-8"
                                 initial={{ opacity: 0 }}
@@ -278,62 +298,65 @@ const CarRentalLanding = () => {
                                     { value: '24/7', label: 'Support' },
                                     { value: '50+', label: 'Locations' }
                                 ].map((stat, index) => (
-                                    <div key={index} className={`p-4 rounded-xl ${stat.highlight ? 'bg-white/10 backdrop-blur-sm' : ''}`}>
-                                        <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
+                                    <div
+                                        key={index}
+                                        className={`p-4 rounded-xl ${stat.highlight ? 'bg-white/10 backdrop-blur-sm' : ''
+                                            }`}
+                                    >
+                                        <div className="text-2xl font-bold">{stat.value}</div>
                                         <div className="text-sm text-gray-300">{stat.label}</div>
                                     </div>
                                 ))}
                             </motion.div>
                         </motion.div>
 
-                        {/* Right Column - Car Showcase */}
+                        {/* ================= RIGHT IMAGE ================= */}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.8 }}
                             className="relative"
                         >
-                            {/* Main Image Container */}
-                            <div className="relative rounded-3xl overflow-hidden">
-                                <img
-                                    src="https://images.unsplash.com/photo-1553440569-bcc63803a83d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                                    alt="Premium Car"
-                                    className="w-full h-[500px] object-cover transform hover:scale-105 transition-transform duration-700"
-                                />
-                                {/* Gradient Overlay */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent"></div>
-                            </div>
 
-                            {/* Features Overlay */}
-                            <motion.div
+                            {/* <div className="relative rounded-3xl overflow-hidden">
+                                <img
+                                    src="https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=1200&q=80"
+                                    alt="Premium Car"
+                                    className="w-full h-[500px] object-cover transition-transform duration-700 hover:scale-105"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent" />
+                            </div> */}
+
+                            {/* Feature Card */}
+                            {/* <motion.div
                                 initial={{ opacity: 0, y: 40 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 1.2 }}
-                                className="absolute -bottom-6 left-1/4 transform -translate-x-1/2 w-11/12"
+                                className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-11/12"
                             >
                                 <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-                                    <div className="grid grid-cols-3 gap-6">
+                                    <div className="grid grid-cols-3 gap-6 text-center">
                                         {[
                                             { icon: '⚡', label: 'Quick Pickup', desc: '30 min or less' },
                                             { icon: '🛡️', label: 'Full Coverage', desc: 'Zero worries' },
                                             { icon: '💰', label: 'Best Price', desc: 'Guaranteed' }
-                                        ].map((feature, index) => (
-                                            <div key={index} className="text-center">
-                                                <div className="text-2xl mb-2">{feature.icon}</div>
-                                                <div className="font-semibold text-white">{feature.label}</div>
-                                                <div className="text-sm text-gray-300">{feature.desc}</div>
+                                        ].map((f, i) => (
+                                            <div key={i}>
+                                                <div className="text-2xl mb-2">{f.icon}</div>
+                                                <div className="font-semibold">{f.label}</div>
+                                                <div className="text-sm text-gray-300">{f.desc}</div>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
-                            </motion.div>
+                            </motion.div> */}
 
-                            {/* Rating Badge */}
-                            <motion.div
+                            {/* Rating */}
+                            {/* <motion.div
                                 initial={{ opacity: 0, rotate: -10 }}
                                 animate={{ opacity: 1, rotate: 0 }}
                                 transition={{ delay: 1 }}
-                                className="absolute top-6 right-6 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-3 rounded-full shadow-lg"
+                                className="absolute top-6 right-6 bg-gradient-to-r from-yellow-500 to-orange-500 px-4 py-3 rounded-full shadow-lg"
                             >
                                 <div className="flex items-center gap-2">
                                     <Star className="h-5 w-5 fill-current" />
@@ -342,11 +365,13 @@ const CarRentalLanding = () => {
                                         <div className="text-xs">Trustpilot</div>
                                     </div>
                                 </div>
-                            </motion.div>
+                            </motion.div> */}
+
                         </motion.div>
                     </div>
                 </div>
             </section>
+
 
             {/* Features Section */}
             <section id="features" className="relative py-20 md:py-28 overflow-hidden">
