@@ -421,7 +421,7 @@ const CarRentalLanding = () => {
                                 <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
                                     <div className="grid lg:grid-cols-2 gap-0">
                                         {/* Features List */}
-                                        <div className="p-10 md:p-12">
+                                        <div className="p-10 md:p-12 bg-gradient-to-br from-blue/50 to-blue/40">
                                             <motion.div
                                                 initial={{ opacity: 0, x: -20 }}
                                                 animate={{ opacity: 1, x: 0 }}
@@ -439,7 +439,7 @@ const CarRentalLanding = () => {
                                                             initial={{ opacity: 0, x: -20 }}
                                                             animate={{ opacity: 1, x: 0 }}
                                                             transition={{ delay: 0.1 * index }}
-                                                            className="flex items-start gap-4 p-4 rounded-xl hover:bg-white hover:shadow-md transition-all duration-300"
+                                                            className="flex items-start gap-4 p-4 rounded-xl hover:bg-white bg-gray-100 hover:shadow-md transition-all duration-300"
                                                         >
                                                             <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                                                                 <CheckCircle className="h-5 w-5 text-blue-600" />
@@ -468,8 +468,8 @@ const CarRentalLanding = () => {
                                                 >
                                                     {/* Dashboard Header */}
                                                     <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6">
-                                                        <div className="flex items-center justify-between">
-                                                            <div className="text-white">
+                                                        <div className="flex items-center justify-center">
+                                                            <div className="text-gray-900 text-center">
                                                                 <h4 className="text-xl font-bold">
                                                                     {activeTab === 'user' && 'Renter Dashboard'}
                                                                     {activeTab === 'owner' && 'Owner Portal'}
