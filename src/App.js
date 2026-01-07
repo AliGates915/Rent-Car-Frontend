@@ -33,6 +33,7 @@ import OwnerList from "./pages/Vehicle/Reports/OwnerList/OwnerList";
 import PetrolRates from "./pages/Vehicle/Petrol Rates/PetrolRates";
 import AddPromotion from "./pages/Vehicle/Promotion/Promotion";
 import CarRentalLanding from "./pages/home/CarRentalLanding";
+import CarDetail from "./pages/Vehicle/CarDetail";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -54,9 +55,9 @@ function App() {
         <Routes>
           {/* <Route path="/"> */}
           <Route path="/login" element={<Login />} />
-            <Route
+          <Route
             path="/"
-            element={ <CarRentalLanding /> }
+            element={<CarRentalLanding />}
           />
           <Route
             path="/dashboard"
@@ -64,6 +65,14 @@ function App() {
               // <ProtectedRoute>
               <Home />
               // </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/car/:id"
+            element={
+              
+                <CarDetail />
+              
             }
           />
 

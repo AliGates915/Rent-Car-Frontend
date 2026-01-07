@@ -1,7 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 import axios from "axios";
 import { useContext, useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import "./login.scss";
 
@@ -11,13 +11,17 @@ const Login = () => {
     password: undefined,
   });
   const { loading, error, dispatch } = useContext(AuthContext);
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get the redirect path from location state (if coming from Book Now)
+  const from = location.state?.from?.pathname || "/";
 
   useEffect(() => {
     const img = new Image();
-    img.src = './car3.png'; // Adjust path if needed
+    img.src = './car3.png';
     img.onload = () => setImageLoaded(true);
   }, []);
 
@@ -27,31 +31,26 @@ const Login = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    alert("Login Successfully.")
-    navigate("/")
-    // dispatch({ type: "LOGIN_START" });
-    // try {
-    //   const res = await axios.post(`${process.env.REACT_APP_API}/auth/login`, credentials, {
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //   });
-
-    //   console.log("Full response data:", res.data);
-
-    //   if (res.data.isAdmin) {
-    //     dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
-    //     navigate("/");
-    //   } else {
-    //     dispatch({
-    //       type: "LOGIN_FAILURE",
-    //       payload: { message: "You are not allowed!" },
-    //     });
-    //   }
-    // } catch (err) {
-    //   const errorMessage = err.response?.data?.message || "Something went wrong!";
-    //   dispatch({ type: "LOGIN_FAILURE", payload: { message: errorMessage } });
-    // }
+    
+    // For demo purposes - replace with actual API call
+    // Set login status in localStorage
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("user", JSON.stringify({
+      username: credentials.username || "demo_user",
+      isAdmin: true
+    }));
+    
+    // Dispatch login success if using context
+    dispatch({ type: "LOGIN_SUCCESS", payload: {
+      username: credentials.username || "demo_user",
+      isAdmin: true
+    }});
+    
+    // Redirect to the intended page or home
+    navigate(from, { replace: true });
+    
+    // Remove the alert since we're redirecting
+    // alert("Login Successfully.") // Commented out
   };
 
   // Toggle password visibility
@@ -72,9 +71,14 @@ const Login = () => {
       >
         <div className="max-w-md w-full mx-auto">
           <form className="bg-opacity-60 bg-white rounded-2xl p-6 
-          shadow-[0_2px_16px_-3px_rgba(6,81,237,0.3)]">
+          shadow-[0_2px_16px_-3px_rgba(6,81,237,0.3)]" onSubmit={handleClick}>
             <div className="mb-10">
               <h3 className="text-gray-800 text-3xl font-extrabold">Login</h3>
+              {from !== "/" && (
+                <p className="text-blue-600 text-sm mt-2">
+                  Please login to book the car
+                </p>
+              )}
             </div>
 
             {/* Username Field */}
@@ -106,7 +110,7 @@ const Login = () => {
             <div className="mt-6">
               <div className="relative flex items-center">
                 <input
-                  type={showPassword ? "text" : "password"} // Toggle between 'text' and 'password'
+                  type={showPassword ? "text" : "password"}
                   placeholder="password"
                   id="password"
                   onChange={handleChange}
@@ -119,7 +123,7 @@ const Login = () => {
                   stroke="#333"
                   className="w-[18px] h-[18px] absolute right-2 cursor-pointer"
                   viewBox="0 0 128 128"
-                  onClick={togglePasswordVisibility} // Toggle password visibility on click
+                  onClick={togglePasswordVisibility}
                 >
                   <path
                     d="M64 104C22.127 104 1.367 67.496.504 65.943a4 4 0 0 1 0-3.887C1.367 60.504 22.127 24 64 24s62.633 36.504 63.496 38.057a4 4 0 0 1 0 3.887C126.633 67.496 105.873 104 64 104zM8.707 63.994C13.465 71.205 32.146 96 64 96c31.955 0 50.553-24.775 55.293-31.994C114.535 56.795 95.854 32 64 32 32.045 32 13.447 56.775 8.707 63.994zM64 88c-13.234 0-24-10.766-24-24s10.766-24 24-24 24 10.766 24 24-10.766 24-24 24zm0-40c-8.822 0-16 7.178-16 16s7.178 16 16 16 16-7.178 16-16-7.178-16-16-16z"
@@ -137,20 +141,18 @@ const Login = () => {
 
             {/* Login Button */}
             <div className="mt-10 mb-4">
-              <Link to="/dashboard">
-                <button
-                  type="button"
-                  // disabled={loading}
-                  // onClick={handleClick}
-                  className="w-full py-2.5 px-4 text-sm font-semibold tracking-wider 
-                  rounded-full text-white bg-[#0071c2] hover:bg-[#3a90f3] focus:outline-none"
-                >
-                  Login
-                </button>
-              </Link>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-2.5 px-4 text-sm font-semibold tracking-wider 
+                rounded-full text-white bg-[#0071c2] hover:bg-[#3a90f3] focus:outline-none
+                disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? "Logging in..." : "Login"}
+              </button>
             </div>
             <div className="flex justify-center text-gray-900 font-bold">
-              <a href="http://www.afaqtechnologies.com.pk" target="blank">
+              <a href="http://www.afaqtechnologies.com.pk" target="blank" rel="noopener noreferrer">
                 Designed by AfaqTechnologies.
               </a>
             </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import { Car, Shield, Users, Calendar, Star, CheckCircle, Menu, X, CreditCard, MapPin, UserCheck, BarChart, Sparkles, PlayCircle, TrendingUp, Zap, DollarSign } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CarRentalLanding = () => {
     const [activeTab, setActiveTab] = useState('user');
@@ -71,34 +71,28 @@ const CarRentalLanding = () => {
         return descriptions[role]?.[index] || "Premium feature included";
     };
 
-    const getDetailedDescription = (role, index) => {
-        const detailed = {
-            user: [
-                "Access our extensive catalog of premium vehicles with detailed filters",
-                "Receive instant updates on your booking status and car location",
-                "Multiple payment methods with bank-level security encryption",
-                "Modify or cancel bookings up to 24 hours before pickup",
-                "Dedicated support team available round the clock",
-                "Share your experience and read authentic reviews"
-            ],
-            owner: [
-                "Turn your unused car into a steady revenue stream",
-                "Control rental rates based on demand and season",
-                "Detailed financial reports and earnings projections",
-                "Calendar-based scheduling with automatic conflict prevention",
-                "Comprehensive insurance for peace of mind",
-                "Instant payouts to your preferred bank account"
-            ],
-            admin: [
-                "Real-time dashboard with all platform metrics",
-                "User management with role-based access control",
-                "Resolution center for handling user issues efficiently",
-                "Generate custom reports and export data",
-                "Quality control for all listings and user content",
-                "System maintenance and performance optimization"
-            ]
-        };
-        return detailed[role]?.[index] || "Detailed feature description";
+    const navigate = useNavigate();
+
+    // Add this function to handle booking
+    // In CarRentalLanding.jsx, update the handleBookNow function:
+    const handleBookNow = (carId) => {
+        const isLoggedIn = localStorage.getItem('isLoggedIn'); // or check your AuthContext
+
+        if (!isLoggedIn) {
+            // Store the car ID in localStorage or state to redirect after login
+            sessionStorage.setItem('redirectCarId', carId);
+
+            // Navigate to login with state
+            navigate('/login', {
+                state: {
+                    from: {
+                        pathname: `/car/${carId}`
+                    }
+                }
+            });
+        } else {
+            navigate(`/car/${carId}`);
+        }
     };
 
     // Also update your roleFeatures to match array lengths
@@ -720,6 +714,7 @@ const CarRentalLanding = () => {
                                         <motion.button
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
+                                            onClick={() => handleBookNow(car.id)}
                                             className="relative overflow-hidden group bg-gradient-to-r from-gray-100/50 to-gray-200/50 text-purple-600 px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300"
                                         >
                                             <span className="relative z-10 flex items-center">
